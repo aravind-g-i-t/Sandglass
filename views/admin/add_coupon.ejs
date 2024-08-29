@@ -1,0 +1,257 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Evara Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/admin/assets/imgs/theme/favicon.svg">
+    <!-- Template CSS -->
+    <link href="/admin/assets/css/main.css" rel="stylesheet" type="text/css" />
+    <style>
+        .centered-text {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full viewport height */
+            text-align: center; /* Center text within the flex container */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="screen-overlay"></div>
+    <aside class="navbar-aside" id="offcanvas_aside">
+        <div class="aside-top">
+            <a href="index.html" class="brand-wrap">
+                <img src="/admin/assets/imgs/theme/sandglass-high-resolution-logo-transparent.svg" class="logo" alt="Hourglass Dashboard">
+            </a>
+            <div>
+                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
+            </div>
+        </div>
+        <nav>
+            <ul class="menu-aside">
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/dashboard"> <i class="icon material-icons md-home"></i>
+                        <span class="text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/products"> <i class="icon material-icons md-shopping_bag"></i>
+                        <span class="text">Products</span>
+                    </a>
+                    <!-- <div class="submenu">
+                        <a href="page-products-list.html">Product List</a>
+                        <a href="page-products-grid.html">Product grid</a>
+                        <a href="page-products-grid-2.html">Product grid 2</a>
+                        <a href="page-categories.html">Categories</a>
+                    </div> -->
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/orders"> <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Orders</span>
+                    </a>
+                    <!-- <div class="submenu">
+                        <a href="page-orders-1.html">Order list 1</a>
+                        <a href="page-orders-2.html">Order list 2</a>
+                        <a href="page-orders-detail.html">Order detail</a>
+                        <a href="page-orders-tracking.html">Order tracking</a>
+                        <a href="page-invoice.html">Invoice</a>
+                    </div> -->
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/users"> <i class="icon material-icons md-public"></i>
+                        <span class="text">Users</span>
+                    </a>
+                    <!-- <div class="submenu">
+                        <a href="page-sellers-cards.html">Sellers cards</a>
+                        <a href="page-sellers-list.html">Sellers list</a>
+                        <a href="page-seller-detail.html">Seller profile</a>
+                    </div> -->
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/add_product"> <i class="icon material-icons md-add_box"></i>
+                        <span class="text">Add product</span>
+                    </a>
+                    <!-- <div class="submenu">
+                        <a href="page-form-product-1.html">Add product 1</a>
+                        <a href="page-form-product-2.html">Add product 2</a>
+                        <a href="page-form-product-3.html">Add product 3</a>
+                        <a href="page-form-product-4.html">Add product 4</a>
+                    </div> -->
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/categories"> <i class="icon material-icons md-apps"></i>
+                        <span class="text">Categories</span>
+                    </a>
+                    <!-- <div class="submenu">
+                        <a href="page-transactions-1.html">Transaction 1</a>
+                        <a href="page-transactions-2.html">Transaction 2</a>
+                        <a href="page-transactions-details.html">Transaction Details</a>
+                    </div> -->
+                </li>
+                <li class="menu-item active">
+                    <a class="menu-link" href="/admin/coupons"> <i class="icon material-icons md-payment"></i>
+                        <span class="text">Coupons</span>
+                    </a>
+                    <!-- <div class="submenu">
+                        <a href="page-account-login.html">User login</a>
+                        <a href="page-account-register.html">User registration</a>
+                        <a href="page-error-404.html">Error 404</a>
+                    </div> -->
+                </li>
+                <!-- <li class="menu-item">
+                    <a class="menu-link" href="/admin/reviews"> <i class="icon material-icons md-comment"></i>
+                        <span class="text">Reviews</span>
+                    </a>
+                </li> -->
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/offers"> <i class="icon material-icons md-local_offer"></i>
+                        <span class="text">Offers</span> </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" disabled href="/admin/statistics"> <i class="icon material-icons md-pie_chart"></i>
+                        <span class="text">Statistics</span>
+                    </a>
+                </li>
+            </ul>
+            <hr>
+            <!-- <ul class="menu-aside">
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="#"> <i class="icon material-icons md-settings"></i>
+                        <span class="text">Settings</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="page-settings-1.html">Setting sample 1</a>
+                        <a href="page-settings-2.html">Setting sample 2</a>
+                    </div>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="page-blank.html"> <i class="icon material-icons md-local_offer"></i>
+                        <span class="text"> Starter page </span>
+                    </a>
+                </li>
+            </ul> -->
+            <br>
+            <br>
+        </nav>
+    </aside>
+    <main class="main-wrap">
+        <header class="main-header navbar">
+            <div class="col-search">
+                
+            </div>
+            <div class="col-nav">
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
+                <ul class="nav">
+                    <!-- <li class="nav-item">
+                        <a class="nav-link btn-icon" href="#">
+                            <i class="material-icons md-notifications animation-shake"></i>
+                            <span class="badge rounded-pill">3</span>
+                        </a>
+                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/admin/logout" ><i class="material-icons md-exit_to_app"></i></a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </header>
+    
+        <section class="content-main">
+            <div class="content-header">
+                <h2 class="content-title">Add New Coupon</h2>
+            </div>
+    
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form action="/admin/save_coupon" method="POST" id="couponForm">
+                        <div class="mb-4">
+                            <label for="couponCode" class="form-label">Coupon Code</label>
+                            <input type="text" class="form-control" id="couponCode" name="code" placeholder="Enter Coupon Code" required>
+                            <div class="invalid-feedback">Please enter a valid coupon code (3-15 alphanumeric characters).</div>
+                            <% if(locals.message) { %>
+                                <div class="alert alert-danger" role="alert"><%= message%></div>
+                                <% } %>
+                        </div>
+    
+                        <div class="mb-4">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" placeholder="Enter Description" required></textarea>
+                            <div class="invalid-feedback">Description must be between 10 and 200 characters.</div>
+                        </div>
+    
+                        <div class="mb-4">
+                            <label for="discountPercentage" class="form-label">Discount Percentage</label>
+                            <input type="number" class="form-control" id="discountPercentage" name="discountPercentage" placeholder="Enter Discount Percentage" min="1" max="100" required>
+                            <div class="invalid-feedback">Discount percentage must be between 1% and 100%.</div>
+                        </div>
+    
+                        <div class="mb-4">
+                            <label for="minAmount" class="form-label">Minimum Amount</label>
+                            <input type="number" class="form-control" id="minAmount" name="minPurchaseAmount" placeholder="Enter Minimum Amount" min="1" required>
+                            <div class="invalid-feedback">Minimum amount must be greater than 0.</div>
+                        </div>
+    
+                        <div class="mb-4">
+                            <label for="limit" class="form-label">Limit</label>
+                            <input type="number" class="form-control" id="limit" name="quantityLimit" placeholder="Enter Limit" min="1" required>
+                            <div class="invalid-feedback">Limit must be a positive integer.</div>
+                        </div>
+    
+                        <div class="mb-4">
+                            <label for="expiresOn" class="form-label">Expires On</label>
+                            <input type="date" class="form-control" id="expiresOn" name="expiryDate" required>
+                            <div class="invalid-feedback">Please select a valid expiration date.</div>
+                        </div>
+    
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Add Coupon</button>
+                            <a href="/admin/coupons" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script>
+        // Custom validation for the form
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var form = document.getElementById('couponForm');
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            }, false);
+        })();
+    </script>
+    
+    <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/vendors/select2.min.js"></script>
+    <script src="assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script src="assets/js/main.js" type="text/javascript"></script>
+</body>
+
+</html>

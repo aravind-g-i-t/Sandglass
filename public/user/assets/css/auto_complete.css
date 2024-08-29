@@ -1,0 +1,52 @@
+
+        .autocomplete-box {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            max-height: 250px;
+            overflow-y: auto;
+            width: calc(100% - 20px); /* Adjust to fit within the input's width */
+            z-index: 1000;
+            padding: 10px;
+            top: 100%; /* Position it right below the input field */
+            left: 0;
+            margin-top: 5px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow for better visibility */
+        }
+
+
+        .autocomplete-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-photo {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            margin-right: 10px;
+            border-radius: 4px;
+        }
+
+        .autocomplete-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .autocomplete-name {
+            font-weight: bold;
+        }
+
+        .autocomplete-category {
+            font-size: 12px;
+            color: #777;
+        }
+
+    

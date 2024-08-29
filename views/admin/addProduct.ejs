@@ -1,0 +1,562 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Evara Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/admin/assets/imgs/theme/favicon.svg">
+    <!-- Template CSS -->
+
+    <link href="/admin/assets/css/main.css" rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/cropperjs/dist/cropper.css">
+
+
+
+    <!-- Toastify CSS -->
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"> -->
+
+    <style>
+        /* #image-preview {
+    width: 100px;
+    height: 100px;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#image-upload {
+    display: none;
+} */
+/* body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            font-size: 24px;
+        }
+        .form-control {
+            margin-bottom: 20px;
+        }
+        .image-preview {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .image-preview img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border: 1px solid #ccc;
+            padding: 5px;
+            border-radius: 5px;
+        }
+    */
+
+
+    .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 75%;
+            height: 75%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #preview-container img {
+            width: 100px;
+            height: 100px;
+            margin: 5px;
+        }
+    body {
+            font-family: Arial, sans-serif;
+            
+        }
+        h1 {
+            font-size: 24px;
+        }
+        .form-control {
+            margin-bottom: 20px;
+        }
+        /* .image-preview {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .image-preview img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border: 1px solid #ccc;
+            padding: 5px;
+            border-radius: 5px;
+        } */
+
+    </style>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.css" />
+    
+</head>
+
+<body>
+    <div class="screen-overlay"></div>
+    <aside class="navbar-aside" id="offcanvas_aside">
+        <div class="aside-top">
+            <a href="index.html" class="brand-wrap">
+                <img src="/admin/assets/imgs/theme/sandglass-high-resolution-logo-transparent.svg" class="logo" alt="Hourglass Dashboard">
+            </a>
+            <div>
+                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
+            </div>
+        </div>
+        <nav>
+            <ul class="menu-aside">
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/dashboard"> <i class="icon material-icons md-home"></i>
+                        <span class="text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/products"> <i class="icon material-icons md-shopping_bag"></i>
+                        <span class="text">Products</span>
+                    </a>
+                    <!-- <div class="submenu">
+                        <a href="page-products-list.html">Product List</a>
+                        <a href="page-products-grid.html">Product grid</a>
+                        <a href="page-products-grid-2.html">Product grid 2</a>
+                        <a href="page-categories.html">Categories</a>
+                    </div> -->
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/orders"> <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Orders</span>
+                    </a>
+                    <!-- <div class="submenu">
+                        <a href="page-orders-1.html">Order list 1</a>
+                        <a href="page-orders-2.html">Order list 2</a>
+                        <a href="page-orders-detail.html">Order detail</a>
+                        <a href="page-orders-tracking.html">Order tracking</a>
+                        <a href="page-invoice.html">Invoice</a>
+                    </div> -->
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/users"> <i class="icon material-icons md-public"></i>
+                        <span class="text">Users</span>
+                    </a>
+                    <!-- <div class="submenu">
+                        <a href="page-sellers-cards.html">Sellers cards</a>
+                        <a href="page-sellers-list.html">Sellers list</a>
+                        <a href="page-seller-detail.html">Seller profile</a>
+                    </div> -->
+                </li>
+                <li class="menu-item active">
+                    <a class="menu-link" href="/admin/add_product"> <i class="icon material-icons md-add_box"></i>
+                        <span class="text">Add product</span>
+                    </a>
+                    <!-- <div class="submenu">
+                        <a href="page-form-product-1.html">Add product 1</a>
+                        <a href="page-form-product-2.html">Add product 2</a>
+                        <a href="page-form-product-3.html">Add product 3</a>
+                        <a href="page-form-product-4.html">Add product 4</a>
+                    </div> -->
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/categories"> <i class="icon material-icons md-apps"></i>
+                        <span class="text">Categories</span>
+                    </a>
+                    <!-- <div class="submenu">
+                        <a href="page-transactions-1.html">Transaction 1</a>
+                        <a href="page-transactions-2.html">Transaction 2</a>
+                        <a href="page-transactions-details.html">Transaction Details</a>
+                    </div> -->
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/coupons"> <i class="icon material-icons md-payment"></i>
+                        <span class="text">Coupons</span>
+                    </a>
+                    <!-- <div class="submenu">
+                        <a href="page-account-login.html">User login</a>
+                        <a href="page-account-register.html">User registration</a>
+                        <a href="page-error-404.html">Error 404</a>
+                    </div> -->
+                </li>
+                <!-- <li class="menu-item">
+                    <a class="menu-link" href="/admin/reviews"> <i class="icon material-icons md-comment"></i>
+                        <span class="text">Reviews</span>
+                    </a>
+                </li> -->
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/offers"> <i class="icon material-icons md-local_offer"></i>
+                        <span class="text">Offers</span> </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" disabled href="/admin/statistics"> <i class="icon material-icons md-pie_chart"></i>
+                        <span class="text">Statistics</span>
+                    </a>
+                </li>
+            </ul>
+            <hr>
+            <!-- <ul class="menu-aside">
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="#"> <i class="icon material-icons md-settings"></i>
+                        <span class="text">Settings</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="page-settings-1.html">Setting sample 1</a>
+                        <a href="page-settings-2.html">Setting sample 2</a>
+                    </div>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="page-blank.html"> <i class="icon material-icons md-local_offer"></i>
+                        <span class="text"> Starter page </span>
+                    </a>
+                </li>
+            </ul> -->
+            <br>
+            <br>
+        </nav>
+    </aside>
+    <main class="main-wrap">
+        <header class="main-header navbar">
+            <div class="col-search">
+                <!-- <form class="searchform">
+                    <div class="input-group">
+                        <input list="search_terms" type="text" class="form-control" placeholder="Search">
+                        <button class="btn btn-light bg" type="button"> <i class="material-icons md-search"></i></button>
+                    </div>
+                    <datalist id="search_terms">
+                        <option value="Products">
+                        <option value="New orders">
+                        <option value="Apple iphone">
+                        <option value="Ahmed Hassan">
+                    </datalist>
+                </form> -->
+            </div>
+            <div class="col-nav">
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
+                <ul class="nav">
+                    <!-- <li class="nav-item">
+                        <a class="nav-link btn-icon" href="#">
+                            <i class="material-icons md-notifications animation-shake"></i>
+                            <span class="badge rounded-pill">3</span>
+                        </a>
+                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/admin/logout" ><i class="material-icons md-exit_to_app"></i></a>
+                    </li>
+                    <!-- <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false"><i class="material-icons md-public"></i></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
+                            <a class="dropdown-item text-brand" href="#"><img src="/admin/assets/imgs/theme/flag-us.png" alt="English">English</a>
+                            <a class="dropdown-item" href="#"><img src="/admin/assets/imgs/theme/flag-fr.png" alt="Français">Français</a>
+                            <a class="dropdown-item" href="#"><img src="/admin/assets/imgs/theme/flag-jp.png" alt="Français">日本語</a>
+                            <a class="dropdown-item" href="#"><img src="/admin/assets/imgs/theme/flag-cn.png" alt="Français">中国人</a>
+                        </div>
+                    </li>-->
+                    <!-- <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="/admin/assets/imgs/people/avatar2.jpg" alt="User"></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                            <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                        </div>
+                    </li>  -->
+                </ul>
+            </div>
+        </header>
+        <section class="content-main">
+            <div class="row">
+                <div class="col-9">
+                    <div class="content-header">
+                        <h2 class="content-title">Add New Product</h2>
+                    </div>
+                </div>
+                <% if(typeof message != "undefined"){ %>
+                    <h4 class="text-danger"><%= message %></h4>
+                <% } %>
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Basic</h4>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" enctype="multipart/form-data" id="uploadForm" onsubmit="return productValidate()">
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Product title</label>
+                                    <input type="text" placeholder="Type here" class="form-control" id="product_name" name="product_name">
+                                    <div id="error_Pname" class="text-danger"></div>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Full description</label>
+                                    <textarea placeholder="Type here" class="form-control" rows="4" name="product_description" id="product_description"></textarea>
+                                    <div id="error_PD" class="text-danger"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Regular price</label>
+                                            <div class="row gx-2">
+                                                <input placeholder="₹" type="text" class="form-control" name="product_price" id="product_Aprice">
+                                                <div id="error_Paprice" class="text-danger"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Sale price</label>
+                                            <input placeholder="₹" type="text" class="form-control" name="product_sale_price" id="product_Pprice">
+                                            <div id="error_Ppprice" class="text-danger"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Stock</label>
+                                            <input name="product_stock" type="number" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 mb-3">
+                                        <label class="form-label">Category</label>
+                                        <select name="product_category" class="form-select" id="product_category">
+                                            <% if(categories) { %>
+                                                <% categories.forEach((category) => { %>
+                                                    <option value="<%= category._id %>"><%= category.name %></option>
+                                                <% }) %>
+                                            <% } %>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="input-upload">
+                                    <input type="file" id="file-input-1" name="images" class="form-control additional-image" accept="image/*" multiple>
+                                    <div id="preview-container"></div>
+                                    <div id="imageError" class="text-danger"></div>
+                                </div>
+                                <div>
+                                    <button class="btn btn-md rounded font-sm hover-up" type="submit">Upload</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </section> <!-- content-main end// -->
+        
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
+    
+
+    <script src="/admin/assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/admin/assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/admin/assets/js/vendors/select2.min.js"></script>
+    <script src="/admin/assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/admin/assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script src="/admin/assets/js/main.js" type="text/javascript"></script>
+    <!-- Toastify JS -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script> -->
+
+ <!-- SweetAlert CSS and JS -->
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ <script src="https://unpkg.com/cropperjs/dist/cropper.js"></script>
+
+
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cropperTemplate = document.getElementById('cropperTemplate').innerHTML;
+            const previewContainer = document.getElementById('preview-container');
+            const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+            let currentFileInput = null;
+            let dataTransfer = new DataTransfer();
+            let isProcessing = false; // Flag to check if the form is being processed
+
+            function createCropperModal(imageSrc, file) {
+                if (isProcessing) return; // Prevent opening multiple cropper modals
+                
+                isProcessing = true; // Set flag to indicate processing
+                const modalWrapper = document.createElement('div');
+                modalWrapper.innerHTML = cropperTemplate;
+                const modal = modalWrapper.firstElementChild;
+                const imageToCrop = modal.querySelector('img');
+                const closeBtn = modal.querySelector('.close');
+                const cropButton = modal.querySelector('.cropButton');
+
+                imageToCrop.src = imageSrc;
+                document.body.appendChild(modal);
+
+                const cropper = new Cropper(imageToCrop, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                });
+
+                closeBtn.onclick = function() {
+                    modal.style.display = 'none';
+                    cropper.destroy();
+                    modal.remove();
+                    isProcessing = false; // Reset flag when modal is closed
+                };
+
+                cropButton.onclick = function() {
+                    const canvas = cropper.getCroppedCanvas();
+                    canvas.toBlob(function(blob) {
+                        const croppedFile = new File([blob], file.name, {
+                            type: 'image/jpeg',
+                            lastModified: Date.now()
+                        });
+
+                        // Add the cropped file to the DataTransfer object
+                        dataTransfer.items.add(croppedFile);
+                        currentFileInput.files = dataTransfer.files;
+
+                        const img = document.createElement('img');
+                        img.src = URL.createObjectURL(blob);
+                        previewContainer.appendChild(img);
+
+                        modal.style.display = 'none';
+                        cropper.destroy();
+                        modal.remove();
+                        isProcessing = false; // Reset flag after processing
+                    }, 'image/jpeg');
+                };
+
+                modal.style.display = 'block';
+            }
+
+            function handleFiles(input, files) {
+                currentFileInput = input;
+                Array.from(files).forEach(file => {
+                    if (file && validImageTypes.includes(file.type)) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            createCropperModal(e.target.result, file);
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Invalid file type. Only JPEG, JPG, and PNG files are allowed',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            }
+
+            window.validateImage = function(input) {
+                handleFiles(input, input.files);
+                return true; // Ensure the validateImage returns true for form submission validation
+            };
+
+            document.getElementById('file-input-1').addEventListener('change', function(e) {
+                validateImage(e.target);
+            });
+        });
+
+        function productValidate() {
+            const productName = document.getElementById('product_name').value.trim();
+            const productDescription = document.getElementById('product_description').value.trim();
+            const productAprice = document.getElementById('product_Aprice').value.trim();
+            const productPprice = document.getElementById('product_Pprice').value.trim();
+            const images = document.querySelector('.additional-image').files;
+
+            let isValid = true;
+
+            // Validate product name
+            if (productName === "") {
+                document.getElementById("error_Pname").innerHTML = "Please fill name";
+                isValid = false;
+            } else {
+                document.getElementById("error_Pname").innerHTML = "";
+            }
+
+            // Validate product description
+            if (productDescription === "") {
+                document.getElementById("error_PD").innerHTML = "Please fill the description";
+                isValid = false;
+            } else {
+                document.getElementById("error_PD").innerHTML = "";
+            }
+
+            // Validate actual price
+            if (productAprice === "") {
+                document.getElementById("error_Paprice").innerHTML = "Please fill the Regular price";
+                isValid = false;
+            } else if (isNaN(productAprice) || Number(productAprice) <= 0) {
+                document.getElementById("error_Paprice").innerHTML = "Please enter a valid Regular price";
+                isValid = false;
+            } else {
+                document.getElementById("error_Paprice").innerHTML = "";
+            }
+
+            // Validate promotional price
+            if (productPprice === "") {
+                document.getElementById("error_Ppprice").innerHTML = "Please fill the Promotion price";
+                isValid = false;
+            } else if (isNaN(productPprice) || Number(productPprice) <= 0) {
+                document.getElementById("error_Ppprice").innerHTML = "Please enter a valid Promotion price";
+                isValid = false;
+            } else {
+                document.getElementById("error_Ppprice").innerHTML = "";
+            }
+
+            // Validate images
+            if (!validateImage(document.getElementById('file-input-1'))) {
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+    </script>
+</body>
+
+</html>
