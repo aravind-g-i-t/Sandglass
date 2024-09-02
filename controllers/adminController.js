@@ -118,7 +118,8 @@ const loadDashboard = async (req, res) => {
             .populate('userId');
 
         // Calculate total revenue
-        const totalRevenue = orderData.reduce((acc, order) => {
+        const orders = await Order.find();
+        const totalRevenue = orders.reduce((acc, order) => {
             let orderTotal = parseFloat(order.payableAmount);
             if (order.returnedAmount) {
                 orderTotal -= parseFloat(order.returnedAmount);
@@ -149,7 +150,8 @@ const loadDashboard = async (req, res) => {
                 dateTo: toDate.toISOString().split('T')[0],
                 limit: parseInt(limit, 10),
                 graphData: JSON.stringify(graphData),
-                interval: interval
+                interval: interval,
+                totalOrders
             });
         }
     } catch (error) {

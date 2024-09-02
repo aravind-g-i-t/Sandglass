@@ -190,11 +190,11 @@ const selectItems = async(req, res) => {
     }
 };
 
-
 const addOfferProduct = async (req, res) => {
     const { offerId, productId } = req.body;
 
     try {
+        // Find the offer by offerId
         const offer = await Offer.findById(offerId);
         if (!offer) {
             return res.status(404).json({ error: 'Offer not found' });
@@ -203,18 +203,29 @@ const addOfferProduct = async (req, res) => {
         // Check if the product is already in the offer
         if (offer.product.includes(productId)) {
             return res.status(400).json({ error: 'Product already in offer' });
-        } else {
-            offer.product.push(productId);
-            await offer.save();
-            return res.status(200).json({ message: 'Product added to offer' });
         }
+
+        // Find other offers that include this product
+        const otherOffers = await Offer.find({ product: productId });
+
+        // Remove the product from other offers
+        for (let otherOffer of otherOffers) {
+            otherOffer.product = otherOffer.product.filter(p => p.toString() !== productId.toString());
+            await otherOffer.save();
+        }
+
+        // Add the product to the new offer
+        offer.product.push(productId);
+        await offer.save();
+
+        return res.status(200).json({ message: 'Product added to offer, and any existing offers were removed.' });
     } catch (error) {
         console.error('Error adding product to offer:', error);
         return res.status(500).json({ error: 'Internal server error' });
     }
 };
 
-const removeOfferProduct= async (req, res) => {
+const removeOfferProduct = async (req, res) => {
     const { offerId, productId } = req.body;
 
     try {
@@ -243,6 +254,7 @@ const addOfferCategory = async (req, res) => {
     const { offerId, categoryId } = req.body;
 
     try {
+        // Find the offer by offerId
         const offer = await Offer.findById(offerId);
         if (!offer) {
             return res.status(404).json({ error: 'Offer not found' });
@@ -251,16 +263,28 @@ const addOfferCategory = async (req, res) => {
         // Check if the category is already in the offer
         if (offer.category.includes(categoryId)) {
             return res.status(400).json({ error: 'Category already in offer' });
-        } else {
-            offer.category.push(categoryId);
-            await offer.save();
-            return res.status(200).json({ message: 'Category added to offer' });
         }
+
+        // Find other offers that include this category
+        const otherOffers = await Offer.find({ category: categoryId });
+
+        // Remove the category from other offers
+        for (let otherOffer of otherOffers) {
+            otherOffer.category = otherOffer.category.filter(c => c.toString() !== categoryId.toString());
+            await otherOffer.save();
+        }
+
+        // Add the category to the new offer
+        offer.category.push(categoryId);
+        await offer.save();
+
+        return res.status(200).json({ message: 'Category added to offer, and any existing offers were removed.' });
     } catch (error) {
         console.error('Error adding category to offer:', error);
         return res.status(500).json({ error: 'Internal server error' });
     }
 };
+
 
 const removeOfferCategory = async (req, res) => {
     const { offerId, categoryId } = req.body;

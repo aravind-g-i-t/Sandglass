@@ -8,7 +8,7 @@ const Address = require('../models/addressModel');
 const Wishlist = require('../models/wishlistModel');
 const Order = require('../models/orderModel');
 const Wallet = require('../models/walletModel');
-const Offer = require('../models/offerModel');
+// const Offer = require('../models/offerModel');
 // const { ResultWithContextImpl } = require('express-validator/lib/chain');
 
 // to load the signup page
@@ -377,7 +377,7 @@ const shop = async (req, res) => {
 
 
         // Fetch active categories
-        const activeCategories = await Category.find({ isActive: true }).select('_id');
+        const activeCategories = await Category.find({ isActive: true });
         const activeCategoryIds = activeCategories.map(category => category._id);
 
         // Update search query to include only products with active categories
@@ -418,6 +418,7 @@ const shop = async (req, res) => {
         const totalDocuments = await Product.countDocuments(searchQuery);
         const totalPages = Math.ceil(totalDocuments / limit);
         const categories = await Category.find({ isActive: true });
+        console.log('Category filter:', categoryFilter);
 
         res.render("user/shop", {
             products: productsWithFinalPrice,
@@ -826,8 +827,11 @@ const deleteAddress = async (req, res) => {
 const autoComplete = async(req, res) => {
     try {
         const query = req.query.query;
+        const activeCategories = await Category.find({ isActive: true });
+        const activeCategoryIds = activeCategories.map(category => category._id);
         const products = await Product.find({
             isActive: true,
+            category: { $in: activeCategoryIds },
             productName: new RegExp(query, "i")
         }).limit(3).populate('category');
 
@@ -840,6 +844,23 @@ const autoComplete = async(req, res) => {
     } catch (error) {
         console.log('Error in autoComplete', error);
 
+    }
+};
+
+const loadAbout = async (req, res) => {
+    try {
+        const userData = await User.findById(req.session.user);
+        res.render('user/about', { userData });
+    } catch (error) {
+        console.log('Error in autoComplete', error);
+    }
+};
+const loadContact = async (req, res) => {
+    try {
+        const userData = await User.findById(req.session.user);
+        res.render('user/contact', { userData });
+    } catch (error) {
+        console.log('Error in autoComplete', error);
     }
 };
 
@@ -868,5 +889,7 @@ module.exports = {
     deleteAddress,
     editAddress,
     setPassword,
-    autoComplete
+    autoComplete,
+    loadContact,
+    loadAbout
 };

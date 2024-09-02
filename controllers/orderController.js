@@ -6,7 +6,7 @@ const Address = require('../models/addressModel');
 const Cart = require('../models/cartModel');
 const Wallet = require('../models/walletModel');
 const Coupon = require('../models/couponModel');
-const fs = require('fs');
+// const fs = require('fs');
 const PDFDocument = require('pdfkit');
 
 const Razorpay = require('razorpay');
@@ -23,10 +23,9 @@ const RazorPayInstance = new Razorpay({
 const orderDetails = async(req, res) => {
     try {
         const orderId = req.query.orderId;
-        console.log('orderId:', orderId);
         const userData = await User.findById(req.session.user._id);
         const orderData = await Order.findOne({ orderId }).populate('userId').populate('products.productId');
-        console.log(orderData);
+
         let totalPrice = 0;
         let invoice;
         orderData.products.forEach(item => {
@@ -46,14 +45,19 @@ const orderDetails = async(req, res) => {
                 couponDiscount = coupon.discountPercentage;
             }
         }
-        console.log(address);
+        let walletApplicable;
+        const wallet = await Wallet.findOne({ userId: req.session.user._id });
+        if (wallet.walletBalance > orderData.payableAmount) {
+            walletApplicable = true;
+        }
         res.render('user/orderDetails', {
             userData,
             orderData,
             address,
             couponDiscount,
             totalPrice,
-            invoice
+            invoice,
+            walletApplicable
         });
     } catch (error) {
         console.log('Error in orderDetails', error);
@@ -514,6 +518,79 @@ const loadInvoice = async (req, res) => {
     }
 };
 
+const payByRazorpay = async (req, res) => {
+    try {
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
+        req.body.response;
+        const { paymentMethod, totalPrice, id } = req.body;
+        console.log(paymentMethod, totalPrice, id);
+
+        const body = `${razorpay_order_id}|${razorpay_payment_id}`;
+        const keySecret = process.env.RAZORPAY_KEY_SECRET; // Razorpay key secret from environment variables
+
+        // Generate the expected signature using HMAC SHA256
+        const expectedSignature = crypto
+            .createHmac("sha256", keySecret)
+            .update(body.toString())
+            .digest("hex");
+
+        // Compare the signatures
+        if (expectedSignature === razorpay_signature) {
+            console.log("Payment verified successfully");
+
+            if (paymentMethod && totalPrice) {
+                await Order.findOneAndUpdate({ orderId: id },
+                    { $set: {
+                        paymentMethod: 'Razorpay',
+                        paymentStatus: 'Success'
+                    } }
+                );
+            }
+
+
+            res.status(200)
+                .send({ success: true, message: "Payment done successfully" });
+        } else {
+            console.log("Payment verification failed");
+            res.status(400)
+                .send({ success: false, message: "Payment failed" });
+        }
+    } catch (error) {
+        console.error(`Error in payByRazorpay -- ${error}`);
+        return res.status(500).send({ success: false, message: "Internal Server Error" });
+    }
+};
+
+const payByWallet = async (req, res) =>{
+    try {
+        const { totalPrice, id } = req.body;
+        await Order.findOneAndUpdate({ orderId: id },
+            { $set: {
+                paymentMethod: 'Wallet',
+                paymentStatus: 'Success'
+            } }
+        );
+        await Wallet.findOneAndUpdate(
+            { userId: req.session.user._id },
+            {
+                $inc: { walletBalance: -totalPrice },
+                $push: {
+                    transactions: {
+                        type: 'Debit',
+                        amount: totalPrice,
+                        time: new Date()
+                    }
+                }
+            },
+            { new: true }
+        );
+        return res.status(200).json({ message: "Success" });
+    } catch (error) {
+        console.error(`Error in payByWallet -- ${error}`);
+        return res.status(500).send({ success: false, message: "Internal Server Error" });
+    }
+};
+
 module.exports = {
     orderDetails,
     placeOrder,
@@ -522,5 +599,7 @@ module.exports = {
     razorPayment,
     verifyPayment,
     generateInvoice,
-    loadInvoice
+    loadInvoice,
+    payByRazorpay,
+    payByWallet
 };

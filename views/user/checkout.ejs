@@ -911,29 +911,30 @@
                     </div>
         
                     <h4>Payment Options</h4>
-                    <%if(codApplicable){%>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="payment-method" id="cod" value="COD">
-                            <label class="form-check-label" for="cod">
-                                Cash on Delivery
-                            </label>
-                        </div>
-                    <%}%>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="payment-method" id="cod" value="COD" <% if (!codApplicable) { %>disabled<% } %>>
+                        <label class="form-check-label <% if (!codApplicable) { %>text-muted<% } %>" for="cod">
+                            Cash on Delivery
+                        </label>
+                    </div>
+
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="payment-method" id="razorpay" value="RazorPay">
                         <label class="form-check-label" for="razorpay">
                             Razorpay
                         </label>
                     </div>
-                    <%if(walletApplicable){%>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="payment-method" id="wallet" value="Wallet">
-                            <label class="form-check-label" for="wallet">
-                                Wallet
-                            </label>
-                        </div>
-                    <%}%>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="payment-method" id="wallet" value="Wallet" <% if (!walletApplicable) { %>disabled<% } %>>
+                        <label class="form-check-label <% if (!walletApplicable) { %>text-muted<% } %>" for="wallet">
+                            Wallet
+                        </label>
+                    </div>
+
                     <button class="btn btn-success my-3" onclick="placeOrder()">Place Order</button>
+
                 </div>
             </div>
         </div>

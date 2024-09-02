@@ -67,4 +67,10 @@ userRoute.post('/apply_coupon', auth.isLoggedIn, cartController.applyCoupon);
 userRoute.post('/remove_coupon', auth.isLoggedIn, cartController.removeCoupon);
 userRoute.get('/autocomplete', userController.autoComplete);
 userRoute.get('/invoice/:id', auth.isLoggedIn, orderController.generateInvoice);
+userRoute.patch('/pay-by-razorpay', auth.isLoggedIn, orderController.payByRazorpay);
+userRoute.patch('/pay-by-wallet', auth.isLoggedIn, orderController.payByWallet);
+userRoute.get('/about', userController.loadAbout);
+userRoute.get('/contact', userController.loadContact);
+
+
 module.exports = userRoute;

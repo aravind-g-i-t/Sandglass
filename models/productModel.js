@@ -77,12 +77,12 @@ productSchema.methods.getDisplayPrice = async function() {
 
     // Apply the product-specific offer if it exists
     if (productOffer) {
-        finalPrice -= finalPrice * (productOffer.discountPercentage / 100);
+        finalPrice = this.price - (this.price * (productOffer.discountPercentage / 100));
     }
 
     // Apply the category-wide offer if no product-specific offer is applied
     if (categoryOffer && !productOffer) {
-        finalPrice -= finalPrice * (categoryOffer.discountPercentage / 100);
+        finalPrice = this.price - (this.price * (categoryOffer.discountPercentage / 100));
     }
 
     return finalPrice;

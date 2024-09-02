@@ -37,6 +37,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+        
     </style>
 </head>
 
@@ -856,8 +857,8 @@
                                         <%})%>
                                         
                                         <tr>
-                                            <td colspan="4">
-                                                <article class="float-end">
+                                            <td colspan="5">
+                                                <article >
                                                     <dl class="dlist">
                                                         <dt>Subtotal:</dt>
                                                         <dd>₹ <%=totalPrice.toFixed(2)%></dd>
@@ -882,6 +883,34 @@
                                                             <span class="badge rounded-pill alert-success text-success"><%=orderData.paymentStatus%></span>
                                                         </dd>
                                                     </dl>
+                                                    <br>
+                                                    <%if(orderData.paymentStatus==='Pending'){%>
+                                                    <dl>
+                                                        <button type="button" class="button-pay-now" id="payNowButton" onclick="showPaymentOptions()">Pay now</button>
+                                                    </dl>
+                                                    
+                                                    <!-- Payment Options Container -->
+                                                    <div id="paymentOptions" style="display: none;">
+                                                        <h4>Payment Options</h4>
+                                                        
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="payment-method" id="razorpay" value="RazorPay">
+                                                            <label class="form-check-label" for="razorpay">
+                                                                Razorpay
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="payment-method" id="wallet" value="Wallet" <% if (!walletApplicable) { %>disabled<% } %>>
+                                                            <label class="form-check-label <% if (!walletApplicable) { %>text-muted<% } %>" for="wallet">
+                                                                Wallet
+                                                            </label>
+                                                        </div>
+                                                        <button class="btn btn-success my-3" onclick="payNow('<%=orderData.orderId%>','<%=orderData.payableAmount%>')">Proceed to pay</button>
+                                                        <button class="btn btn-secondary my-3" onclick="cancelPayment()">Cancel</button>
+                                                    </div>
+                                                    <%}%>
+                                                    
+
                                                 </article>
                                             </td>
                                         </tr>
@@ -1039,6 +1068,192 @@
             </div>
         </div>
     </div> -->
+    <script>
+        function showPaymentOptions() {
+            // Hide the "Pay now" button
+            document.getElementById('payNowButton').style.display = 'none';
+            
+            // Show the payment options
+            document.getElementById('paymentOptions').style.display = 'block';
+        }
+        
+        function cancelPayment() {
+            // Show the "Pay now" button
+            document.getElementById('payNowButton').style.display = 'block';
+        
+            // Hide the payment options
+            document.getElementById('paymentOptions').style.display = 'none';
+        }
+
+        async function payNow(id, totalPrice){
+            console.log('payNow working');
+            
+            const selectedPaymentMethod = document.querySelector('input[name="payment-method"]:checked');
+            if (!selectedPaymentMethod) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select a payment method.'
+                });
+                return;
+            }
+            const paymentMethod = selectedPaymentMethod.value;
+            console.log('Payment method :',paymentMethod);
+            if (paymentMethod === "Wallet") {
+                console.log('Fetch paybywallet');
+                
+                fetch('/pay-by-wallet', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id,
+                        totalPrice
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === "Success") {
+                        console.log('paybywallet success');
+                        
+                        Swal.fire({
+                            title: 'Payment Successful',
+                            text: 'Your payment has been done successfully!',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(result => {
+                            if (result.isConfirmed) {
+                                window.location.href = `/order_details?orderId=${id}`; // Replace '/' with your home page URL
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Payment failed',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        }).then(result => {
+                            if (result.isConfirmed) {
+                                window.location.href = `/order_details?orderId=${id}`; // Redirect to cart page
+                            }
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        title: 'Order not placed',
+                        text: 'An unexpected error occurred. Please try again later.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.href = `/order_details?orderId=${id}`; // Redirect to cart page
+                    });
+                });
+            } else {
+                try {
+                    const orderId = await createRazorpayOrder(totalPrice);
+                    if (orderId) {
+                        console.log('orderId is there')
+                        handleRazorpayNow(orderId, totalPrice,id);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        title: 'Order not placed',
+                        text: 'An unexpected error occurred. Please try again later.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.href = `/order_details?orderId=${id}`; // Redirect to cart page
+                    });
+                }
+            }
+        }
+
+        async function createRazorpayOrder(totalPrice) {
+            const settings = {
+                url: "/payment/razorpay",
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: JSON.stringify({
+                    amount: totalPrice * 100 // Convert to paisa
+                }),
+            };
+
+            const response = await $.ajax(settings);
+            return response.orderId;
+        }
+
+        function handleRazorpayNow(orderId, totalPrice, id) {
+            console.log('handleRazorpayNOw:',orderId,totalPrice,id);
+            
+            const options = {
+                key: "rzp_test_7DylGE19pXY4Lf", // Replace with your Razorpay Key ID
+                amount: totalPrice * 100, // Amount in paisa
+                currency: "INR",
+                name: "SANDGLASS",
+                description: "Buy watches",
+                image: "/user/assets/imgs/theme/sandglass-high-resolution-logo-transparent.svg",
+                order_id: orderId,
+                handler: function (response) {
+                    payByRazorpay(response, totalPrice,id);
+                },
+                theme: {
+                    color: "#000"
+                }
+            };
+
+            const rzp1 = new Razorpay(options);
+            rzp1.on('payment.failed', function (response) {
+                handlePaymentFailure(response, totalPrice);
+            });
+
+            rzp1.open();
+        }
+
+        function payByRazorpay(response, totalPrice, id) {
+            const verifySettings = {
+                url: "/pay-by-razorpay",
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: JSON.stringify({
+                    response,
+                    paymentMethod: 'Razorpay',
+                    totalPrice,
+                    id
+                }),
+            };
+
+            $.ajax(verifySettings)
+                .done(function (verificationResponse) {
+                    Swal.fire({
+                        title: "Success",
+                        text: "Payment successful",
+                        icon: "success"
+                    }).then(() => {
+                        window.location.href = `/order_details?orderId=${id}`;
+                    });
+                })
+                .fail(function (error) {
+                    console.error('Payment verification failed:', error);
+                    Swal.fire({
+                        title: 'Payment Verification Failed',
+                        text: 'Your payment was not verified. Please try again.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.href = `/order_details?orderId=${id}`; // Redirect to cart page
+                    });
+                });
+        }
+    </script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <!-- Vendor JS-->
