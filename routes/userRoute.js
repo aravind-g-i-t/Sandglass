@@ -71,6 +71,9 @@ userRoute.patch('/pay-by-razorpay', auth.isLoggedIn, orderController.payByRazorp
 userRoute.patch('/pay-by-wallet', auth.isLoggedIn, orderController.payByWallet);
 userRoute.get('/about', userController.loadAbout);
 userRoute.get('/contact', userController.loadContact);
+userRoute.get('/wallet-transactions', userController.getWalletTransactions);
+
+
 
 
 module.exports = userRoute;

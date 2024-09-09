@@ -550,6 +550,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             const ctx = document.getElementById('turnoverChart').getContext('2d');
             const graphData = JSON.parse('<%- graphData %>');
+            console.log(graphData);
+            
             const interval = '<%- interval %>';
 
             new Chart(ctx, {

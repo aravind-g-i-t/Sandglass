@@ -394,13 +394,16 @@
                                     <div class="col-sm-6 mb-3">
                                         <label class="form-label">Category</label>
                                         <select name="product_category" class="form-select" id="product_category">
+                                            <option value="">Select a category</option> <!-- Default empty option -->
                                             <% if(categories) { %>
                                                 <% categories.forEach((category) => { %>
                                                     <option value="<%= category._id %>"><%= category.name %></option>
                                                 <% }) %>
                                             <% } %>
                                         </select>
+                                        <div id="error_Pcategory" class="text-danger"></div> <!-- Error message for category -->
                                     </div>
+                                    
                                 </div>
                                 <div class="input-upload">
                                     <input type="file" id="file-input-1" name="images" class="form-control additional-image" accept="image/*" multiple>
@@ -456,106 +459,107 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-    const cropperTemplate = document.getElementById('cropperTemplate').innerHTML;
-    const previewContainer = document.getElementById('preview-container');
-    const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-    let currentFileInput = null;
-    let dataTransfer = new DataTransfer();
-    let isProcessing = false; // Flag to check if the form is being processed
-    let filesToProcess = []; // Array to hold files to be processed
+            const cropperTemplate = document.getElementById('cropperTemplate').innerHTML;
+            const previewContainer = document.getElementById('preview-container');
+            const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+            let currentFileInput = null;
+            let dataTransfer = new DataTransfer();
+            let isProcessing = false; // Flag to check if the form is being processed
+            let filesToProcess = []; // Array to hold files to be processed
 
-    function createCropperModal(imageSrc, file) {
-        if (isProcessing) return; // Prevent opening multiple cropper modals
+            function createCropperModal(imageSrc, file) {
+                if (isProcessing) return; // Prevent opening multiple cropper modals
 
-        isProcessing = true; // Set flag to indicate processing
-        const modalWrapper = document.createElement('div');
-        modalWrapper.innerHTML = cropperTemplate;
-        const modal = modalWrapper.firstElementChild;
-        const imageToCrop = modal.querySelector('img');
-        const closeBtn = modal.querySelector('.close');
-        const cropButton = modal.querySelector('.cropButton');
+                isProcessing = true; // Set flag to indicate processing
+                const modalWrapper = document.createElement('div');
+                modalWrapper.innerHTML = cropperTemplate;
+                const modal = modalWrapper.firstElementChild;
+                const imageToCrop = modal.querySelector('img');
+                const closeBtn = modal.querySelector('.close');
+                const cropButton = modal.querySelector('.cropButton');
 
-        imageToCrop.src = imageSrc;
-        document.body.appendChild(modal);
+                imageToCrop.src = imageSrc;
+                document.body.appendChild(modal);
 
-        const cropper = new Cropper(imageToCrop, {
-            aspectRatio: 1,
-            viewMode: 1,
-        });
-
-        closeBtn.onclick = function() {
-            modal.style.display = 'none';
-            cropper.destroy();
-            modal.remove();
-            isProcessing = false; // Reset flag when modal is closed
-        };
-
-        cropButton.onclick = function() {
-            const canvas = cropper.getCroppedCanvas();
-            canvas.toBlob(function(blob) {
-                const croppedFile = new File([blob], file.name, {
-                    type: 'image/jpeg',
-                    lastModified: Date.now()
+                const cropper = new Cropper(imageToCrop, {
+                    aspectRatio: 1,
+                    viewMode: 1,
                 });
 
-                // Add the cropped file to the DataTransfer object
-                dataTransfer.items.add(croppedFile);
-                currentFileInput.files = dataTransfer.files;
-
-                const img = document.createElement('img');
-                img.src = URL.createObjectURL(blob);
-                previewContainer.appendChild(img);
-
-                modal.style.display = 'none';
-                cropper.destroy();
-                modal.remove();
-                isProcessing = false; // Reset flag after processing
-
-                // Process the next file in the queue
-                processNextFile();
-            }, 'image/jpeg');
-        };
-
-        modal.style.display = 'flex'; // Flex display to center modal
-    }
-
-
-    function handleFiles(input, files) {
-        currentFileInput = input;
-        filesToProcess = Array.from(files); // Store files in an array to be processed
-        processNextFile(); // Start processing the first file
-    }
-
-    function processNextFile() {
-        if (filesToProcess.length > 0) {
-            const file = filesToProcess.shift(); // Get the first file in the array
-            if (file && validImageTypes.includes(file.type)) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    createCropperModal(e.target.result, file);
+                closeBtn.onclick = function() {
+                    modal.style.display = 'none';
+                    cropper.destroy();
+                    modal.remove();
+                    isProcessing = false; // Reset flag when modal is closed
                 };
-                reader.readAsDataURL(file);
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Invalid file type. Only JPEG, JPG, and PNG files are allowed',
-                    confirmButtonText: 'OK'
-                });
-                processNextFile(); // Continue processing next file if invalid file type
+
+                cropButton.onclick = function() {
+                    const canvas = cropper.getCroppedCanvas();
+                    canvas.toBlob(function(blob) {
+                        const croppedFile = new File([blob], file.name, {
+                            type: 'image/jpeg',
+                            lastModified: Date.now()
+                        });
+
+                        // Add the cropped file to the DataTransfer object
+                        dataTransfer.items.add(croppedFile);
+                        currentFileInput.files = dataTransfer.files;
+
+                        const img = document.createElement('img');
+                        img.src = URL.createObjectURL(blob);
+                        previewContainer.appendChild(img);
+
+                        modal.style.display = 'none';
+                        cropper.destroy();
+                        modal.remove();
+                        isProcessing = false; // Reset flag after processing
+
+                        // Process the next file in the queue
+                        processNextFile();
+                    }, 'image/jpeg');
+                };
+
+                modal.style.display = 'flex'; // Flex display to center modal
             }
-        }
-    }
 
-    window.validateImage = function(input) {
-        handleFiles(input, input.files);
-        return true; // Ensure the validateImage returns true for form submission validation
-    };
 
-    document.getElementById('file-input-1').addEventListener('change', function(e) {
-        validateImage(e.target);
-    });
-});
+            function handleFiles(input, files) {
+                currentFileInput = input;
+                filesToProcess = Array.from(files); // Store files in an array to be processed
+                processNextFile(); // Start processing the first file
+            }
+
+            function processNextFile() {
+                if (filesToProcess.length > 0) {
+                    const file = filesToProcess.shift(); // Get the first file in the array
+                    if (file && validImageTypes.includes(file.type)) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            createCropperModal(e.target.result, file);
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Invalid file type. Only JPEG, JPG, and PNG files are allowed',
+                            confirmButtonText: 'OK'
+                        });
+                        processNextFile(); // Continue processing next file if invalid file type
+                    }
+                }
+            }
+
+            window.validateImage = function(input) {
+                handleFiles(input, input.files);
+                return true; // Ensure the validateImage returns true for form submission validation
+            };
+
+            document.getElementById('file-input-1').addEventListener('change', function(e) {
+                validateImage(e.target);  // This will trigger the cropping process when the image is selected
+            });
+
+        });
 
 
         function productValidate() {
@@ -563,7 +567,7 @@
             const productDescription = document.getElementById('product_description').value.trim();
             const productAprice = document.getElementById('product_Aprice').value.trim();
             const productPprice = document.getElementById('product_Pprice').value.trim();
-            const images = document.querySelector('.additional-image').files;
+            const productCategory = document.getElementById('product_category').value;
 
             let isValid = true;
 
@@ -605,13 +609,18 @@
                 document.getElementById("error_Ppprice").innerHTML = "";
             }
 
-            // Validate images
-            if (!validateImage(document.getElementById('file-input-1'))) {
+            // Validate category selection
+            if (productCategory === "") {
+                document.getElementById("error_Pcategory").innerHTML = "Please select a category";
                 isValid = false;
+            } else {
+                document.getElementById("error_Pcategory").innerHTML = "";
             }
 
             return isValid;
         }
+
+
 
     </script>
 </body>

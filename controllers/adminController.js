@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 /* eslint-disable object-shorthand */
 const hashing = require('../helpers/passwordHash');
 const Admin = require('../models/adminModel');
@@ -14,65 +15,41 @@ const moment = require('moment');
 
 
 
-const loadLogin = async(req, res) => {
+const loadLogin = async (req, res) => {
     try {
         res.render('admin/login');
     } catch (error) {
-        console.log(error.message);
+
+        res.status(500).json({
+            success: false,
+            message: 'Failed to load login page',
+            error: error.message
+        });
     }
 };
 
-const adminLogin = async(req, res) => {
+const adminLogin = async (req, res) => {
     try {
         let { adminId, adminPassword } = req.body;
         adminId = adminId.trim();
+
         const adminData = await Admin.findOne({ adminId });
-        console.log(adminData);
         if (adminData) {
             const securePassword = await hashing.comparePassword(adminPassword, adminData.adminPassword);
             if (securePassword) {
                 req.session.admin = adminData;
-                res.redirect('/admin/dashboard');
+                return res.redirect('/admin/dashboard');
             } else {
-                res.render('admin/login', { message: 'Incorrect credentials' });
+                return res.render('admin/login', { message: 'Incorrect credentials' });
             }
         } else {
-            res.render('admin/login', { message: 'Incorrect credentials' });
+            return res.render('admin/login', { message: 'Incorrect credentials' });
         }
-
-    } catch (error) {
-        console.log(error.message);
+    } catch {
+        return res.status(500).render('admin/login', { message: 'An error occurred. Please try again.' });
     }
-
-    // const admin = {
-    //     username: "Admin",
-    //     password: "Admin@123",
-    //   };
-    //   let { adminId, adminPassword } = req.body;
-    //   console.log(adminId + " -- " + adminPassword);
-    //   if (admin.username === adminId) {
-    //     console.log("usernamatch match");
-    //     if (admin.password === adminPassword) {
-    //       console.log("password match");
-    //       const hash = await hashing.hashPassword(adminPassword);
-    //       const adminData = await Admin.create({
-    //         adminId: adminId,
-    //         adminPassword: hash,
-    //       });
-    //       const adminsave = await adminData.save();
-    //       if (adminsave) {
-    //         console.log("saved");
-    //         res.redirect("/admin/dashboard");
-    //       } else {
-    //         console.log("not savedd");
-    //       }
-    //     } else {
-    //       console.log("password dosend match");
-    //     }
-    //   } else {
-    //     console.log("username doesent match");
-    //   }
 };
+
 
 
 const loadDashboard = async (req, res) => {
@@ -82,7 +59,16 @@ const loadDashboard = async (req, res) => {
 
         // Convert query params to Date objects for filtering
         const fromDate = dateFrom ? new Date(dateFrom) : new Date(new Date().setFullYear(new Date().getFullYear() - 1));
-        const toDate = dateTo ? new Date(dateTo) : new Date();
+
+        // Set the end of the day for `toDate` to include orders created later in the day
+        let toDate;
+        if (dateTo) {
+            toDate = new Date(dateTo);
+            toDate.setHours(23, 59, 59, 999); // Ensure `toDate` is at 23:59:59 for the selected day
+        } else {
+            toDate = new Date();
+            toDate.setHours(23, 59, 59, 999); // Ensure today's `toDate` is at 23:59:59
+        }
 
         // Set graph end date to the later of toDate or today, and start date 6 units before
         const graphEndDate = new Date(Math.max(toDate, new Date()));
@@ -103,27 +89,26 @@ const loadDashboard = async (req, res) => {
 
         // Calculate total number of orders for pagination
         const totalOrders = await Order.countDocuments({
-            orderDate: { $gte: fromDate, $lte: toDate }
+            orderDate: { $gte: fromDate, $lte: toDate } // Use adjusted toDate
         });
 
         // Fetch all orders within the date range for graph data
         const allOrders = await Order.find({
             orderDate: { $gte: graphStartDate, $lte: graphEndDate }
         });
+
         // Fetch paginated order data
         const orderData = await Order.find({
-            orderDate: { $gte: fromDate, $lte: toDate }
+            orderDate: { $gte: fromDate, $lte: toDate } // Use adjusted toDate
         }).skip((page - 1) * limit)
             .limit(parseInt(limit, 10))
-            .populate('userId');
+            .populate('userId')
+            .sort({ orderDate: -1 });
 
         // Calculate total revenue
         const orders = await Order.find();
         const totalRevenue = orders.reduce((acc, order) => {
-            let orderTotal = parseFloat(order.payableAmount);
-            if (order.returnedAmount) {
-                orderTotal -= parseFloat(order.returnedAmount);
-            }
+            const orderTotal = parseFloat(order.payableAmount);
             return acc + orderTotal;
         }, 0);
 
@@ -147,25 +132,28 @@ const loadDashboard = async (req, res) => {
                 currentPage: parseInt(page, 10),
                 totalPages: Math.ceil(totalOrders / limit),
                 dateFrom: fromDate.toISOString().split('T')[0],
-                dateTo: toDate.toISOString().split('T')[0],
+                dateTo: toDate.toISOString().split('T')[0], // Use adjusted toDate
                 limit: parseInt(limit, 10),
                 graphData: JSON.stringify(graphData),
                 interval: interval,
                 totalOrders
             });
         }
-    } catch (error) {
-        console.log(error.message);
+    } catch {
         res.status(500).send('An error occurred while loading the dashboard');
     }
 };
 
+
+// eslint-disable-next-line max-params
 function processGraphData(orders, interval, startDate, endDate) {
     const graphData = {};
 
     // Initialize graphData with all 7 points
+    // eslint-disable-next-line no-plusplus
     for (let i = 0; i < 7; i++) {
         const date = new Date(endDate);
+        // eslint-disable-next-line default-case
         switch (interval) {
             case 'day':
                 date.setDate(date.getDate() - i);
@@ -185,11 +173,9 @@ function processGraphData(orders, interval, startDate, endDate) {
         const date = new Date(order.orderDate);
         const key = formatDate(date, interval);
 
+        // eslint-disable-next-line no-prototype-builtins
         if (graphData.hasOwnProperty(key)) {
-            let turnover = parseFloat(order.payableAmount);
-            if (order.returnedAmount) {
-                turnover -= parseFloat(order.returnedAmount);
-            }
+            const turnover = parseFloat(order.payableAmount);
             graphData[key] += turnover;
         }
     });
@@ -199,7 +185,9 @@ function processGraphData(orders, interval, startDate, endDate) {
         .map(([date, turnover]) => ({ date, turnover }));
 }
 
+// eslint-disable-next-line consistent-return
 function formatDate(date, interval) {
+    // eslint-disable-next-line default-case
     switch (interval) {
         case 'day':
             return date.toISOString().split('T')[0];
@@ -215,19 +203,20 @@ function formatDate(date, interval) {
 
 const adminLogout = async (req, res) => {
     try {
+
         req.session.admin = null;
         res.redirect('/admin');
     } catch (error) {
-        console.log(error.message);
+        res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
+
 
 const loadUsers = async(req, res) => {
     try {
         let query = {};
         if (req.query.searchUser) {
             const searchQuery = req.query.searchUser;
-            console.log(searchQuery);
             query = { username: new RegExp(searchQuery, 'i') };
         }
         const page = parseInt(req.query.page, 10) || 1;
@@ -239,37 +228,11 @@ const loadUsers = async(req, res) => {
         res.render('admin/users', { userData, totalPages, page });
 
     } catch (error) {
-        console.log(error.message);
+        res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
-// const blockUser=async(req,res)=>{
-//     try {
-//         const id=req.query.id;
-//         req.session.temp=req.session.user;
-//         req.session.user.destroy=false;
-//         await User.findByIdAndUpdate(id,{
-//             $set:{isActive:false}
-//         });
-//         res.redirect('/admin/users')
-//     } catch (error) {
-//         console.log(error.message);
-//     }
-// }
 
-
-// const unblockUser=async(req,res)=>{
-//     try {
-//         const id=req.query.id;
-//         req.session.temp=req.session.user;
-//         const userData=await User.findByIdAndUpdate(id,{
-//             $set:{isActive:false}
-//         });
-//         res.redirect('/admin/users')
-//     } catch (error) {
-//         console.log(error.message);
-//     }
-// }
 
 const userStatusUpdate = async(req, res) => {
     try {
@@ -290,44 +253,33 @@ const userStatusUpdate = async(req, res) => {
         res.redirect('/admin/users');
 
     } catch (error) {
-        console.log(error.message);
+        res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
-// const loadProducts=async(req,res)=>{
-//     try {
-//         res.render('admin/products')
-//     } catch (error) {
-//         console.log(error.message);
-//     }
-// }
+
 const orderList = async (req, res) => {
     try {
         let query = {};
 
         if (req.query.searchId) {
             const searchQuery = req.query.searchId.trim(); // Trim the search query to remove leading/trailing whitespace and tab characters
-            console.log("Search Query:", searchQuery);
 
             if (searchQuery !== "") {
                 query = { orderId: searchQuery }; // Ensure you use the correct field name `orderId`
             }
         }
 
-        console.log("Query:", query);
 
         const page = parseInt(req.query.page, 10) || 1;
-        console.log("Page:", page);
 
         const limit = 6;
         const startIndex = (page - 1) * limit;
 
         const orderData = await Order.find(query).populate('userId').sort({ orderDate: -1 }).skip(startIndex).limit(limit);
-        console.log("Number of orders:", orderData.length);
 
         const totalDocuments = await Order.countDocuments(query);
         const totalPages = Math.ceil(totalDocuments / limit);
-        console.log("Total pages:", totalPages);
 
         res.render('admin/orders', {
             orderData,
@@ -335,7 +287,7 @@ const orderList = async (req, res) => {
             totalPages
         });
     } catch (error) {
-        console.log("Error in orderList:", error);
+        res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -346,7 +298,6 @@ const orderDetails = async(req, res) => {
         const orderId = req.query.orderId;
 
         const orderData = await Order.findOne({ orderId: orderId }).populate('userId').populate('products.productId');
-        console.log(orderData);
         let totalPrice = 0;
         let invoice;
         orderData.products.forEach(item => {
@@ -375,7 +326,7 @@ const orderDetails = async(req, res) => {
             invoice
         });
     } catch (error) {
-        console.log('Error in orderDetails:', error);
+        res.status(500).send(`An error occurred: ${error.message}`);
     }
 
 };
@@ -460,8 +411,7 @@ const updateOrderStatus = async (req, res) => {
         return res.json({ success: true, order: updatedOrder });
 
     } catch (error) {
-        console.log('Error in updateOrderStatus', error);
-        return res.status(500).json({ success: false, message: 'Server error' });
+        return res.status(500).json({ success: false, message: `${error.message}` });
     }
 };
 
@@ -472,7 +422,8 @@ const coupons = async(req, res) => {
 
         const coupons = await Coupon.find({})
             .limit(limit)
-            .skip((page - 1) * limit);
+            .skip((page - 1) * limit)
+            .sort({ createdAt: -1 });
 
         const totalCoupons = await Coupon.countDocuments();
         const totalPages = Math.ceil(totalCoupons / limit);
@@ -483,8 +434,7 @@ const coupons = async(req, res) => {
             currentPage: page
         });
     } catch (error) {
-        console.log('Error in coupons', error);
-        return res.status(500).json({ success: false, message: 'Server error' });
+        return res.status(500).json({ success: false, message: `${error.message}` });
     }
 };
 
@@ -492,8 +442,7 @@ const addCoupon = async(req, res) => {
     try {
         return res.render('admin/add_coupon');
     } catch (error) {
-        console.log('Error in addCoupon', error);
-        return res.status(500).json({ success: false, message: 'Server error' });
+        return res.status(500).json({ success: false, message: `${error.message}` });
     }
 };
 
@@ -506,8 +455,7 @@ const editCoupon = async(req, res) => {
 
         return res.render('admin/edit_coupon', { coupon });
     } catch (error) {
-        console.log('Error in editCoupon', error);
-        return res.status(500).json({ success: false, message: 'Server error' });
+        return res.status(500).json({ success: false, message: `${error.message}` });
     }
 };
 
@@ -517,7 +465,7 @@ const updateCoupon = async(req, res) => {
         const couponExists = await Coupon.findOne({ code: code, _id: { $ne: req.params.id } });
         if (couponExists) {
             const coupon = await Coupon.findById(req.params.id);
-            res.render(`admin/edit_coupon`, { coupon, message: "Code already exists" });
+            return res.render(`admin/edit_coupon`, { coupon, message: "Code already exists" });
         } else {
             await Coupon.findByIdAndUpdate(req.params.id, {
                 code,
@@ -532,8 +480,7 @@ const updateCoupon = async(req, res) => {
 
 
     } catch (error) {
-        console.log('Error in updateCoupon', error);
-        return res.status(500).json({ success: false, message: 'Server error' });
+        return res.status(500).json({ success: false, message: `${error.message}` });
     }
 };
 
@@ -547,7 +494,7 @@ const saveCoupon = async(req, res) => {
         }
         const couponExists = await Coupon.findOne({ code: code });
         if (couponExists) {
-            res.render('admin/add_coupon', { message: "Code already exists" });
+            return res.render('admin/add_coupon', { message: "Code already exists" });
         } else {
             // Create a new coupon object
             const newCoupon = new Coupon({
@@ -566,8 +513,7 @@ const saveCoupon = async(req, res) => {
             return res.status(201).redirect('/admin/coupons');
         }
     } catch (error) {
-        console.log('Error in saveCoupon', error);
-        return res.status(500).json({ success: false, message: 'Server error' });
+        return res.status(500).json({ success: false, message: `${error.message}` });
     }
 };
 
@@ -576,17 +522,17 @@ const updateCouponStatus = async(req, res) => {
         const { isActive } = req.body;
         const coupon = await Coupon.findByIdAndUpdate(req.params.id, { isActive }, { new: true });
         if (coupon) {
-            res.json({ success: true });
+            return res.json({ success: true });
         } else {
-            res.json({ success: false });
+            return res.json({ success: false });
         }
     } catch (error) {
-        console.log('Error in updateCouponStatus', error);
-
+        return res.status(500).json({ success: false, message: `${error.message}` });
     }
 };
 
 
+// eslint-disable-next-line consistent-return
 const generateReport = async (req, res) => {
     try {
         const { dateFrom, dateTo, format } = req.query;
@@ -610,11 +556,10 @@ const generateReport = async (req, res) => {
         } else if (format === 'excel') {
             await generateExcelReport(res, orders, { totalSales, averageOrderValue, numberOfOrders, fromDate, toDate });
         } else {
-            res.status(400).send('Invalid format. Supported formats are "pdf" and "excel".');
+            return res.status(400).send('Invalid format. Supported formats are "pdf" and "excel".');
         }
     } catch (error) {
-        console.error('Error generating report:', error);
-        res.status(500).send('An error occurred while generating the report. Please try again later.');
+        return res.status(500).json({ success: false, message: `${error.message}` });
     }
 };
 
@@ -696,6 +641,7 @@ const generatePDFReport = async (res, orders, summary) => {
 
     // Footer
     const pageCount = doc.bufferedPageRange().count;
+    // eslint-disable-next-line no-plusplus
     for (let i = 0; i < pageCount; i++) {
         doc.switchToPage(i);
         doc.fontSize(10).text(

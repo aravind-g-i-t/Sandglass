@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 // const { errorMonitor } = require('nodemailer/lib/xoauth2');
 const Cart = require('../models/cartModel');
 const Product = require('../models/productModel');
@@ -34,7 +35,7 @@ const loadCart = async(req, res) => {
             totalPrice
         });
     } catch (error) {
-        console.log('Error in cart', error);
+        res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -54,20 +55,16 @@ const loadCart = async(req, res) => {
 const addToCart = async (req, res) => {
     try {
         const productId = req.body.productId;
-        console.log('Product id:', productId);
         const productData = await Product.findById(productId);
         if (!productData) {
-            console.log('productData not found');
             return res.status(404).json({ success: false, message: "Product not found" });
         }
 
         // Calculate the final price using getDisplayPrice
         const finalPrice = await productData.getDisplayPrice();
 
-        console.log(req.session.user._id);
         const userData = await User.findById(req.session.user._id);
         if (!userData) {
-            console.log('userData not found');
             return res.status(404).json({ success: false, message: "User not found" });
         }
 
@@ -76,11 +73,9 @@ const addToCart = async (req, res) => {
             const productIndex = cart.product.findIndex((item) => {
                 return item.productId.toString() === productId;
             });
-            console.log(productIndex);
             if (productIndex > -1) {
                 if (cart.product[productIndex].quantity < productData.stock) {
                     cart.product[productIndex].quantity += 1;
-                    console.log('Product already exists in cart');
                 }
             } else {
                 cart.product.push({
@@ -88,10 +83,8 @@ const addToCart = async (req, res) => {
                     productPrice: finalPrice, // Use the final calculated price
                     quantity: 1
                 });
-                console.log('New product added to cart');
             }
         } else {
-            console.log('Cart does not exist');
             cart = new Cart({
                 userId: userData._id,
                 product: [
@@ -110,8 +103,7 @@ const addToCart = async (req, res) => {
         await cart.save();
         return res.status(200).json({ success: true });
     } catch (error) {
-        console.log('Error in addToCart', error);
-        return res.status(500).send('Internal Server Error');
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -208,14 +200,10 @@ const addToCart = async (req, res) => {
 
 const quantityUpdate = async (req, res) => {
     try {
-        console.log("cart qty");
         const { productId, status } = req.body;
-        console.log(productId, status);
 
         const productData = await Product.findById(productId);
         const finalPrice = await productData.getDisplayPrice();
-        console.log('Final price: ', finalPrice);
-
         const cartData = await Cart.findOne({ userId: req.session.user._id });
         await Promise.all(cartData.product.map(async item => {
             const product = await Product.findById(item.productId);
@@ -232,15 +220,12 @@ const quantityUpdate = async (req, res) => {
         }
 
         if (status === "UP") {
-            console.log(`status is ${status}`);
             const findProductStock = productData.stock;
-            console.log(findProductStock);
 
             if (cartData.product[productIndex].quantity < findProductStock) {
                 if (cartData.product[productIndex].quantity < 10) {
                     cartData.product[productIndex].quantity += 1;
                 } else {
-                    console.log("quantity out of range");
                     return res.json({
                         message: "Max 10",
                         total: cartData.totalPrice
@@ -254,12 +239,10 @@ const quantityUpdate = async (req, res) => {
             }
 
         } else if (status === "DOWN") {
-            console.log(`status is ${status}`);
 
             if (cartData.product[productIndex].quantity > 1) {
                 cartData.product[productIndex].quantity -= 1;
             } else {
-                console.log("quantity out of range");
                 return res.json({
                     message: "Min 1",
                     total: cartData.totalPrice
@@ -277,10 +260,8 @@ const quantityUpdate = async (req, res) => {
 
         }
         const quantity = cartData.product[productIndex].quantity;
-        console.log('Quantity:', quantity);
 
 
-        console.log('quantity updated successfully');
         return res.status(200).json({
             message: "quantity updated successfully",
             total: totalPrice,
@@ -292,8 +273,7 @@ const quantityUpdate = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(`Error in quantityUpdate -- ${error}`);
-        return res.status(500).json({ message: "Internal Server Error" });
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -328,18 +308,14 @@ const quantityUpdate = async (req, res) => {
 const removeProduct = async (req, res) => {
     try {
         const { productId, productPrice } = req.body;
-        console.log(`Product ID: ${productId}`);
-        console.log(`Product Price: ${productPrice}`);
 
         const cartData = await Cart.findOne({ userId: req.session.user._id });
         if (!cartData) {
-            console.log('Cart not found');
             return res.status(404).send("Cart not found");
         }
 
         const productIndex = cartData.product.findIndex(item => item.productId.toString() === productId);
         if (productIndex === -1) {
-            console.log('Product not found in cart');
             return res.status(404).send("Product not found in cart");
         }
 
@@ -353,12 +329,10 @@ const removeProduct = async (req, res) => {
             }
         );
 
-        console.log(`Updated cart: ${cartData._id}`);
         return res.status(200).json("Successfully removed from cart");
 
     } catch (error) {
-        console.log('Error in removeProduct', error);
-        return res.status(500).send("Internal Server Error");
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -417,12 +391,9 @@ const loadCheckout = async (req, res) => {
         }
 
 
-        console.log('wallet:', walletApplicable);
 
 
-
-
-        res.render("user/checkout", {
+        return res.render("user/checkout", {
             cartData,
             addressData,
             userData,
@@ -433,8 +404,7 @@ const loadCheckout = async (req, res) => {
             codApplicable
         });
     } catch (error) {
-        console.log('Error in loadCheckout', error);
-        return res.status(500).send('Internal Server Error');
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -451,17 +421,7 @@ const addNewAddress = async(req, res) => {
             phone,
             email
         } = req.body;
-        console.log(
-            fullname,
-            billing_address1,
-            billing_address2,
-            city,
-            state,
-            pincode,
-            phone,
-            email
-        );
-        console.log(req.session.user._id);
+
         let addressData = await Address.findOne({ userId: req.session.user._id });
         // const userData = await User.findById(req.session.user._id);
         // const orderData = await Order.find({ userId: req.session.user._id });
@@ -497,10 +457,10 @@ const addNewAddress = async(req, res) => {
             await addressData.save();
         }
 
-        res.redirect("/checkout");
+        return res.redirect("/checkout");
 
     } catch (error) {
-        console.log('Error in addAddress', error);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -534,8 +494,7 @@ const applyCoupon = async(req, res) => {
 
         return res.json({ message: 'Coupon applied successfully', discountPercentage: coupon.discountPercentage });
     } catch (error) {
-        console.log('Error in applyCoupon', error);
-        return res.status(500).send("Internal Server Error");
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -555,8 +514,7 @@ const removeCoupon = async(req, res) => {
 
         return res.json({ message: 'Coupon removed successfully' });
     } catch (error) {
-        console.log('Error in removeCoupon', error);
-        return res.status(500).send("Internal Server Error");
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 

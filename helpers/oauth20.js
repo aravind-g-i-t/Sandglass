@@ -20,7 +20,7 @@ passport.deserializeUser((user, done) => {
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:4000/oauth2/redirect/google",
+    callbackURL: "http://sandglass.store/oauth2/redirect/google",
     passReqToCallback: true
 },
 // eslint-disable-next-line max-params

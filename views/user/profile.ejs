@@ -736,31 +736,23 @@
                                                     <div class="wallet-details">
                                                         <h5 class="mb-10">Details</h5>
                                                         <div class="table-responsive">
-                                                            <table class="table table-striped">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th scope="col">Date</th>
-                                                                        <th scope="col">Type of Payment</th>
-                                                                        <th scope="col">Amount</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody id="wallet-details-list">
-                                                                    <!-- Wallet details will be dynamically added here -->
-                                                                    <% walletData.transactions.sort((a,b)=>b.time-a.time).forEach(data => { %>
-                                                                        <tr>
-                                                                            <td><%= data.time.toISOString().split("T")[0] %></td>
-                                                                            <td><%= data.type %></td>
-                                                                            <% if(data.type === 'Credit'){ %>
-                                                                                <td><span class="text-success">+ ₹<%= data.amount %></span></td>
-                                                                            <% } else if(data.type === 'Debit'){ %>
-                                                                                <td><span class="text-danger">- ₹<%= data.amount %></span></td>
-                                                                            <% } %>
-                                                                         </tr>
-                                                                    <% }) %>
-                                                                </tbody>
-                                                            </table>
+                                                          <table class="table table-striped">
+                                                            <thead>
+                                                              <tr>
+                                                                <th scope="col">Date</th>
+                                                                <th scope="col">Type of Payment</th>
+                                                                <th scope="col">Amount</th>
+                                                              </tr>
+                                                            </thead>
+                                                            <tbody id="wallet-details-list">
+                                                              
+                                                            </tbody>
+                                                          </table>
                                                         </div>
-                                                    </div>
+                                                        <div id="pagination-container" class="mt-3">
+                                                          
+                                                        </div>
+                                                      </div>
                                                 </div>
                                             <% } else { %>
                                                 <div class="card-body">
@@ -941,7 +933,7 @@
             // Get the user ID from the modal's data attribute
             const modal = document.getElementById('editNameModal');
             const userId = modal.getAttribute('data-user-id');
-            const url = `http://localhost:4000/edit_name/${userId}`;
+            const url = `http://sandglass.store/edit_name/${userId}`;
             
             const data = {
                 name: document.getElementById('editName').value
@@ -983,7 +975,7 @@
             // Get the user ID from the modal's data attribute
             const modal = document.getElementById('editPhoneModal');
             const userId = modal.getAttribute('data-user-id');
-            const url = `http://localhost:4000/edit_phone/${userId}`;
+            const url = `http://sandglass.store/edit_phone/${userId}`;
             
             const data = {
                 phone: document.getElementById('editPhone').value
@@ -1027,7 +1019,7 @@
         function resetPassword() {
             const modal = document.getElementById('resetPasswordModal');
             const userId = modal.getAttribute('data-user-id');
-            const url = `http://localhost:4000/reset_password/${userId}`;
+            const url = `http://sandglass.store/reset_password/${userId}`;
             
             const data = {
                 oldPassword: document.getElementById('oldPassword').value,
@@ -1481,6 +1473,83 @@
                 }
             });
         }
+    </script>
+    <script>
+        let currentPage = 1;
+
+        function loadWalletTransactions(page = 1) {
+        fetch(`/wallet-transactions?page=${page}`)
+            .then(response => response.json())
+            .then(data => {
+            const transactionsList = document.getElementById('wallet-details-list');
+            transactionsList.innerHTML = ''; // Clear existing transactions
+
+            data.transactions.forEach(transaction => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                <td>${new Date(transaction.time).toISOString().split('T')[0]}</td>
+                <td>${transaction.type}</td>
+                <td class="${transaction.type === 'Credit' ? 'text-success' : 'text-danger'}">
+                    ${transaction.type === 'Credit' ? '+' : '-'} ₹${transaction.amount}
+                </td>
+                `;
+                transactionsList.appendChild(row);
+            });
+
+            updatePaginationControls(data.currentPage, data.totalPages);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function updatePaginationControls(currentPage, totalPages) {
+            const paginationContainer = document.getElementById('pagination-container');
+            paginationContainer.innerHTML = '';
+
+            if (totalPages > 1) {
+                const prevButton = document.createElement('button');
+                prevButton.textContent = 'Previous';
+                prevButton.classList.add('btn', 'btn-secondary', 'mr-2');
+                prevButton.disabled = currentPage === 1;
+                prevButton.addEventListener('click', () => loadWalletTransactions(currentPage - 1));
+                paginationContainer.appendChild(prevButton);
+
+                // Define startPage and endPage so that three pages are shown if possible
+                let startPage = Math.max(1, currentPage - 1);
+                let endPage = Math.min(totalPages, currentPage + 1);
+
+                // Adjust the range to always show 3 pages when possible
+                if (currentPage === 1) {
+                    endPage = Math.min(totalPages, currentPage + 2); // Show next two pages
+                } else if (currentPage === totalPages) {
+                    startPage = Math.max(1, totalPages - 2); // Show previous two pages
+                }
+
+                // Create page buttons
+                for (let i = startPage; i <= endPage; i++) {
+                    const pageButton = document.createElement('button');
+                    pageButton.textContent = i;
+                    pageButton.classList.add('btn', 'btn-primary', 'mx-1');
+                    if (i === currentPage) {
+                        pageButton.disabled = true;
+                    }
+                    pageButton.addEventListener('click', () => loadWalletTransactions(i));
+                    paginationContainer.appendChild(pageButton);
+                }
+
+                const nextButton = document.createElement('button');
+                nextButton.textContent = 'Next';
+                nextButton.classList.add('btn', 'btn-secondary', 'ml-2');
+                nextButton.disabled = currentPage === totalPages;
+                nextButton.addEventListener('click', () => loadWalletTransactions(currentPage + 1));
+                paginationContainer.appendChild(nextButton);
+            }
+        }
+
+
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => loadWalletTransactions());
+
     </script>
     <!-- SweetAlert2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

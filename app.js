@@ -60,7 +60,15 @@ app.use('/', userRoute);
 
 app.use('/admin', adminRoute);
 
+app.get(
+    '*', (req, res) => {
+        res.render('user/404');
+    }
+);
+
+// app.get('/error')
+
 
 app.listen(PORT, () => {
-    console.log(`App running on http://localhost:${PORT}`);
+    console.log(`App running on http://sandglass.store`);
 });

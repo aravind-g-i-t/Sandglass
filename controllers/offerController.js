@@ -8,13 +8,12 @@ const createOffer = async(req, res) => {
     try {
         const categoryData = await Category.find({});
         const productData = await Product.find({});
-        res.render('admin/add_offer', {
+        return res.render('admin/add_offer', {
             categoryData,
             productData
         });
     } catch (error) {
-        console.log('Error in createOffer', error);
-        res.status(500).send('Internal Server Error');
+        return res.status(500).send(`An error occurred: ${error.message}`);
 
     }
 };
@@ -41,10 +40,9 @@ const saveOffer = async (req, res) => {
         await newOffer.save();
 
         // Redirect to the offers list page after successful save
-        res.redirect('/admin/offers');
+        return res.redirect('/admin/offers');
     } catch (error) {
-        console.log('Error in saveOffer:', error);
-        res.status(500).send('Internal Server Error');
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -56,7 +54,8 @@ const loadOffersPage = async (req, res) => {
             .skip((page - 1) * limit)
             .limit(Number(limit))
             .populate('category', 'name')
-            .populate('product', 'productName');
+            .populate('product', 'productName')
+            .sort({ createdAt: -1 });
 
         const totalOffers = await Offer.countDocuments();
         const totalPages = Math.ceil(totalOffers / limit);
@@ -65,7 +64,7 @@ const loadOffersPage = async (req, res) => {
         const products = await Product.find();
         const categories = await Category.find();
 
-        res.render('admin/offers', {
+        return res.render('admin/offers', {
             offers,
             products,
             categories,
@@ -73,8 +72,7 @@ const loadOffersPage = async (req, res) => {
             currentPage: Number(page)
         });
     } catch (error) {
-        console.log('Error loading offers page:', error);
-        res.status(500).send('Internal Server Error');
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -112,10 +110,9 @@ const toggleOfferStatus = async (req, res) => {
         offer.isActive = !offer.isActive; // Toggle status
         await offer.save();
 
-        res.status(200).json({ success: true, newStatus: offer.isActive });
+        return res.status(200).json({ success: true, newStatus: offer.isActive });
     } catch (error) {
-        console.error('Error toggling offer status:', error.message);
-        res.status(500).send('Internal Server Error');
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -128,10 +125,9 @@ const editOffer = async(req, res) => {
             return res.status(404).send('Offer not found');
         }
 
-        res.render('admin/edit_offer', { offer });
+        return res.render('admin/edit_offer', { offer });
     } catch (error) {
-        console.error('Error in editOffer:', error);
-        res.status(500).send('Internal Server Error');
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -152,10 +148,9 @@ const updateOffer = async(req, res) => {
         offer.endDate = new Date(endDate);
 
         await offer.save();
-        res.redirect('/admin/offers');
+        return res.redirect('/admin/offers');
     } catch (error) {
-        console.error('Error updating offer:', error);
-        res.status(500).send('Internal Server Error');
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -171,13 +166,13 @@ const selectItems = async(req, res) => {
         const categories = await Category.find({});
         const offer = await Offer.findById(offerId);
         if (offer.offerType === 'product') {
-            res.render('admin/select_products', {
+            return res.render('admin/select_products', {
                 offerId,
                 products: productsWithFinalPrice,
                 offer
             });
         } else {
-            res.render('admin/select_categories', {
+            return res.render('admin/select_categories', {
                 offerId,
                 categories,
                 offer
@@ -185,8 +180,7 @@ const selectItems = async(req, res) => {
         }
 
     } catch (error) {
-        console.error('Error updating offer:', error);
-        res.status(500).send('Internal Server Error');
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -209,6 +203,7 @@ const addOfferProduct = async (req, res) => {
         const otherOffers = await Offer.find({ product: productId });
 
         // Remove the product from other offers
+        // eslint-disable-next-line prefer-const
         for (let otherOffer of otherOffers) {
             otherOffer.product = otherOffer.product.filter(p => p.toString() !== productId.toString());
             await otherOffer.save();
@@ -220,8 +215,7 @@ const addOfferProduct = async (req, res) => {
 
         return res.status(200).json({ message: 'Product added to offer, and any existing offers were removed.' });
     } catch (error) {
-        console.error('Error adding product to offer:', error);
-        return res.status(500).json({ error: 'Internal server error' });
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -245,8 +239,7 @@ const removeOfferProduct = async (req, res) => {
             return res.status(200).json({ message: 'Product removed from offer' });
         }
     } catch (error) {
-        console.error('Error removing product from offer:', error);
-        return res.status(500).json({ error: 'Internal server error' });
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -269,6 +262,7 @@ const addOfferCategory = async (req, res) => {
         const otherOffers = await Offer.find({ category: categoryId });
 
         // Remove the category from other offers
+        // eslint-disable-next-line prefer-const
         for (let otherOffer of otherOffers) {
             otherOffer.category = otherOffer.category.filter(c => c.toString() !== categoryId.toString());
             await otherOffer.save();
@@ -280,8 +274,7 @@ const addOfferCategory = async (req, res) => {
 
         return res.status(200).json({ message: 'Category added to offer, and any existing offers were removed.' });
     } catch (error) {
-        console.error('Error adding category to offer:', error);
-        return res.status(500).json({ error: 'Internal server error' });
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -306,8 +299,7 @@ const removeOfferCategory = async (req, res) => {
             return res.status(200).json({ message: 'Category removed from offer' });
         }
     } catch (error) {
-        console.error('Error removing category from offer:', error);
-        return res.status(500).json({ error: 'Internal server error' });
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 

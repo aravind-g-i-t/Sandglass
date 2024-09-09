@@ -10,9 +10,9 @@ const loadcategories = async (req, res) => {
         const categoryData = await Category.find().skip(startIndex).limit(limit);
         const totalDocuments = await Category.countDocuments();
         const totalPages = Math.ceil(totalDocuments / limit);
-        res.status(200).render('admin/categories', { categoryData, page, totalPages });
+        return res.status(200).render('admin/categories', { categoryData, page, totalPages });
     } catch (error) {
-        console.log(error);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -31,24 +31,20 @@ const insertCategory = async(req, res) => {
         const checkCategory = await Category.findOne({
             name
         });
-        console.log(checkCategory);
 
         if (checkCategory) {
-            res.status(200).render('admin/categories', {
+            return res.status(200).render('admin/categories', {
                 message: 'Category already exists',
                 categoryData,
                 page,
                 totalPages
             });
         } else {
-            console.log('inserting');
-            const insertData = await Category.insertMany({
+            await Category.insertMany({
                 name,
                 description
             });
-            console.log('Data inserted successfully');
-            console.log(insertData);
-            res.render('admin/categories', {
+            return res.render('admin/categories', {
                 categoryData,
                 page,
                 totalPages
@@ -56,7 +52,7 @@ const insertCategory = async(req, res) => {
         }
 
     } catch (error) {
-        console.log(error.message);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -85,10 +81,10 @@ const statusUpdate = async (req, res) => {
             );
         }
 
-        res.redirect('/admin/categories');
+        return res.redirect('/admin/categories');
 
     } catch (error) {
-        console.log(error.message);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -97,19 +93,17 @@ const statusUpdate = async (req, res) => {
 const loadEdit = async(req, res) => {
     try {
         const id = req.query.id;
-        console.log(id);
         const category = await Category.findById(id);
 
-        res.render('admin/editCategory', { category });
+        return res.render('admin/editCategory', { category });
     } catch (error) {
-        console.log(error.message);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
 const editCategory = async(req, res) => {
     try {
         let { id, name, description } = req.body;
-        console.log(id);
         name = name.toUpperCase();
         const category = await Category.findById(id);
         const nameMatch = await Category.findOne({
@@ -120,9 +114,9 @@ const editCategory = async(req, res) => {
                 await Category.findByIdAndUpdate(id, {
                     $set: { description }
                 });
-                res.redirect('/admin/categories');
+                return res.redirect('/admin/categories');
             } else {
-                res.render("edit-category", {
+                return res.render("edit-category", {
                     message: "Cannot change to existing Category",
                     category
                 });
@@ -134,12 +128,12 @@ const editCategory = async(req, res) => {
                     name
                 }
             });
-            res.redirect('/admin/categories');
+            return res.redirect('/admin/categories');
         }
 
 
     } catch (error) {
-        console.log(error.message);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 

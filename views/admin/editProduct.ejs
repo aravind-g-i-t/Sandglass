@@ -375,69 +375,28 @@
                                     </div>
                                     <div class="col-sm-6 mb-3">
                                         <label class="form-label">Category</label>
-                                        <select name="product_category" class="form-select"  id="product_category">
+                                        <select name="product_category" class="form-select" id="product_category">
                                             <% if(categories) { %>
-                                                <% categories.forEach((category)=> { %>
-                                            <option value="<%= category._id %>"><%= category.name %></option>
+                                                <% categories.forEach((category) => { %>
+                                                    <option value="<%= category._id %>" <%= product.category.toString() === category._id.toString() ? 'selected' : '' %>>
+                                                        <%= category.name %>
+                                                    </option>
                                                 <% }) %>
                                             <% } %>
-                                          </select>
-                                          
-                                    </div>
-                                    <!-- <div class="col-lg-4">
-                                        <label class="form-label">Currency</label>
-                                        <select class="form-select">
-                                            <option> USD </option>
-                                            <option> EUR </option>
-                                            <option> RUBL </option>
                                         </select>
-                                    </div> -->
+                                        <div id="error_Pcategory" class="text-danger"></div> <!-- Error message for category -->
+                                    </div>
+                                    
+                                    
                                 </div>
-                                <!-- <div class="mb-4">
-                                    <label class="form-label">Tax rate</label>
-                                    <input type="text" placeholder="%" class="form-control" id="product_name">
-                                </div> -->
-                                <!-- <label class="form-check mb-4">
-                                    <input class="form-check-input" type="checkbox" value="">
-                                    <span class="form-check-label"> Make a template </span>
-                                </label> -->
+                                
                                 <div>
                                     <button class="btn btn-md rounded font-sm hover-up" type="submit">Update</button>
                                 </div>
                           
                         </div>
                     </div> <!-- card end// -->
-                    <!-- <div class="card mb-4">
-                        <div class="card-header">
-                            <h4>Shipping</h4>
-                        </div>
-                        <div class="card-body">
-                            <form>
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="mb-4">
-                                            <label for="product_name" class="form-label">Width</label>
-                                            <input type="text" placeholder="inch" class="form-control" id="product_name">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="mb-4">
-                                            <label for="product_name" class="form-label">Height</label>
-                                            <input type="text" placeholder="inch" class="form-control" id="product_name">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-4">
-                                    <label for="product_name" class="form-label">Weight</label>
-                                    <input type="text" placeholder="gam" class="form-control" id="product_name">
-                                </div>
-                                <div class="mb-4">
-                                    <label for="product_name" class="form-label">Shipping fees</label>
-                                    <input type="text" placeholder="$" class="form-control" id="product_name">
-                                </div>
-                            </form>
-                        </div>
-                    </div> card end// -->
+                    
                 </div>
                 <div class="col-lg-6">
                     <div class="card mb-4">
@@ -454,16 +413,7 @@
                                             <!-- Trigger SweetAlert on button click -->
                                             <button type="button" class="btn btn-danger btn-sm btn-remove" onclick="confirmRemove('<%= product._id %>', '<%= product.productImage[i] %>')">Remove</button>
                                         
-                                            <!-- <input type="file" name="images" class="form-control additional-image" accept="image/*" onchange="showCropModal(this)"> -->
-                                            <!-- <input type="file" name="images" class="form-control additional-image" accept="image/*" > -->
                                             
-
-                                            <!-- <input type="file" name="images" class="form-control additional-image" accept="image/*" onchange="showCropModal(this)"> -->
-                                            <!-- <img id="croppedImageOutput" style="margin-top: 20px; width: 150px; height: 200px;" />
-                                            <img id="croppedImageOutput" src="/uploads/default-image.jpg" style="margin-top: 20px; width: 150px; height: 200px;" /> -->
-
-
-                                            <!-- <input type="file" name="images" class="form-control additional-image" accept="image/*" onchange="showCropModal(this)"> -->
                                         
                                         
                                     </div>
@@ -489,52 +439,11 @@
                     </div> 
                     
                 </form>
-                    
-                    <!-- <div class="card mb-4">
-                        <div class="card-header">
-                            <h4>Organization</h4>
-                        </div> -->
-                        <!-- <div class="card-body">
-                            <div class="row gx-2">
-                                <div class="col-sm-6 mb-3">
-                                    <label class="form-label">Category</label>
-                                    <select class="form-select">
-                                     
-                                    </select>
-                                </div>
-                                <!-- <div class="col-sm-6 mb-3"> -->
-                                    <!-- <label class="form-label">Sub-category</label>
-                                    <select class="form-select">
-                                        <option> Nissan </option>
-                                        <option> Honda </option>
-                                        <option> Mercedes </option>
-                                        <option> Chevrolet </option>
-                                    </select>
-                                </div> --> 
-                                <!-- <div class="mb-4">
-                                    <label for="product_name" class="form-label">Tags</label>
-                                    <input type="text" class="form-control">
-                                </div> -->
-                           <!-- </div>  row.// -->
-                        <!-- </div> -->
-                    <!-- </div> card end// -->
+                        
                 </div>
             </div>
         </section> <!-- content-main end// -->
-        <!-- <footer class="main-footer font-xs">
-            <div class="row pb-30 pt-15">
-                <div class="col-sm-6">
-                    <script>
-                    document.write(new Date().getFullYear())
-                    </script> ©, Evara - HTML Ecommerce Template .
-                </div>
-                <div class="col-sm-6">
-                    <div class="text-sm-end">
-                        All rights reserved
-                    </div>
-                </div>
-            </div>
-        </footer> -->
+        
     </main>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
     

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable max-depth */
 const Order = require('../models/orderModel');
 const Product = require('../models/productModel');
@@ -50,7 +51,7 @@ const orderDetails = async(req, res) => {
         if (wallet.walletBalance > orderData.payableAmount) {
             walletApplicable = true;
         }
-        res.render('user/orderDetails', {
+        return res.render('user/orderDetails', {
             userData,
             orderData,
             address,
@@ -60,14 +61,13 @@ const orderDetails = async(req, res) => {
             walletApplicable
         });
     } catch (error) {
-        console.log('Error in orderDetails', error);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
 const placeOrder = async (req, res) => {
     try {
         const { addressId, paymentMethod, totalPrice } = req.body;
-        console.log(addressId, paymentMethod, totalPrice);
 
         const cartData = await Cart.findOne({ userId: req.session.user._id }).populate("product.productId");
 
@@ -127,12 +127,10 @@ const placeOrder = async (req, res) => {
         cartData.product = [];
         cartData.coupon = null;
         await cartData.save();
-        console.log('Cart cleared');
         return res.status(200).json({ message: "Success" });
 
     } catch (error) {
-        console.log('Error in placeOrder', error);
-        return res.status(500).json({ message: "Internal Server Error" });
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -155,7 +153,6 @@ const cancelOrder = async (req, res) => {
         // Calculate refund amount
         let refundAmount = product.productPrice * product.quantity;
         if (orderData.coupon) {
-            console.log('Coupon exists');
             const coupon = await Coupon.findOne({ code: orderData.coupon });
             if (coupon) {
                 refundAmount = refundAmount * (1 - (coupon.discountPercentage / 100));
@@ -209,8 +206,7 @@ const cancelOrder = async (req, res) => {
 
         return res.status(200).json({ message: "Successfully Cancelled" });
     } catch (error) {
-        console.error('Error in cancelOrder', error);
-        return res.status(500).json({ message: "Internal Server Error" });
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -220,28 +216,24 @@ const cancelOrder = async (req, res) => {
 const returnOrder = async(req, res) => {
     try {
         const { orderId, productId, reason } = req.body;
-        console.log(orderId, productId, reason);
         const orderData = await Order.findById(orderId);
         const orderedProduct = orderData.products.find(product => product._id.toString() === productId);
         if (!orderedProduct) {
             return res.status(404).json({ message: "Product not found in order" });
         }
-        console.log("Product found", orderedProduct);
         orderedProduct.reason = reason;
         orderedProduct.status = 'Return Requested';
         await orderData.save();
         return res.redirect('/profile');
 
     } catch (error) {
-        console.log('Error in returnOrder', error);
-        return res.status(500).json({ message: "Internal Server Error" });
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
 const razorPayment = (req, res) => {
     let amount = parseFloat(req.body.amount);
     amount = Math.round(amount); // Ensure amount is a valid float and fixed to 2 decimals
-    console.log(amount);
     const options = {
         amount, // Convert to smallest currency unit
         currency: "INR",
@@ -249,10 +241,8 @@ const razorPayment = (req, res) => {
     };
     RazorPayInstance.orders.create(options, (err, order) => {
         if (err) {
-            console.log(`Error in razorPayment -- ${JSON.stringify(err)}`); // Improved error logging
             return res.status(400).json({ success: false, message: "Failed to create order", error: err });
         } else {
-            console.log("Order created: ", order.id);
             return res.status(200).json({ success: true, orderId: order.id });
         }
     });
@@ -260,12 +250,12 @@ const razorPayment = (req, res) => {
 
 
 // Here the razorpay payment will be verified and the order will be placed
+// eslint-disable-next-line consistent-return
 const verifyPayment = async (req, res) => {
     try {
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
         req.body.response;
         const { addressId, paymentMethod, totalPrice } = req.body;
-        console.log(addressId, paymentMethod, totalPrice);
 
         const body = `${razorpay_order_id}|${razorpay_payment_id}`;
         const keySecret = process.env.RAZORPAY_KEY_SECRET; // Razorpay key secret from environment variables
@@ -278,7 +268,6 @@ const verifyPayment = async (req, res) => {
 
         // Compare the signatures
         if (expectedSignature === razorpay_signature) {
-            console.log("Payment verified successfully");
 
             if (addressId && paymentMethod && totalPrice) {
                 const cartData = await Cart.findOne({ userId: req.session.user._id }).populate("product.productId");
@@ -323,7 +312,6 @@ const verifyPayment = async (req, res) => {
                 cartData.product = [];
                 cartData.coupon = null;
                 await cartData.save();
-                console.log('Cart cleared');
 
             }
 
@@ -331,16 +319,15 @@ const verifyPayment = async (req, res) => {
             res.status(200)
                 .send({ success: true, message: "Payment verified successfully" });
         } else {
-            console.log("Payment verification failed");
             res.status(400)
                 .send({ success: false, message: "Payment verification failed" });
         }
     } catch (error) {
-        console.error(`Error in verifyPayment -- ${error}`);
-        return res.status(500).send({ success: false, message: "Internal Server Error" });
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
+// eslint-disable-next-line consistent-return
 const generateInvoice = async (req, res) => {
     try {
         // Retrieve the order by ID
@@ -380,8 +367,7 @@ const generateInvoice = async (req, res) => {
         doc.end();
 
     } catch (error) {
-        console.error('Error generating invoice:', error);
-        res.status(500).send('Error generating invoice');
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -421,6 +407,7 @@ function generateInvoiceTable(doc, order) {
     generateHr(doc, invoiceTableTop + 20);
     doc.font('Helvetica');
 
+    // eslint-disable-next-line no-plusplus
     for (i = 0; i < order.products.length; i++) {
         const product = order.products[i];
         const position = invoiceTableTop + ((i + 1) * 30);
@@ -446,6 +433,7 @@ function generateInvoiceTable(doc, order) {
 }
 
 // Function to generate a row in the invoice table
+// eslint-disable-next-line max-params
 function generateTableRow(doc, y, item, unitPrice, quantity, lineTotal) {
     doc
         .fontSize(10)
@@ -503,7 +491,7 @@ const loadInvoice = async (req, res) => {
         const shippingPrice = 300; // Set shipping price dynamically if needed
 
         // Render the invoice page with the order, user, and calculated prices
-        res.render('user/invoice', {
+        return res.render('user/invoice', {
             order,
             user,
             address,
@@ -513,8 +501,7 @@ const loadInvoice = async (req, res) => {
             shippingPrice: shippingPrice.toFixed(2)
         });
     } catch (error) {
-        console.error('Error fetching order details:', error);
-        res.status(500).send('Server error');
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -523,7 +510,6 @@ const payByRazorpay = async (req, res) => {
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
         req.body.response;
         const { paymentMethod, totalPrice, id } = req.body;
-        console.log(paymentMethod, totalPrice, id);
 
         const body = `${razorpay_order_id}|${razorpay_payment_id}`;
         const keySecret = process.env.RAZORPAY_KEY_SECRET; // Razorpay key secret from environment variables
@@ -536,7 +522,6 @@ const payByRazorpay = async (req, res) => {
 
         // Compare the signatures
         if (expectedSignature === razorpay_signature) {
-            console.log("Payment verified successfully");
 
             if (paymentMethod && totalPrice) {
                 await Order.findOneAndUpdate({ orderId: id },
@@ -548,20 +533,18 @@ const payByRazorpay = async (req, res) => {
             }
 
 
-            res.status(200)
+            return res.status(200)
                 .send({ success: true, message: "Payment done successfully" });
         } else {
-            console.log("Payment verification failed");
-            res.status(400)
+            return res.status(400)
                 .send({ success: false, message: "Payment failed" });
         }
     } catch (error) {
-        console.error(`Error in payByRazorpay -- ${error}`);
-        return res.status(500).send({ success: false, message: "Internal Server Error" });
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
-const payByWallet = async (req, res) =>{
+const payByWallet = async (req, res) => {
     try {
         const { totalPrice, id } = req.body;
         await Order.findOneAndUpdate({ orderId: id },
@@ -586,8 +569,7 @@ const payByWallet = async (req, res) =>{
         );
         return res.status(200).json({ message: "Success" });
     } catch (error) {
-        console.error(`Error in payByWallet -- ${error}`);
-        return res.status(500).send({ success: false, message: "Internal Server Error" });
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 

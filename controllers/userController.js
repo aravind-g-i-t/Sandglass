@@ -1,6 +1,6 @@
+/* eslint-disable camelcase */
 const otp = require('../helpers/otp');
 const hashing = require('../helpers/passwordHash');
-const validate = require('../helpers/validatePassword');
 const User = require('../models/userModel');
 const Product = require('../models/productModel');
 const Category = require('../models/categoryModel');
@@ -14,16 +14,16 @@ const Wallet = require('../models/walletModel');
 // to load the signup page
 const loadSignup = (req, res) => {
     try {
-        res.render('user/signup');
+        return res.render('user/signup');
     } catch (error) {
-        console.log(error.message);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
 // to save the signup credentials in the session storage before otp verification
+// eslint-disable-next-line consistent-return
 const insertUser = async (req, res) => {
     try {
-        console.log(req.body);
         const { username, email, phone, password } = req.body;
 
         const checkMail = await User.findOne({
@@ -35,23 +35,20 @@ const insertUser = async (req, res) => {
         // checks if the credentials are already used
 
         if (checkPhone && checkMail) {
-            res.render('user/signup', {
+            return res.render('user/signup', {
                 message: 'Email and Phone number already exist!'
             });
         } else if (checkMail) {
-            res.render('user/signup', {
+            return res.render('user/signup', {
                 message: 'Email already exists!'
             });
         } else if (checkPhone) {
-            res.render('user/signup', {
+            return res.render('user/signup', {
                 message: 'Phone number already exists!'
             });
         } else {
 
-            const strongpass = await validate(password);
-            console.log(strongpass);
             const hashedPassword = await hashing.hashPassword(password);
-            console.log('--password hashing');
             const userData = {
                 username,
                 email,
@@ -67,24 +64,19 @@ const insertUser = async (req, res) => {
             req.session.email = email;
             req.session.otp = otpCode;
             req.session.otpExpire = Date.now() + (5 * 60 * 1000);
-            console.log('OTP:', req.session.otp);
             await otp.sendOtp(req.session.email, otpCode)
                 .then((result) => {
-                    res.redirect('/verify');
-                    console.log(result);
+                    return res.redirect('/verify');
                 })
                 .catch((err) => {
-                    res.render('user/signup', {
-                        message: 'There was an error sending OTP.'
+                    return res.render('user/signup', {
+                        message: err.message
                     });
-                    console.log(err);
                 });
 
         }
-
     } catch (error) {
-
-        console.log(error.message);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -94,9 +86,9 @@ const insertUser = async (req, res) => {
 
 const loadVerify = async (req, res) => {
     try {
-        res.render('user/verify');
+        return res.render('user/verify');
     } catch (error) {
-        console.log(error.message);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -106,20 +98,19 @@ const resendOtp = async (req, res) => {
     try {
         const otpCode = otp.generate();
         req.session.otp = otpCode;
-        console.log(otpCode);
         req.session.otpExpire = Date.now() + (5 * 60 * 1000);
-        await otp.sendOtp(req.session.email, req.session.otp)
-            .then((result) => {
-                console.log(result);
-            });
+        await otp.sendOtp(req.session.email, req.session.otp);
+        // .then((result) => {
+        //     console.log(result);
+        // });
         if (req.session.tempUser) {
-            res.redirect('/verify');
+            return res.redirect('/verify');
         } else {
-            res.render('user/verifyForgot');
+            return res.render('user/verifyForgot');
         }
 
     } catch (error) {
-        console.log('Error in resendOtp', error);
+        return res.status(500).send(`An error occurred: ${error.message}`);
 
     }
 };
@@ -146,18 +137,18 @@ const verifyOtp = async (req, res) => {
             });
             await newWallet.save();
 
-            res.redirect('/');
+            return res.redirect('/');
 
 
         } else {
             req.session.otp = null;
             req.session.otpExpire = null;
-            res.render('user/verify', {
+            return res.render('user/verify', {
                 message: 'Incorrect OTP or expired OTP. Please try again.'
             });
         }
     } catch (error) {
-        console.log(error.message);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -166,9 +157,9 @@ const verifyOtp = async (req, res) => {
 // to load the login page
 const loadLogin = (req, res) => {
     try {
-        res.render('user/login');
+        return res.render('user/login');
     } catch (error) {
-        console.log(error.message);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -184,31 +175,28 @@ const verifyLogin = async (req, res) => {
             email
         });
         if (userData) {
-            console.log('email matched');
             if (userData.isActive) {
                 const passwordMatch = await hashing.comparePassword(password, userData.password);
                 if (passwordMatch) {
-                    console.log('password matched');
                     req.session.user = userData;
-                    res.redirect('/');
+                    return res.redirect('/');
                 } else {
-                    console.log('Incorrect password');
-                    res.render('user/login', {
+                    return res.render('user/login', {
                         message: 'Incorrect password'
                     });
                 }
             } else {
-                res.render('user/login', {
+                return res.render('user/login', {
                     message: 'You were blocked by Admin'
                 });
             }
         } else {
-            res.render('user/login', {
+            return res.render('user/login', {
                 message: 'Incorrect mail'
             });
         }
     } catch (error) {
-        console.log(error.message);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -250,7 +238,7 @@ const loadHome = async (req, res) => {
         }
 
         // Render the home page with user data, featured products, new arrivals, and categories
-        res.render('user/home', {
+        return res.render('user/home', {
             userData,
             featured: featuredWithFinalPrice,
             newArrival: newArrivalWithFinalPrice,
@@ -258,8 +246,7 @@ const loadHome = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(`Error loading home page: ${error.message}`);
-        res.status(500).send('Internal Server Error');
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -268,10 +255,9 @@ const loadHome = async (req, res) => {
 const userLogout = async (req, res) => {
     try {
         req.session.user = null;
-        console.log('user logged out');
-        res.redirect('/login');
+        return res.redirect('/login');
     } catch (error) {
-        console.log(error.message);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -280,15 +266,15 @@ const userLogout = async (req, res) => {
 
 const loadForgotPassword = async (req, res) => {
     try {
-        res.render('user/forgotPassword');
+        return res.render('user/forgotPassword');
     } catch (error) {
-        console.log(error.message);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
+// eslint-disable-next-line consistent-return
 const forgotPassword = async (req, res) => {
     try {
-        console.log("Entered forgotPassword");
 
         const mail = req.body.mail;
         const userExists = await User.findOne({ email: mail });
@@ -296,21 +282,19 @@ const forgotPassword = async (req, res) => {
             req.session.email = mail;
             req.session.otp = otp.generate();
             req.session.otpExpire = Date.now() + (5 * 60 * 1000);
-            console.log(req.session.otp);
             await otp.sendOtp(mail, req.session.otp)
                 .then((result) => {
-                    res.render('user/verifyForgot');
-                    console.log(result);
+                    return res.render('user/verifyForgot');
                 });
         } else {
-            res.render('user/forgotPassword', {
+            return res.render('user/forgotPassword', {
                 message: "User doesnot exists"
             });
         }
 
 
     } catch (error) {
-        console.log("Error in forgotPassword", error);
+        return res.status(500).send(`An error occurred: ${error.message}`);
 
     }
 };
@@ -320,14 +304,14 @@ const verifyForgotOtp = async (req, res) => {
         const otp = req.body.otp.trim();
         if (otp === req.session.otp && Date.now() < req.session.otpExpire) {
 
-            res.render('user/setPassword');
+            return res.render('user/setPassword');
         } else {
-            res.render('user/verifyForgot',
+            return res.render('user/verifyForgot',
                 { message: 'Entered OTP is wrong or expired' }
             );
         }
     } catch (error) {
-        console.log("Error in verifyForgerOtp", error);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -343,14 +327,14 @@ const setPassword = async (req, res) => {
             req.session.email = null;
             req.session.otp = null;
             req.session.otpExpire = null;
-            res.redirect('/login');
+            return res.redirect('/login');
         } else {
-            res.render('user/setPassword',
+            return res.render('user/setPassword',
                 { message: 'Password mismatch. Try again' }
             );
         }
     } catch (error) {
-        console.log("Error in setPassword", error);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -418,9 +402,8 @@ const shop = async (req, res) => {
         const totalDocuments = await Product.countDocuments(searchQuery);
         const totalPages = Math.ceil(totalDocuments / limit);
         const categories = await Category.find({ isActive: true });
-        console.log('Category filter:', categoryFilter);
 
-        res.render("user/shop", {
+        return res.render("user/shop", {
             products: productsWithFinalPrice,
             categories,
             page,
@@ -431,8 +414,7 @@ const shop = async (req, res) => {
             sortBy
         });
     } catch (error) {
-        console.log(`Error in shop -- ${error}`);
-        res.status(500).send('Server Error');
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -483,24 +465,22 @@ const productDetails = async (req, res) => {
         const product = await Product.findById(productId).exec();
 
         if (!product) {
-            console.log('Product not found');
             return res.status(404).render('error', { message: 'Product not found' });
         }
 
         // Check if the product's category is active
         const category = await Category.findById(product.category).exec();
         if (!category || !category.isActive) {
-            console.log('Product category is not active');
             return res.status(404).render('error', { message: 'Product not found' });
         }
 
         let wishlisted = false;
         if (req.session.user) {
             wishlisted = await Wishlist.findOne({
-                userId: req.session.user._id,
+                "userId": req.session.user._id,
                 'products.productId': product._id
             }).exec();
-            wishlisted = wishlisted ? true : false;
+            wishlisted = !!wishlisted;
         }
 
         // Fetch active categories
@@ -525,8 +505,6 @@ const productDetails = async (req, res) => {
             })
         );
 
-        console.log('Product:', product);
-        console.log('Wishlisted:', wishlisted);
 
         return res.render('user/productDetails', {
             userData,
@@ -536,8 +514,7 @@ const productDetails = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Error in productDetails:', error.message);
-        return res.status(500).render('error', { message: 'Internal Server Error' });
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -550,21 +527,21 @@ const googleSuccess = async (req, res) => {
 
         if (req.user) {
             req.session.user = await User.findById(req.user._id);
-            res.status(200).redirect('/');
+            return res.status(200).redirect('/');
         } else {
             // res.redirect('/failure')
-            res.status(404).render('user/login', { message: 'googleSuccess failure' });
+            return res.status(404).render('user/login', { message: 'googleSuccess failure' });
         }
     } catch (error) {
-        console.log('Error in googleSuccess', error.message);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
 const googleFailure = async (req, res) => {
     try {
-        res.status(404).render('user/login', { message: 'You have been blocked by SANDGLASS' });
+        return res.status(404).render('user/login', { message: 'You have been blocked by SANDGLASS' });
     } catch (error) {
-        console.log('Error in googleFailure', error.message);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -576,7 +553,7 @@ const profile = async (req, res) => {
         const orderData = await Order.find({ userId: req.session.user._id }).populate('products.productId').sort({ createdAt: -1 });
         const walletData = await Wallet.findOne({ userId: req.session.user._id }).sort({ time: 1 });
 
-        res.render('user/profile', {
+        return res.render('user/profile', {
             userData,
             addressData,
             orderData,
@@ -584,7 +561,38 @@ const profile = async (req, res) => {
 
         });
     } catch (error) {
-        console.log('Error in profile', error);
+        return res.status(500).send(`An error occurred: ${error.message}`);
+    }
+};
+
+
+
+const getWalletTransactions = async (req, res) => {
+    try {
+        const ITEMS_PER_PAGE = 5;
+        const userId = req.session.user._id;
+        const page = parseInt(req.query.page, 10) || 1;
+
+        const wallet = await Wallet.findOne({ userId });
+
+        if (!wallet) {
+            return res.status(404).json({ message: 'Wallet not found' });
+        }
+
+        const totalTransactions = wallet.transactions.length;
+        const totalPages = Math.ceil(totalTransactions / ITEMS_PER_PAGE);
+
+        const paginatedTransactions = wallet.transactions
+            .sort((a, b) => b.time - a.time)
+            .slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+
+        return res.json({
+            transactions: paginatedTransactions,
+            currentPage: page,
+            totalPages
+        });
+    } catch (error) {
+        return res.status(500).json({ message: 'Error fetching wallet transactions', error: error.message });
     }
 };
 
@@ -595,23 +603,19 @@ const editName = async (req, res) => {
     try {
         const userId = req.params.id;
         const newName = req.body.name;
-        console.log('Received PUT request:', userId, newName);
         const nameUpdated = await User.findByIdAndUpdate(userId, { $set: { username: newName } }, { new: true });
         if (nameUpdated) {
-            console.log('Name updated successfully');
-            res.status(200).json({
+            return res.status(200).json({
                 message: 'Name updated successfully',
                 user: nameUpdated
             });
         } else {
-            console.log('User not found');
-            res.status(404).json({
+            return res.status(404).json({
                 message: 'User not found'
             });
         }
     } catch (error) {
-        console.log('Error in editName:', error);
-        res.status(500).json({
+        return res.status(500).json({
             message: 'An error occurred while updating the name',
             error: error.message
         });
@@ -623,7 +627,6 @@ const editPhone = async (req, res) => {
         const userId = req.params.id;
         const newPhone = req.body.phone;
 
-        console.log('User ID:', userId, 'New Phone:', newPhone);
 
         const phoneUpdated = await User.findByIdAndUpdate(userId,
             { $set: { phone: newPhone } },
@@ -631,20 +634,17 @@ const editPhone = async (req, res) => {
         );
 
         if (phoneUpdated) {
-            console.log('Phone number updated successfully');
-            res.status(200).json({
+            return res.status(200).json({
                 message: 'Phone number updated successfully',
                 user: phoneUpdated
             });
         } else {
-            console.log('User not found');
-            res.status(404).json({
+            return res.status(404).json({
                 message: 'User not found'
             });
         }
     } catch (error) {
-        console.log('Error in editPhone', error);
-        res.status(500).json({
+        return res.status(500).json({
             message: 'An error occurred while updating the phone number',
             error: error.message
         });
@@ -690,7 +690,6 @@ const resetPassword = async (req, res) => {
             message: 'Password reset successfully'
         });
     } catch (error) {
-        console.error('Error in resetPassword:', error);
         return res.status(500).json({
             success: false,
             message: 'An error occurred while resetting the password',
@@ -712,17 +711,7 @@ const addAddress = async (req, res) => {
             phone,
             email
         } = req.body;
-        console.log(
-            fullname,
-            billing_address1,
-            billing_address2,
-            city,
-            state,
-            pincode,
-            phone,
-            email
-        );
-        console.log(req.session.user._id);
+
         let addressData = await Address.findOne({ userId: req.session.user._id });
         // const userData = await User.findById(req.session.user._id);
         // const orderData = await Order.find({ userId: req.session.user._id });
@@ -758,17 +747,17 @@ const addAddress = async (req, res) => {
             await addressData.save();
         }
 
-        res.redirect("/profile");
+        return res.redirect("/profile");
 
     } catch (error) {
-        console.log('Error in addAddress', error);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
+// eslint-disable-next-line consistent-return
 const editAddress = async (req, res) => {
     try {
         const { address, addressId } = req.body;
-        console.log(`Req.body - ${req.body}`);
 
         const addressData = await Address.findOne({ userId: req.session.user._id });
         if (addressData) {
@@ -776,7 +765,6 @@ const editAddress = async (req, res) => {
                 (addr) => addr._id.toString() === addressId
             );
 
-            console.log(`the selected address is - ${updateAddress}`);
             if (updateAddress) {
                 // Update the fields of the found address
                 updateAddress.fullName = address.fullname || updateAddress.fullName;
@@ -790,37 +778,35 @@ const editAddress = async (req, res) => {
             }
             const newAddress = await addressData.save();
             // console.log("saved", newAddress);
-            console.log(`UpdateAddress - ${updateAddress}`);
 
             if (newAddress) {
-                res.status(200).json({ Message: "Successfully updated address" });
+                return res.status(200).json({ Message: "Successfully updated address" });
             } else {
-                res.status(500);
+                return res.status(500);
             }
         }
 
     } catch (error) {
-        console.log('Error in editAddress', error);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
+// eslint-disable-next-line consistent-return
 const deleteAddress = async (req, res) => {
     try {
         const { addressId } = req.body;
-        console.log(`addressId -- ${addressId}`);
         const addressData = await Address.findOne({ userId: req.session.user._id });
         if (addressData) {
             const findAddress = addressData.address.find(
                 (addr) => addr._id.toString() === addressId
             );
             const addressIndex = addressData.address.indexOf(findAddress);
-            console.log(`index of ${addressIndex}`);
             addressData.address.splice(addressIndex, 1);
-            res.status(200).json({ message: "Successfully deleted" });
             addressData.save();
+            return res.status(200).json({ message: "Successfully deleted" });
         }
     } catch (error) {
-        console.log('Error in deleteAddress', error);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -840,9 +826,9 @@ const autoComplete = async(req, res) => {
             category: item.category.name, // Adjust based on your data structure
             photoUrl: item.productImage[0] // Adjust to the correct path of the product photo
         }));
-        res.json(suggestions);
+        return res.json(suggestions);
     } catch (error) {
-        console.log('Error in autoComplete', error);
+        return res.status(500).send(`An error occurred: ${error.message}`);
 
     }
 };
@@ -850,17 +836,17 @@ const autoComplete = async(req, res) => {
 const loadAbout = async (req, res) => {
     try {
         const userData = await User.findById(req.session.user);
-        res.render('user/about', { userData });
+        return res.render('user/about', { userData });
     } catch (error) {
-        console.log('Error in autoComplete', error);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 const loadContact = async (req, res) => {
     try {
         const userData = await User.findById(req.session.user);
-        res.render('user/contact', { userData });
+        return res.render('user/contact', { userData });
     } catch (error) {
-        console.log('Error in autoComplete', error);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -891,5 +877,6 @@ module.exports = {
     setPassword,
     autoComplete,
     loadContact,
-    loadAbout
+    loadAbout,
+    getWalletTransactions
 };

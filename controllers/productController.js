@@ -12,7 +12,6 @@ const loadProducts = async (req, res) => {
         const query = {};
         if (req.query.searchProduct) {
             const searchQuery = req.query.searchProduct;
-            console.log(searchQuery);
             query.productName = new RegExp(searchQuery, 'i');
         }
 
@@ -39,11 +38,10 @@ const loadProducts = async (req, res) => {
         const totalDocuments = await Product.countDocuments(query);
         const totalPages = Math.ceil(totalDocuments / limit);
 
-        res.render('admin/products', { products: productsWithFinalPrice, page, totalPages });
+        return res.render('admin/products', { products: productsWithFinalPrice, page, totalPages });
 
     } catch (error) {
-        console.log(`Error loading products: ${error.message}`);
-        res.status(500).send('Internal Server Error');
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -53,9 +51,9 @@ const loadProducts = async (req, res) => {
 const loadAddProduct = async(req, res) => {
     try {
         const categories = await Categories.find({ isActive: true });
-        res.render('admin/addProduct', { categories });
+        return res.render('admin/addProduct', { categories });
     } catch (error) {
-        console.log(error.message);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -75,7 +73,6 @@ const addProduct = async (req, res) => {
         const stock = req.body.product_stock;
         const category = req.body.product_category;
 
-        console.log(category);
 
         // Checking if the product name already exists (case-insensitive)
         const nameExists = await Product.findOne({ productName: { $regex: name, $options: 'i' } });
@@ -84,9 +81,6 @@ const addProduct = async (req, res) => {
         } else {
             // Extracting image filenames from the uploaded files
             const images = req.files.map(file => file.filename);
-            console.log('Images:', images);
-            console.log(req.files);
-
             // Creating a new product instance
             const productAdding = await Product.create({
                 productName: name,
@@ -101,7 +95,6 @@ const addProduct = async (req, res) => {
             // Saving the product to the database
             const product = await productAdding.save();
             if (product) {
-                console.log('Product added');
                 return res.redirect('/admin/products');
             } else {
                 return res.render('admin/addProduct', { message: 'Error adding the product', categories });
@@ -109,8 +102,7 @@ const addProduct = async (req, res) => {
         }
 
     } catch (error) {
-        console.log(`Load product error: ${error}`);
-        return res.status(500).send("Internal Server Error");
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -125,8 +117,6 @@ const editProduct = async(req, res) => {
         const stock = req.body.product_stock;
         const category = req.body.product_category;
         const images = req.files.map(file => file.filename);
-        console.log('Images :', images);
-        console.log(req.files);
 
         await Product.findByIdAndUpdate(id,
             { $set: {
@@ -143,9 +133,9 @@ const editProduct = async(req, res) => {
             }
         );
 
-        res.redirect('/admin/products');
+        return res.redirect('/admin/products');
     } catch (error) {
-        console.log(error.message);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -159,46 +149,72 @@ const productStatusUpdate = async(req, res) => {
                 { _id: id },
                 { $set: { isActive: false } }
             );
-            console.log('Product blocked successfully');
             await Cart.updateMany(
                 {},
                 { $pull: { product: { productId: product._id } } }
             );
-            console.log('Product removed from all carts');
             await Wishlist.updateMany(
                 {},
                 { $pull: { products: { productId: product._id } } }
             );
-            console.log('Product removed from all wishlists');
         } else {
             await Product.findByIdAndUpdate(
                 { _id: id },
                 { $set: { isActive: true } }
             );
         }
-        res.redirect('/admin/products');
+        return res.redirect('/admin/products');
 
     } catch (error) {
-        console.log(error.message);
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
-const loadEditProduct = async(req, res) => {
+const loadEditProduct = async (req, res) => {
     try {
         const categories = await Categories.find({ isActive: true });
         const id = req.query.id;
         const product = await Product.findOne({ _id: id });
-        res.render('admin/editProduct', { product, categories });
+
+        // Check if the product was found
+        if (!product) {
+            return res.status(404).render('admin/editProduct', {
+                success: false,
+                message: 'Product not found',
+                error: {
+                    description: 'The product with the given ID does not exist'
+                },
+                categories
+            });
+        }
+
+        // Success Response
+        return res.status(200).render('admin/editProduct', {
+            success: true,
+            message: 'Product and categories loaded successfully',
+            data: {
+                product,
+                categories
+            }
+        });
     } catch (error) {
-        console.log(error.message);
+        // Error Response
+        return res.status(500).render('admin/editProduct', {
+            success: false,
+            message: 'Failed to load product or categories',
+            error: {
+                description: error.message
+            },
+            categories: [] // Optional: Pass empty categories to prevent errors in the view
+        });
     }
 };
 
+
+// eslint-disable-next-line consistent-return
 const removeImage = async(req, res) => {
     try {
         const { productId, image } = req.body;
-        console.log("body ", req.body);
-
         // Find the product by ID
         const product = await Product.findById(productId);
         if (!product) {
@@ -218,7 +234,6 @@ const removeImage = async(req, res) => {
         const imagePath = path.join(__dirname, '../public/uploads', image);
         fs.unlink(imagePath, async (err) => {
             if (err) {
-                console.error('Error deleting the image file:', err);
                 return res.status(500).json({ error: 'Error deleting the image file' });
             }
 
@@ -226,15 +241,13 @@ const removeImage = async(req, res) => {
             try {
                 await product.save();
                 return res.status(200).json({ success: true, message: 'Image file deleted and product updated successfully' });
-            } catch (saveError) {
-                console.error('Error saving the product:', saveError);
+            } catch {
                 return res.status(500).json({ error: 'Error saving the product' });
             }
         });
 
     } catch (error) {
-        console.error('Error from productController productEditRemove:', error);
-        return res.status(500).json({ error: 'An error occurred while removing the image' });
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
