@@ -23,7 +23,6 @@ passport.use(new GoogleStrategy({
     callbackURL: "http://sandglass.store/oauth2/redirect/google",
     passReqToCallback: true
 },
-// eslint-disable-next-line max-params
 (async (request, accessToken, refreshToken, profile, done) => {
     try {
 
@@ -46,9 +45,11 @@ passport.use(new GoogleStrategy({
             await newWallet.save();
             console.log('user :', user);
         } if (!user.isActive) {
-            return done(null, false, { message: 'User is blocked' });
+             done(null, false, { message: 'User is blocked' });
+             return;
         }
-        return done(null, user);
+         done(null, user);
+         return;
     } catch (error) {
         console.log(error.message);
     }

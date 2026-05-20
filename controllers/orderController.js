@@ -7,26 +7,31 @@ const Address = require('../models/addressModel');
 const Cart = require('../models/cartModel');
 const Wallet = require('../models/walletModel');
 const Coupon = require('../models/couponModel');
+<<<<<<< HEAD
 // const fs = require('fs');
+=======
+>>>>>>> 003d3dd (update ui)
 const PDFDocument = require('pdfkit');
 
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
 require('dotenv').config();
 
-// To create an instance of RazorPay to do payments
 const RazorPayInstance = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
     key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
 
-const orderDetails = async(req, res) => {
+const orderDetails = async (req, res) => {
     try {
         const orderId = req.query.orderId;
         const userData = await User.findById(req.session.user._id);
         const orderData = await Order.findOne({ orderId }).populate('userId').populate('products.productId');
+<<<<<<< HEAD
 
+=======
+>>>>>>> 003d3dd (update ui)
         let totalPrice = 0;
         let invoice;
         orderData.products.forEach(item => {
@@ -46,11 +51,14 @@ const orderDetails = async(req, res) => {
                 couponDiscount = coupon.discountPercentage;
             }
         }
+<<<<<<< HEAD
         let walletApplicable;
         const wallet = await Wallet.findOne({ userId: req.session.user._id });
         if (wallet.walletBalance > orderData.payableAmount) {
             walletApplicable = true;
         }
+=======
+>>>>>>> 003d3dd (update ui)
         return res.render('user/orderDetails', {
             userData,
             orderData,
@@ -60,8 +68,13 @@ const orderDetails = async(req, res) => {
             invoice,
             walletApplicable
         });
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send("Something went wrong");
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -129,8 +142,13 @@ const placeOrder = async (req, res) => {
         await cartData.save();
         return res.status(200).json({ message: "Success" });
 
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).json({ message: "Internal Server Error" });
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -138,19 +156,16 @@ const cancelOrder = async (req, res) => {
     try {
         const { orderId, productId } = req.body;
 
-        // Fetch the order data
         const orderData = await Order.findById(orderId);
         if (!orderData) {
             return res.status(404).json({ message: "Order not found" });
         }
 
-        // Find the product in the order
         const product = orderData.products.find(product => product._id.toString() === productId);
         if (!product) {
             return res.status(404).json({ message: "Product not found in order" });
         }
 
-        // Calculate refund amount
         let refundAmount = product.productPrice * product.quantity;
         if (orderData.coupon) {
             const coupon = await Coupon.findOne({ code: orderData.coupon });
@@ -158,7 +173,6 @@ const cancelOrder = async (req, res) => {
                 refundAmount = refundAmount * (1 - (coupon.discountPercentage / 100));
             }
         }
-        // Update product status and inventory regardless of payment status
         const activeProducts = orderData.products.filter(product => !['Cancelled', 'Returned'].includes(product.status));
         if (orderData.products.length === 1 || activeProducts.length === 1) {
             if (orderData.paymentStatus === 'Success') {
@@ -172,13 +186,9 @@ const cancelOrder = async (req, res) => {
             $inc: { stock: product.quantity }
         });
 
-
-
-        // If payment status is "Success", proceed with the refund
         if (orderData.paymentStatus === 'Refunded' || orderData.paymentStatus === 'Success') {
 
 
-            // Use findOneAndUpdate to update wallet and push transaction
             const walletData = await Wallet.findOneAndUpdate(
                 { userId: req.session.user._id },
                 {
@@ -201,19 +211,23 @@ const cancelOrder = async (req, res) => {
             }
         }
         product.status = "Cancelled";
-        // Save the updated order
         await orderData.save();
 
         return res.status(200).json({ message: "Successfully Cancelled" });
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).json({ message: "Internal Server Error" });
+>>>>>>> 003d3dd (update ui)
     }
 };
 
 
 
 
-const returnOrder = async(req, res) => {
+const returnOrder = async (req, res) => {
     try {
         const { orderId, productId, reason } = req.body;
         const orderData = await Order.findById(orderId);
@@ -226,21 +240,34 @@ const returnOrder = async(req, res) => {
         await orderData.save();
         return res.redirect('/profile');
 
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).json({ message: "Internal Server Error" });
+>>>>>>> 003d3dd (update ui)
     }
 };
 
 const razorPayment = (req, res) => {
     let amount = parseFloat(req.body.amount);
+<<<<<<< HEAD
     amount = Math.round(amount); // Ensure amount is a valid float and fixed to 2 decimals
+=======
+    amount = Math.round(amount); 
+>>>>>>> 003d3dd (update ui)
     const options = {
-        amount, // Convert to smallest currency unit
+        amount,
         currency: "INR",
         receipt: "order_rcptid_11"
     };
     RazorPayInstance.orders.create(options, (err, order) => {
         if (err) {
+<<<<<<< HEAD
+=======
+            console.log(`Error in razorPayment -- ${JSON.stringify(err)}`);
+>>>>>>> 003d3dd (update ui)
             return res.status(400).json({ success: false, message: "Failed to create order", error: err });
         } else {
             return res.status(200).json({ success: true, orderId: order.id });
@@ -249,24 +276,25 @@ const razorPayment = (req, res) => {
 };
 
 
+<<<<<<< HEAD
 // Here the razorpay payment will be verified and the order will be placed
 // eslint-disable-next-line consistent-return
+=======
+>>>>>>> 003d3dd (update ui)
 const verifyPayment = async (req, res) => {
     try {
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
-        req.body.response;
+            req.body.response;
         const { addressId, paymentMethod, totalPrice } = req.body;
 
         const body = `${razorpay_order_id}|${razorpay_payment_id}`;
-        const keySecret = process.env.RAZORPAY_KEY_SECRET; // Razorpay key secret from environment variables
+        const keySecret = process.env.RAZORPAY_KEY_SECRET;
 
-        // Generate the expected signature using HMAC SHA256
         const expectedSignature = crypto
             .createHmac("sha256", keySecret)
             .update(body.toString())
             .digest("hex");
 
-        // Compare the signatures
         if (expectedSignature === razorpay_signature) {
 
             if (addressId && paymentMethod && totalPrice) {
@@ -316,62 +344,71 @@ const verifyPayment = async (req, res) => {
             }
 
 
-            res.status(200)
+            return res.status(200)
                 .send({ success: true, message: "Payment verified successfully" });
         } else {
+<<<<<<< HEAD
             res.status(400)
                 .send({ success: false, message: "Payment verification failed" });
         }
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+            return res.status(400)
+                .send({ success: false, message: "Payment verification failed" });
+        }
+    } catch {
+        return res.status(500).send({ success: false, message: "Internal Server Error" });
+>>>>>>> 003d3dd (update ui)
     }
 };
 
 // eslint-disable-next-line consistent-return
 const generateInvoice = async (req, res) => {
     try {
-        // Retrieve the order by ID
         const order = await Order.findOne({ orderId: req.params.id })
-            .populate('userId') // Populate user details
-            .populate('products.productId'); // Populate product details
+            .populate('userId') 
+            .populate('products.productId');
 
         if (!order) {
-            return res.status(404).send('Order not found');
+            res.status(404).send('Order not found');
+            return;
         }
 
-        // Fetch the address using the addressId from the order
         const address = await Address.findOne(
             { 'address._id': order.addressId },
             { 'address.$': 1 }
         );
 
         if (!address) {
-            return res.status(404).send('Address not found');
+            res.status(404).send('Address not found');
+            return;
         }
 
-        // Generate the invoice PDF
         const doc = new PDFDocument({ margin: 50 });
 
-        // Stream the PDF to the response
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `attachment; filename=invoice-${order.orderId}.pdf`);
         doc.pipe(res);
 
-        // Generate the invoice content
         generateHeader(doc);
         generateCustomerInformation(doc, order, address);
         generateInvoiceTable(doc, order);
         generateFooter(doc);
 
-        // Finalize the PDF
         doc.end();
 
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        res.status(500).send('Error generating invoice');
+        return;
+>>>>>>> 003d3dd (update ui)
     }
 };
 
-// Function to generate the header of the invoice
 function generateHeader(doc) {
     doc
         .fontSize(20)
@@ -383,9 +420,8 @@ function generateHeader(doc) {
         .moveDown();
 }
 
-// Function to generate customer information on the invoice
 function generateCustomerInformation(doc, order, address) {
-    const customerAddress = address.address[0]; // Fetch the first address object
+    const customerAddress = address.address[0]; 
 
     doc
         .text(`Invoice Number: ${order.orderId}`, 50, 160)
@@ -397,7 +433,6 @@ function generateCustomerInformation(doc, order, address) {
         .moveDown();
 }
 
-// Function to generate the invoice table with products
 function generateInvoiceTable(doc, order) {
     let i;
     const invoiceTableTop = 250;
@@ -432,8 +467,11 @@ function generateInvoiceTable(doc, order) {
     generateTableRow(doc, duePosition, '', '', 'Balance Due', (0).toFixed(2));
 }
 
+<<<<<<< HEAD
 // Function to generate a row in the invoice table
 // eslint-disable-next-line max-params
+=======
+>>>>>>> 003d3dd (update ui)
 function generateTableRow(doc, y, item, unitPrice, quantity, lineTotal) {
     doc
         .fontSize(10)
@@ -443,7 +481,6 @@ function generateTableRow(doc, y, item, unitPrice, quantity, lineTotal) {
         .text(lineTotal, 0, y, { align: 'right' });
 }
 
-// Function to generate a horizontal line (divider)
 function generateHr(doc, y) {
     doc
         .strokeColor('#aaaaaa')
@@ -453,7 +490,6 @@ function generateHr(doc, y) {
         .stroke();
 }
 
-// Function to generate the footer of the invoice
 function generateFooter(doc) {
     doc
         .fontSize(10)
@@ -465,7 +501,6 @@ const loadInvoice = async (req, res) => {
     try {
         const orderId = req.params.id;
 
-        // Fetch the order, user, and coupon details
         const order = await Order.findOne({ orderId })
             .populate('userId')
             .populate('products.productId');
@@ -483,14 +518,16 @@ const loadInvoice = async (req, res) => {
         order.products.forEach(item => {
             finalPrice += item.productPrice * item.quantity;
         });
-        // Calculate discount and total
         let discount = 0;
         if (order.coupon) {
             discount = (finalPrice * coupon.discountPercentage) / 100;
         }
-        const shippingPrice = 300; // Set shipping price dynamically if needed
+        const shippingPrice = 300;
 
+<<<<<<< HEAD
         // Render the invoice page with the order, user, and calculated prices
+=======
+>>>>>>> 003d3dd (update ui)
         return res.render('user/invoice', {
             order,
             user,
@@ -500,6 +537,7 @@ const loadInvoice = async (req, res) => {
             finalPrice: finalPrice.toFixed(2),
             shippingPrice: shippingPrice.toFixed(2)
         });
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
     }
@@ -570,6 +608,10 @@ const payByWallet = async (req, res) => {
         return res.status(200).json({ message: "Success" });
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send('Server error');
+>>>>>>> 003d3dd (update ui)
     }
 };
 

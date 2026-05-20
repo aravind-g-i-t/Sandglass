@@ -1,206 +1,410 @@
 <!DOCTYPE HTML>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
-    <title>Evara Dashboard</title>
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="description" content="">
+    <title>Sandglass – Invoice</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta property="og:title" content="">
-    <meta property="og:type" content="">
-    <meta property="og:url" content="">
-    <meta property="og:image" content="">
-    <!-- Favicon -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
     <link rel="shortcut icon" type="image/x-icon" href="/user/assets/imgs/theme/favicon.svg">
-    <!-- Template CSS -->
     <link href="/user/assets/css/main.css" rel="stylesheet" type="text/css" />
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --purple-50: #EEEDFE;
+            --purple-200: #AFA9EC;
+            --purple-400: #7F77DD;
+            --purple-600: #534AB7;
+            --purple-800: #3C3489;
+            --green-50: #EAF3DE;
+            --green-800: #27500A;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f7fc;
+            --bg-tertiary: #f2f0f9;
+            --text-primary: #1a1825;
+            --text-secondary: #6b6880;
+            --text-tertiary: #9b98ab;
+            --border: rgba(83,74,183,0.12);
+            --border-md: rgba(83,74,183,0.2);
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 14px;
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .invoice-shell {
+            max-width: 780px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        /* ── Top bar ── */
+        .invoice-topbar {
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 12px;
+        }
+
+        .invoice-topbar-left h1 {
+            font-size: 20px; font-weight: 600;
+        }
+
+        .invoice-topbar-left p {
+            font-size: 13px; color: var(--text-secondary); margin-top: 2px;
+        }
+
+        .download-btn {
+            display: inline-flex; align-items: center; gap: 7px;
+            padding: 8px 18px; border-radius: var(--radius-md);
+            font-size: 13px; font-weight: 500;
+            background: var(--purple-600); color: #fff;
+            border: none; cursor: pointer; text-decoration: none;
+            transition: background .15s;
+        }
+        .download-btn:hover { background: var(--purple-800); }
+        .download-btn i { font-size: 16px; }
+
+        /* ── Invoice card ── */
+        .invoice-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        /* ── Invoice header ── */
+        .invoice-header {
+            padding: 1.5rem 1.75rem;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: flex-start; justify-content: space-between;
+            gap: 1rem; flex-wrap: wrap;
+        }
+
+        .brand-block { display: flex; align-items: center; gap: 10px; }
+
+        .brand-icon {
+            width: 38px; height: 38px;
+            background: var(--purple-600);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .brand-name { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+        .brand-sub  { font-size: 11px; color: var(--text-tertiary); }
+
+        .invoice-meta { text-align: right; }
+        .invoice-meta .invoice-label {
+            font-size: 11px; text-transform: uppercase; letter-spacing: .06em;
+            color: var(--text-tertiary); font-weight: 500;
+        }
+        .invoice-meta .invoice-id {
+            font-size: 15px; font-weight: 700; color: var(--purple-600); margin-top: 2px;
+        }
+        .invoice-meta .invoice-date {
+            font-size: 12.5px; color: var(--text-secondary); margin-top: 4px;
+            display: flex; align-items: center; gap: 5px; justify-content: flex-end;
+        }
+        .invoice-meta .invoice-date i { font-size: 14px; }
+
+        /* ── Greeting banner ── */
+        .greeting-banner {
+            padding: 1rem 1.75rem;
+            background: var(--purple-50);
+            border-bottom: 1px solid var(--border);
+            font-size: 13.5px; color: var(--text-secondary);
+        }
+        .greeting-banner strong { color: var(--text-primary); }
+
+        /* ── Info grid ── */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .info-block {
+            padding: 1.25rem 1.75rem;
+            border-right: 1px solid var(--border);
+        }
+        .info-block:last-child { border-right: none; }
+
+        .info-label {
+            font-size: 10.5px; text-transform: uppercase; letter-spacing: .07em;
+            color: var(--text-tertiary); font-weight: 500; margin-bottom: 6px;
+        }
+
+        .info-value { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+        .info-sub   { font-size: 12px; color: var(--text-secondary); margin-top: 2px; line-height: 1.5; }
+        .info-sub a { color: var(--purple-600); text-decoration: none; }
+        .info-sub a:hover { text-decoration: underline; }
+
+        /* ── Line items ── */
+        .line-items { padding: 1.5rem 1.75rem; }
+
+        .line-items-header {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 1rem;
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            margin-bottom: 6px;
+        }
+
+        .line-items-header span {
+            font-size: 11px; font-weight: 500;
+            color: var(--text-tertiary);
+            text-transform: uppercase; letter-spacing: .05em;
+        }
+
+        .line-items-header span:nth-child(2) { width: 80px; text-align: center; }
+        .line-items-header span:nth-child(3) { width: 100px; text-align: right; }
+
+        .line-item {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 1rem;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            align-items: center;
+        }
+
+        .line-item:last-child { border-bottom: none; }
+
+        .item-name  { font-size: 13.5px; font-weight: 500; }
+        .item-qty   { width: 80px; text-align: center; font-size: 13px; color: var(--text-secondary); }
+        .item-price { width: 100px; text-align: right; font-size: 13.5px; font-weight: 500; }
+
+        /* ── Totals ── */
+        .totals {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+        }
+
+        .totals-row {
+            display: flex; align-items: center; gap: 2rem;
+            font-size: 13px; color: var(--text-secondary);
+            width: 280px; justify-content: space-between;
+        }
+
+        .totals-row span:last-child { font-weight: 500; color: var(--text-primary); }
+
+        .totals-row.grand {
+            margin-top: 6px;
+            padding-top: 10px;
+            border-top: 2px solid var(--border-md);
+            font-size: 15px; font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .totals-row.grand span:last-child { color: var(--purple-600); font-size: 16px; }
+
+        /* ── Footer ── */
+        .invoice-footer {
+            padding: 1rem 1.75rem;
+            border-top: 1px solid var(--border);
+            background: var(--bg-secondary);
+            font-size: 12px; color: var(--text-tertiary);
+            text-align: center;
+        }
+
+        /* ── Print / PDF styles ── */
+        @media print {
+            body { background: #fff; padding: 0; }
+            .invoice-topbar { display: none; }
+            .invoice-card { border: none; box-shadow: none; }
+        }
+    </style>
 </head>
-
 <body>
-    <main class="container">
-        <section class="content-main">
-            <div class="content-header">
+
+<div class="invoice-shell">
+
+    <!-- ── Top bar ── -->
+    <div class="invoice-topbar">
+        <div class="invoice-topbar-left">
+            <h1>Invoice</h1>
+            <p>Order details and payment receipt</p>
+        </div>
+        <button class="download-btn" id="download-btn">
+            <i class="ti ti-download"></i> Download PDF
+        </button>
+    </div>
+
+    <% if (order) { %>
+
+    <!-- ── Invoice card ── -->
+    <div class="invoice-card" id="invoice">
+
+        <!-- Header -->
+        <div class="invoice-header">
+            <div class="brand-block">
+                <div class="brand-icon">
+                    <img src="/admin/assets/imgs/theme/sandglass-high-resolution-logo-transparent.svg"
+                         style="width:22px;height:22px;object-fit:contain;filter:brightness(0) invert(1)" alt="Sandglass">
+                </div>
                 <div>
-                    <h2 class="content-title card-title">Invoice</h2>
-                    <p>Details for Order ID: <span id="order-id"></span></p>
+                    <div class="brand-name">Sandglass</div>
+                    <div class="brand-sub">Official Receipt</div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-lg-12 col-md-8">
-                    <div class="card">
-                        <header class="card-header">
-                            <div class="row align-items-center">
-                                <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
-                                    <span>
-                                        <span class="material-symbols-outlined">calendar_today</span> <b th:text="${date}">Wed, Aug 13, 2022, 4:34PM</b>
-                                    </span> <br>
-                                    <small class="text-muted">Order ID: <span id="order-id-display"></span></small>
-                                </div>
-                                <div class="col-lg-6 col-md-6 ms-auto text-md-end">
-                                    <a class="btn btn-primary pb-15" id="download-btn">
-                                        <span class="material-symbols-outlined">download</span>
-                                        Download PDF</a>
-                                </div>
-                            </div>
-                        </header> <!-- card-header end// -->
-                        <% if(order) {%>
-                        <div class="card-body" id="invoice">
-                            <div class="receipt-content">
-                                <div class="container bootstrap snippets bootdey">
-                                    <div class="row pb-50">
-                                        <div class="col-md-12">
-                                            <div class="invoice-wrapper">
-                                                <div class="intro">
-                                                    Hi <strong><%= user.username %></strong>,
-                                                    <br>
-                                                    This is the receipt for a payment of <strong><%= order.productPrice %> </strong> (INR) for your order
-                                                </div>
-                                                <div class="payment-info">
-                                                    <div class="row">
-                                                        <div class="col-sm-6">
-                                                            <span>Payment Method.</span>
-                                                            <strong><%= order.paymentMethod %></strong>
-                                                        </div>
-                                                        <div class="col-sm-6 text-end">
-                                                            <span>Payment Date</span>
-                                                            <strong><%= order.orderDate.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) %></strong>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="payment-details">
-                                                    <div class="row">
-                                                        <div class="col-sm-6">
-                                                            <span>Delivery Address</span>
-                                                            <% if (address) { %>
-                                                                
-                                                                <strong><%= address.address[0].name %></strong>
-                                                                <p><%= address.address[0].addressLine1 %>,</p>
-                                                                <p><%= address.address[0].addressLine2 %>,</p>
-                                                                <p><%= address.address[0].street %>,</p>
-                                                                <p><%= address.address[0].city %></p>
-                                                                <p><%= address.address[0].state %></p>
-                                                                <p><%= address.address[0].pincode %> - </p>
-                                                                <a href="#"><%= user.email %></a>
-                                                                
-                                                            <% } else { %>
-                                                                <p>No shipping address found.</p>
-                                                            <% } %>
-                                                        </div>
-                                                        <div class="col-sm-6 text-end">
-                                                            <span>Payment To</span>
-                                                            <strong>
-                                                                Retro Pvt. Ltd
-                                                            </strong>
-                                                            <p>
-                                                                23, HAL Old Airport Rd <br>
-                                                                Kodihalli, 560008 <br>
-                                                                Bengaluru <br>
-                                                                Karnataka, India <br>
-                                                                <a href="#">
-                                                                    Retro@gmail.com
-                                                                </a>
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="line-items">
-                                                    <div class="headers clearfix">
-                                                        <div class="row">
-                                                            <div class="col-md-4">Description</div>
-                                                            <div class="col-md-3">Quantity</div>
-                                                            <div class="col-md-5 text-end">Amount</div>
-                                                        </div>
-                                                    </div>
-                                                    <%order.products.forEach(item=>{%>
-                                                    <div class="items">
-                                                        <div class="row item">
-                                                            <div class="col-md-4 desc">
-                                                                <%= item.productId.productName %>
-                                                            </div>
-                                                            <div class="col-md-3 qty">
-                                                                <%= item.quantity %>
-                                                            </div>
-                                                            <div class="col-md-5 amount text-end">
-                                                                <%= item.productPrice %>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <%})%>
-                                                    <div class="total text-end">
-                                                        <div class="field">
-                                                            Subtotal <span id="subtotal"><%= finalPrice %></span>
-                                                        </div>
-                                                        <div class="field">
-                                                            Shipping <span id="shippingPrice">300</span>
-                                                        </div>
-                                                        <div class="field">
-                                                            Discount
-                                                            <% if (order.coupon) { %>
-                                                                <input type="hidden" id="discountOffer" value="<%= coupon.discountPercentage %>">
-                                                                <span id="discount"></span>
-                                                            <% } else { %>
-                                                                <span id="discount">0</span>
-                                                            <% } %>
-                                                        </div>
-                                                        <div class="field grand-total">
-                                                            Total <span id="totalPrice"> order.payableAmount</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> <!-- card-body end// -->
+            <div class="invoice-meta">
+                <div class="invoice-label">Invoice</div>
+                <div class="invoice-id">#<%= order.orderId %></div>
+                <div class="invoice-date">
+                    <i class="ti ti-calendar"></i>
+                    <%= order.orderDate.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) %>
+                </div>
+            </div>
+        </div>
+
+        <!-- Greeting -->
+        <div class="greeting-banner">
+            Hi <strong><%= user.username %></strong>, thank you for your order. Here is your receipt for a payment of
+            <strong>₹<%= order.productPrice %></strong> (INR).
+        </div>
+
+        <!-- Info grid -->
+        <div class="info-grid">
+
+            <!-- Payment method -->
+            <div class="info-block">
+                <div class="info-label">Payment Method</div>
+                <div class="info-value"><%= order.paymentMethod %></div>
+                <div class="info-sub">Payment Date:<br>
+                    <%= order.orderDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) %>
+                </div>
+            </div>
+
+            <!-- Delivery address -->
+            <div class="info-block">
+                <div class="info-label">Delivery Address</div>
+                <% if (address) { %>
+                    <div class="info-value"><%= address.address[0].name %></div>
+                    <div class="info-sub">
+                        <%= address.address[0].addressLine1 %>,<br>
+                        <% if (address.address[0].addressLine2) { %><%= address.address[0].addressLine2 %>,<br><% } %>
+                        <%= address.address[0].street %>,<br>
+                        <%= address.address[0].city %>, <%= address.address[0].state %><br>
+                        <%= address.address[0].pincode %><br>
+                        <a href="mailto:<%= user.email %>"><%= user.email %></a>
+                    </div>
+                <% } else { %>
+                    <div class="info-sub">No shipping address found.</div>
+                <% } %>
+            </div>
+
+            <!-- Payment to -->
+            <div class="info-block">
+                <div class="info-label">Payment To</div>
+                <div class="info-value">Retro Pvt. Ltd</div>
+                <div class="info-sub">
+                    23, HAL Old Airport Rd<br>
+                    Kodihalli, 560008<br>
+                    Bengaluru, Karnataka<br>
+                    India<br>
+                    <a href="mailto:Retro@gmail.com">Retro@gmail.com</a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Line items -->
+        <div class="line-items">
+
+            <div class="line-items-header">
+                <span>Description</span>
+                <span>Qty</span>
+                <span>Amount</span>
+            </div>
+
+            <% order.products.forEach(item => { %>
+            <div class="line-item">
+                <div class="item-name"><%= item.productId.productName %></div>
+                <div class="item-qty"><%= item.quantity %></div>
+                <div class="item-price">₹<%= item.productPrice %></div>
+            </div>
+            <% }) %>
+
+            <!-- Totals -->
+            <div class="totals">
+                <div class="totals-row">
+                    <span>Subtotal</span>
+                    <span>₹<%= finalPrice %></span>
+                </div>
+                <div class="totals-row">
+                    <span>Shipping</span>
+                    <span id="shippingPrice">₹300</span>
+                </div>
+                <div class="totals-row">
+                    <span>Discount</span>
+                    <span id="discount">
+                        <% if (order.coupon) { %>
+                            <input type="hidden" id="discountOffer" value="<%= coupon.discountPercentage %>">
+                            —
+                        <% } else { %>
+                            ₹0
                         <% } %>
-                    </div> <!-- card end// -->
+                    </span>
+                </div>
+                <div class="totals-row grand">
+                    <span>Total</span>
+                    <span>₹<%= order.payableAmount %></span>
                 </div>
             </div>
-        </section> <!-- content-main end// -->
-    </main>
 
-    <script src="/shop/login/js/vendors/jquery-3.6.0.min.js"></script>
-    <script src="/shop/login/js/vendors/bootstrap.bundle.min.js"></script>
-    <script src="/shop/login/js/vendors/select2.min.js"></script>
-    <script src="/shop/login/js/vendors/perfect-scrollbar.js"></script>
-    <script src="/shop/login/js/vendors/jquery.fullscreen.min.js"></script>
-    <!-- Include html2canvas library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- Include jsPDF library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+        </div>
 
-    <!-- <script src="/shop/login/js/main.js" type="text/javascript"> </script> -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            
+        <!-- Footer -->
+        <div class="invoice-footer">
+            Thank you for shopping with Sandglass &mdash;
+            <script>document.write(new Date().getFullYear())</script> &copy; All rights reserved
+        </div>
 
-            document.getElementById('download-btn').addEventListener('click', async function () {
-                const { jsPDF } = window.jspdf;
+    </div>
 
-                // Reference to the HTML content to be converted to PDF
-                const invoiceContent = document.querySelector('.card-body');
+    <% } %>
 
-                // Use html2canvas to capture the content
-                const canvas = await html2canvas(invoiceContent, { scale: 2 });
+</div>
 
-                // Create a new jsPDF instance
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const imgData = canvas.toDataURL('image/png');
-                const imgProps = pdf.getImageProperties(imgData);
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+<!-- Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 
-                // Add the captured content as an image to the PDF
-                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('download-btn').addEventListener('click', async function () {
+            const { jsPDF } = window.jspdf;
+            const invoiceContent = document.getElementById('invoice');
 
-                // Save the PDF
-                pdf.save('invoice.pdf');
-            });
+            const canvas = await html2canvas(invoiceContent, { scale: 2 });
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const imgData = canvas.toDataURL('image/png');
+            const imgProps = pdf.getImageProperties(imgData);
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            pdf.save('invoice.pdf');
         });
-    </script>
-</body>
+    });
+</script>
 
+</body>
 </html>

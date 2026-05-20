@@ -1,23 +1,14 @@
 <!DOCTYPE HTML>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
-    <title>Evara Dashboard</title>
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="description" content="">
+    <title>Sandglass – Add Product</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta property="og:title" content="">
-    <meta property="og:type" content="">
-    <meta property="og:url" content="">
-    <meta property="og:image" content="">
-    <!-- Favicon -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
     <link rel="shortcut icon" type="image/x-icon" href="/admin/assets/imgs/theme/favicon.svg">
-    <!-- Template CSS -->
-
     <link href="/admin/assets/css/main.css" rel="stylesheet" type="text/css" />
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<<<<<<< HEAD
     <link rel="stylesheet" href="https://unpkg.com/cropperjs/dist/cropper.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
 
@@ -41,37 +32,248 @@
             position: fixed;
             z-index: 1;
             left: 0;
+=======
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --purple-50: #EEEDFE;
+            --purple-200: #AFA9EC;
+            --purple-400: #7F77DD;
+            --purple-600: #534AB7;
+            --purple-800: #3C3489;
+            --green-50: #EAF3DE;
+            --green-800: #27500A;
+            --red-50: #FCEBEB;
+            --red-600: #A32D2D;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f7fc;
+            --bg-tertiary: #f2f0f9;
+            --text-primary: #1a1825;
+            --text-secondary: #6b6880;
+            --text-tertiary: #9b98ab;
+            --border: rgba(83,74,183,0.12);
+            --border-md: rgba(83,74,183,0.2);
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .shell {
+            display: grid;
+            grid-template-columns: 230px 1fr;
+            min-height: 100vh;
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: sticky;
+>>>>>>> 003d3dd (update ui)
             top: 0;
-            width: 75%;
-            height: 75%;
-            overflow: auto;
-            background-color: rgb(0,0,0);
-            background-color: rgba(0,0,0,0.4);
-            padding-top: 60px;
+            height: 100vh;
         }
 
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
+        .brand {
+            padding: 1.25rem 1.25rem 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 10px;
         }
 
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
+        .brand-icon {
+            width: 34px; height: 34px;
+            background: var(--purple-600);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
         }
 
-        .close:hover,
-        .close:focus {
-            color: black;
+        .brand-name { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+        .brand-sub  { font-size: 11px; color: var(--text-tertiary); }
+
+        nav { padding: 1rem 0.75rem; flex: 1; overflow-y: auto; }
+
+        .nav-label {
+            font-size: 10px; letter-spacing: .08em;
+            color: var(--text-tertiary);
+            padding: 0 0.5rem; margin: 1rem 0 0.35rem;
+            text-transform: uppercase; font-weight: 500;
+        }
+
+        .nav-item {
+            display: flex; align-items: center; gap: 9px;
+            padding: 8px 10px; border-radius: var(--radius-md);
+            font-size: 13.5px; color: var(--text-secondary);
+            margin-bottom: 1px;
+            transition: background .15s, color .15s;
             text-decoration: none;
-            cursor: pointer;
         }
 
+        .nav-item:hover  { background: var(--bg-secondary); color: var(--text-primary); }
+        .nav-item.active { background: var(--purple-50); color: var(--purple-600); font-weight: 500; }
+        .nav-item i { font-size: 17px; }
+        .nav-item.active i { color: var(--purple-600); }
+
+        .sidebar-footer { padding: 1rem 1.25rem; border-top: 1px solid var(--border); }
+        .user-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+
+        .avatar {
+            width: 34px; height: 34px; border-radius: 50%;
+            background: var(--purple-50);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 600; color: var(--purple-600); flex-shrink: 0;
+        }
+
+        .user-name { font-size: 13px; font-weight: 500; }
+        .user-role { font-size: 11px; color: var(--text-tertiary); }
+
+        .logout-btn {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 13px; color: var(--text-secondary);
+            padding: 7px 10px; border-radius: var(--radius-md);
+            transition: background .15s; text-decoration: none;
+        }
+        .logout-btn:hover { background: var(--bg-secondary); }
+
+        /* ── Main ── */
+        .main { display: flex; flex-direction: column; }
+
+        .topbar {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 1.5rem;
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 10;
+        }
+
+        .search {
+            display: flex; align-items: center; gap: 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 6px 12px; width: 260px;
+        }
+
+        .search input {
+            background: none; border: none; outline: none;
+            font-size: 13px; color: var(--text-primary); width: 100%;
+        }
+
+        .search input::placeholder { color: var(--text-tertiary); }
+        .search i { font-size: 16px; color: var(--text-tertiary); }
+
+        .topbar-right { display: flex; align-items: center; gap: 8px; }
+
+        .icon-btn {
+            width: 34px; height: 34px; border-radius: var(--radius-md);
+            border: 1px solid var(--border); background: var(--bg-primary);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: background .15s; text-decoration: none;
+        }
+
+        .icon-btn:hover { background: var(--bg-secondary); }
+        .icon-btn i { font-size: 17px; color: var(--text-secondary); }
+
+        /* ── Content ── */
+        .content { padding: 1.5rem; flex: 1; }
+
+        .page-header { margin-bottom: 1.5rem; }
+        .page-title  { font-size: 20px; font-weight: 600; }
+        .page-sub    { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+
+        .error-banner {
+            background: var(--red-50);
+            color: var(--red-600);
+            border: 1px solid rgba(163,45,45,0.2);
+            border-radius: var(--radius-md);
+            padding: 10px 14px;
+            font-size: 13px;
+            margin-bottom: 1.25rem;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        /* ── Form card ── */
+        .form-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            max-width: 720px;
+        }
+
+        .form-card-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .form-card-title { font-size: 14px; font-weight: 600; }
+        .form-card-body { padding: 1.25rem; }
+
+        /* ── Form elements ── */
+        .field { margin-bottom: 1.1rem; }
+
+        .field-label {
+            display: block;
+            font-size: 12px; font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            text-transform: uppercase; letter-spacing: .04em;
+        }
+
+        .field-input, .field-select, .field-textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 13.5px;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            outline: none;
+            transition: border-color .15s;
+            font-family: inherit;
+        }
+
+        .field-input:focus,
+        .field-select:focus,
+        .field-textarea:focus { border-color: var(--purple-400); box-shadow: 0 0 0 3px rgba(127,119,221,0.1); }
+
+        .field-textarea { resize: vertical; min-height: 100px; }
+
+        .field-error {
+            font-size: 11.5px; color: var(--red-600);
+            margin-top: 4px; display: none;
+        }
+        .field-error.show { display: block; }
+
+        .price-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* ── Image upload ── */
+        .upload-zone {
+            border: 2px dashed var(--border-md);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color .15s, background .15s;
+            background: var(--bg-secondary);
+        }
+
+<<<<<<< HEAD
         #preview-container img {
             width: 100px;
             height: 100px;
@@ -89,14 +291,38 @@
         }
         /* .image-preview {
             display: flex;
+=======
+        .upload-zone:hover,
+        .upload-zone.drag-over { border-color: var(--purple-400); background: var(--purple-50); }
+        .upload-zone i { font-size: 32px; color: var(--purple-400); margin-bottom: 8px; display: block; }
+        .upload-zone p { font-size: 13px; color: var(--text-secondary); }
+        .upload-zone span { font-size: 12px; color: var(--text-tertiary); }
+
+        #file-input-1 { display: none; }
+
+        /* ── Preview grid ── */
+        #preview-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+>>>>>>> 003d3dd (update ui)
             gap: 10px;
-            margin-top: 10px;
-            flex-wrap: wrap;
+            margin-top: 14px;
         }
-        .image-preview img {
-            width: 100px;
-            height: 100px;
+
+        .preview-item {
+            position: relative;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            aspect-ratio: 1;
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
+<<<<<<< HEAD
             border: 1px solid #ccc;
             padding: 5px;
             border-radius: 5px;
@@ -158,189 +384,268 @@
 }
 
 
+=======
+            display: block;
+        }
+>>>>>>> 003d3dd (update ui)
 
+        /* Status badge */
+        .preview-badge {
+            position: absolute;
+            top: 5px; left: 5px;
+            font-size: 10px; font-weight: 600;
+            padding: 2px 7px;
+            border-radius: 20px;
+            line-height: 1.6;
+            letter-spacing: .03em;
+        }
+        .badge-pending  { background: rgba(255,255,255,0.92); color: #9b98ab; }
+        .badge-cropping { background: rgba(83,74,183,0.9);    color: #fff; }
+        .badge-done     { background: rgba(39,80,10,0.9);     color: #fff; }
+
+        /* Remove button */
+        .preview-remove {
+            position: absolute;
+            top: 5px; right: 5px;
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            background: rgba(163,45,45,0.85);
+            color: #fff;
+            border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; line-height: 1;
+            opacity: 0;
+            transition: opacity .15s;
+        }
+
+        .preview-item:hover .preview-remove { opacity: 1; }
+
+        /* Re-crop button */
+        .preview-recrop {
+            position: absolute;
+            bottom: 5px; right: 5px;
+            width: 26px; height: 26px;
+            border-radius: var(--radius-md);
+            background: rgba(83,74,183,0.85);
+            color: #fff;
+            border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity .15s;
+        }
+
+        .preview-item:hover .preview-recrop { opacity: 1; }
+
+        /* Queue progress bar */
+        .queue-bar {
+            display: none;
+            margin-top: 10px;
+            background: var(--bg-secondary);
+            border-radius: 99px;
+            height: 4px;
+            overflow: hidden;
+        }
+        .queue-bar.visible { display: block; }
+        .queue-fill {
+            height: 100%;
+            background: var(--purple-600);
+            border-radius: 99px;
+            transition: width .3s ease;
+        }
+
+        .queue-label {
+            font-size: 11.5px;
+            color: var(--text-tertiary);
+            margin-top: 5px;
+            display: none;
+        }
+        .queue-label.visible { display: block; }
+
+        /* ── Submit button ── */
+        .submit-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 9px 20px; border-radius: var(--radius-md);
+            font-size: 13.5px; font-weight: 500;
+            background: var(--purple-600); color: #fff;
+            border: none; cursor: pointer;
+            transition: background .15s;
+            margin-top: 0.5rem;
+        }
+        .submit-btn:hover { background: var(--purple-800); }
+
+        /* ── Cropper modal ── */
+        .cropper-modal-overlay {
+            display: none;
+            position: fixed; z-index: 9999;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(3px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cropper-modal-overlay.is-open { display: flex; }
+
+        .cropper-modal-box {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            width: 580px;
+            max-width: 96vw;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.22);
+            overflow: hidden;
+        }
+
+        .cropper-modal-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.9rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .cropper-modal-meta { display: flex; flex-direction: column; gap: 1px; }
+        .cropper-modal-title { font-size: 14px; font-weight: 600; }
+        .cropper-modal-sub   { font-size: 11px; color: var(--text-tertiary); }
+
+        .cropper-close {
+            width: 28px; height: 28px; border-radius: var(--radius-md);
+            border: 1px solid var(--border); background: var(--bg-secondary);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 16px; color: var(--text-secondary); line-height: 1;
+            flex-shrink: 0;
+        }
+        .cropper-close:hover { background: var(--red-50); color: var(--red-600); }
+
+        .cropper-modal-body {
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f4fb;
+        }
+
+        /* The img Cropper.js owns — no fixed size; container constrains it */
+        .cropper-modal-body img {
+            display: block;
+            max-width: 100%;
+            max-height: 400px;
+        }
+
+        .cropper-container { max-height: 400px !important; }
+
+        .cropper-modal-footer {
+            padding: 0.9rem 1.25rem;
+            border-top: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .cropper-tools { display: flex; gap: 6px; }
+
+        .tool-btn {
+            width: 32px; height: 32px; border-radius: var(--radius-md);
+            border: 1px solid var(--border); background: var(--bg-primary);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: background .15s;
+            color: var(--text-secondary); font-size: 16px;
+        }
+        .tool-btn:hover { background: var(--purple-50); color: var(--purple-600); border-color: var(--border-md); }
+
+        .crop-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 18px; border-radius: var(--radius-md);
+            font-size: 13px; font-weight: 500;
+            background: var(--purple-600); color: #fff;
+            border: none; cursor: pointer;
+            transition: background .15s;
+        }
+        .crop-btn:hover { background: var(--purple-800); }
+
+        .skip-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 14px; border-radius: var(--radius-md);
+            font-size: 13px;
+            background: transparent; color: var(--text-secondary);
+            border: 1px solid var(--border); cursor: pointer;
+            transition: background .15s;
+        }
+        .skip-btn:hover { background: var(--bg-secondary); }
+
+        footer {
+            padding: 1rem 1.5rem;
+            font-size: 12px; color: var(--text-tertiary);
+            border-top: 1px solid var(--border);
+            background: var(--bg-primary);
+        }
     </style>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.css" />
-    
 </head>
-
 <body>
-    <div class="screen-overlay"></div>
-    <aside class="navbar-aside" id="offcanvas_aside">
-        <div class="aside-top">
-            <a href="index.html" class="brand-wrap">
-                <img src="/admin/assets/imgs/theme/sandglass-high-resolution-logo-transparent.svg" class="logo" alt="Hourglass Dashboard">
-            </a>
+
+<div class="shell">
+
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">
+                <img src="/admin/assets/imgs/theme/sandglass-high-resolution-logo-transparent.svg"
+                     style="width:22px;height:22px;object-fit:contain;filter:brightness(0) invert(1)" alt="Sandglass">
+            </div>
             <div>
-                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
+                <div class="brand-name">Sandglass</div>
+                <div class="brand-sub">Admin panel</div>
             </div>
         </div>
+
         <nav>
-            <ul class="menu-aside">
-                <li class="menu-item ">
-                    <a class="menu-link" href="/admin/dashboard"> <i class="icon material-icons md-home"></i>
-                        <span class="text">Dashboard</span>
-                    </a>
-                </li>
-                <li class="menu-item ">
-                    <a class="menu-link" href="/admin/products"> <i class="icon material-icons md-shopping_bag"></i>
-                        <span class="text">Products</span>
-                    </a>
-                    <!-- <div class="submenu">
-                        <a href="page-products-list.html">Product List</a>
-                        <a href="page-products-grid.html">Product grid</a>
-                        <a href="page-products-grid-2.html">Product grid 2</a>
-                        <a href="page-categories.html">Categories</a>
-                    </div> -->
-                </li>
-                <li class="menu-item ">
-                    <a class="menu-link" href="/admin/orders"> <i class="icon material-icons md-shopping_cart"></i>
-                        <span class="text">Orders</span>
-                    </a>
-                    <!-- <div class="submenu">
-                        <a href="page-orders-1.html">Order list 1</a>
-                        <a href="page-orders-2.html">Order list 2</a>
-                        <a href="page-orders-detail.html">Order detail</a>
-                        <a href="page-orders-tracking.html">Order tracking</a>
-                        <a href="page-invoice.html">Invoice</a>
-                    </div> -->
-                </li>
-                <li class="menu-item ">
-                    <a class="menu-link" href="/admin/users"> <i class="icon material-icons md-public"></i>
-                        <span class="text">Users</span>
-                    </a>
-                    <!-- <div class="submenu">
-                        <a href="page-sellers-cards.html">Sellers cards</a>
-                        <a href="page-sellers-list.html">Sellers list</a>
-                        <a href="page-seller-detail.html">Seller profile</a>
-                    </div> -->
-                </li>
-                <li class="menu-item active">
-                    <a class="menu-link" href="/admin/add_product"> <i class="icon material-icons md-add_box"></i>
-                        <span class="text">Add product</span>
-                    </a>
-                    <!-- <div class="submenu">
-                        <a href="page-form-product-1.html">Add product 1</a>
-                        <a href="page-form-product-2.html">Add product 2</a>
-                        <a href="page-form-product-3.html">Add product 3</a>
-                        <a href="page-form-product-4.html">Add product 4</a>
-                    </div> -->
-                </li>
-                <li class="menu-item ">
-                    <a class="menu-link" href="/admin/categories"> <i class="icon material-icons md-apps"></i>
-                        <span class="text">Categories</span>
-                    </a>
-                    <!-- <div class="submenu">
-                        <a href="page-transactions-1.html">Transaction 1</a>
-                        <a href="page-transactions-2.html">Transaction 2</a>
-                        <a href="page-transactions-details.html">Transaction Details</a>
-                    </div> -->
-                </li>
-                <li class="menu-item ">
-                    <a class="menu-link" href="/admin/coupons"> <i class="icon material-icons md-payment"></i>
-                        <span class="text">Coupons</span>
-                    </a>
-                    <!-- <div class="submenu">
-                        <a href="page-account-login.html">User login</a>
-                        <a href="page-account-register.html">User registration</a>
-                        <a href="page-error-404.html">Error 404</a>
-                    </div> -->
-                </li>
-                <!-- <li class="menu-item">
-                    <a class="menu-link" href="/admin/reviews"> <i class="icon material-icons md-comment"></i>
-                        <span class="text">Reviews</span>
-                    </a>
-                </li> -->
-                <li class="menu-item">
-                    <a class="menu-link" href="/admin/offers"> <i class="icon material-icons md-local_offer"></i>
-                        <span class="text">Offers</span> </a>
-                </li>
-                <li class="menu-item">
-                    <a class="menu-link" disabled href="/admin/statistics"> <i class="icon material-icons md-pie_chart"></i>
-                        <span class="text">Statistics</span>
-                    </a>
-                </li>
-            </ul>
-            <hr>
-            <!-- <ul class="menu-aside">
-                <li class="menu-item has-submenu">
-                    <a class="menu-link" href="#"> <i class="icon material-icons md-settings"></i>
-                        <span class="text">Settings</span>
-                    </a>
-                    <div class="submenu">
-                        <a href="page-settings-1.html">Setting sample 1</a>
-                        <a href="page-settings-2.html">Setting sample 2</a>
-                    </div>
-                </li>
-                <li class="menu-item">
-                    <a class="menu-link" href="page-blank.html"> <i class="icon material-icons md-local_offer"></i>
-                        <span class="text"> Starter page </span>
-                    </a>
-                </li>
-            </ul> -->
-            <br>
-            <br>
+            <div class="nav-label">Main</div>
+            <a href="/admin/dashboard" class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+            <a href="/admin/products"  class="nav-item"><i class="ti ti-shopping-bag"></i> Products</a>
+            <a href="/admin/orders"    class="nav-item"><i class="ti ti-shopping-cart"></i> Orders</a>
+            <a href="/admin/users"     class="nav-item"><i class="ti ti-users"></i> Users</a>
+
+            <div class="nav-label">Catalog</div>
+            <a href="/admin/add_product" class="nav-item active"><i class="ti ti-circle-plus"></i> Add product</a>
+            <a href="/admin/categories"  class="nav-item"><i class="ti ti-apps"></i> Categories</a>
+            <a href="/admin/coupons"     class="nav-item"><i class="ti ti-ticket"></i> Coupons</a>
+
+            <div class="nav-label">Analytics</div>
+            <a href="/admin/offers" class="nav-item"><i class="ti ti-tag"></i> Offers</a>
         </nav>
-    </aside>
-    <main class="main-wrap">
-        <header class="main-header navbar">
-            <div class="col-search">
-                <!-- <form class="searchform">
-                    <div class="input-group">
-                        <input list="search_terms" type="text" class="form-control" placeholder="Search">
-                        <button class="btn btn-light bg" type="button"> <i class="material-icons md-search"></i></button>
-                    </div>
-                    <datalist id="search_terms">
-                        <option value="Products">
-                        <option value="New orders">
-                        <option value="Apple iphone">
-                        <option value="Ahmed Hassan">
-                    </datalist>
-                </form> -->
+
+        <div class="sidebar-footer">
+            <div class="user-row">
+                <div class="avatar">AD</div>
+                <div>
+                    <div class="user-name">Admin</div>
+                    <div class="user-role">Store manager</div>
+                </div>
             </div>
-            <div class="col-nav">
-                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
-                <ul class="nav">
-                    <!-- <li class="nav-item">
-                        <a class="nav-link btn-icon" href="#">
-                            <i class="material-icons md-notifications animation-shake"></i>
-                            <span class="badge rounded-pill">3</span>
-                        </a>
-                    </li> -->
-                    <li class="nav-item">
-                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/admin/logout" ><i class="material-icons md-exit_to_app"></i></a>
-                    </li>
-                    <!-- <li class="dropdown nav-item">
-                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false"><i class="material-icons md-public"></i></a>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
-                            <a class="dropdown-item text-brand" href="#"><img src="/admin/assets/imgs/theme/flag-us.png" alt="English">English</a>
-                            <a class="dropdown-item" href="#"><img src="/admin/assets/imgs/theme/flag-fr.png" alt="Français">Français</a>
-                            <a class="dropdown-item" href="#"><img src="/admin/assets/imgs/theme/flag-jp.png" alt="Français">日本語</a>
-                            <a class="dropdown-item" href="#"><img src="/admin/assets/imgs/theme/flag-cn.png" alt="Français">中国人</a>
-                        </div>
-                    </li>-->
-                    <!-- <li class="dropdown nav-item">
-                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="/admin/assets/imgs/people/avatar2.jpg" alt="User"></a>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                            <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
-                        </div>
-                    </li>  -->
-                </ul>
+            <a href="/admin/logout" class="logout-btn"><i class="ti ti-logout"></i> Sign out</a>
+        </div>
+    </aside>
+
+    <!-- ── Main ── -->
+    <div class="main">
+
+        <header class="topbar">
+            <div class="search">
+                <i class="ti ti-search"></i>
+                <input type="text" placeholder="Search products, orders…">
+            </div>
+            <div class="topbar-right">
+                <a href="#" class="icon-btn darkmode" title="Dark mode"><i class="ti ti-moon"></i></a>
+                <a href="#" class="icon-btn requestfullscreen" title="Fullscreen"><i class="ti ti-maximize"></i></a>
+                <a href="/admin/logout" class="icon-btn" title="Logout"><i class="ti ti-logout"></i></a>
             </div>
         </header>
+<<<<<<< HEAD
         <section class="content-main">
             <div class="row">
                 <div class="col-9">
@@ -454,8 +759,39 @@
  <script src="https://unpkg.com/cropperjs/dist/cropper.js"></script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
 
+=======
 
+        <div class="content">
 
+            <div class="page-header">
+                <div class="page-title">Add New Product</div>
+                <div class="page-sub">Fill in the details below to add a product to your store</div>
+            </div>
+
+            <% if(typeof message != "undefined") { %>
+            <div class="error-banner">
+                <i class="ti ti-alert-circle"></i>
+                <%= message %>
+            </div>
+            <% } %>
+
+            <div class="form-card">
+                <div class="form-card-header">
+                    <i class="ti ti-package" style="font-size:18px;color:var(--purple-600)"></i>
+                    <div class="form-card-title">Product details</div>
+                </div>
+                <div class="form-card-body">
+                    <form method="post" enctype="multipart/form-data" id="uploadForm" onsubmit="return productValidate()">
+>>>>>>> 003d3dd (update ui)
+
+                        <!-- Product name -->
+                        <div class="field">
+                            <label class="field-label" for="product_name">Product title</label>
+                            <input type="text" class="field-input" id="product_name" name="product_name" placeholder="e.g. Classic Leather Watch">
+                            <div id="error_Pname" class="field-error"></div>
+                        </div>
+
+<<<<<<< HEAD
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -477,38 +813,74 @@
                 const imageToCrop = modal.querySelector('img');
                 const closeBtn = modal.querySelector('.close');
                 const cropButton = modal.querySelector('.cropButton');
+=======
+                        <!-- Description -->
+                        <div class="field">
+                            <label class="field-label" for="product_description">Full description</label>
+                            <textarea class="field-textarea" id="product_description" name="product_description" placeholder="Describe the product in detail…"></textarea>
+                            <div id="error_PD" class="field-error"></div>
+                        </div>
 
-                imageToCrop.src = imageSrc;
-                document.body.appendChild(modal);
+                        <!-- Price & stock -->
+                        <div class="price-grid">
+                            <div class="field">
+                                <label class="field-label" for="product_Aprice">Regular price (₹)</label>
+                                <input type="text" class="field-input" id="product_Aprice" name="product_price" placeholder="0.00">
+                                <div id="error_Paprice" class="field-error"></div>
+                            </div>
+                            <div class="field">
+                                <label class="field-label" for="product_Pprice">Sale price (₹)</label>
+                                <input type="text" class="field-input" id="product_Pprice" name="product_sale_price" placeholder="0.00">
+                                <div id="error_Ppprice" class="field-error"></div>
+                            </div>
+                            <div class="field">
+                                <label class="field-label" for="product_stock">Stock</label>
+                                <input type="number" class="field-input" id="product_stock" name="product_stock" placeholder="0">
+                            </div>
+                        </div>
+>>>>>>> 003d3dd (update ui)
 
-                const cropper = new Cropper(imageToCrop, {
-                    aspectRatio: 1,
-                    viewMode: 1,
-                });
+                        <!-- Category -->
+                        <div class="field" style="max-width:300px">
+                            <label class="field-label" for="product_category">Category</label>
+                            <select class="field-select" id="product_category" name="product_category">
+                                <% if(categories) { %>
+                                    <% categories.forEach((category) => { %>
+                                        <option value="<%= category._id %>"><%= category.name %></option>
+                                    <% }) %>
+                                <% } %>
+                            </select>
+                        </div>
 
-                closeBtn.onclick = function() {
-                    modal.style.display = 'none';
-                    cropper.destroy();
-                    modal.remove();
-                    isProcessing = false; // Reset flag when modal is closed
-                };
+                        <!-- Image upload -->
+                        <div class="field">
+                            <label class="field-label">Product images</label>
 
-                cropButton.onclick = function() {
-                    const canvas = cropper.getCroppedCanvas();
-                    canvas.toBlob(function(blob) {
-                        const croppedFile = new File([blob], file.name, {
-                            type: 'image/jpeg',
-                            lastModified: Date.now()
-                        });
+                            <div class="upload-zone" id="uploadZone"
+                                 onclick="document.getElementById('file-input-1').click()"
+                                 ondragover="handleDragOver(event)"
+                                 ondragleave="handleDragLeave(event)"
+                                 ondrop="handleDrop(event)">
+                                <i class="ti ti-cloud-upload"></i>
+                                <p>Click or drag &amp; drop images here</p>
+                                <span>JPEG, JPG, PNG · Select multiple at once</span>
+                            </div>
 
-                        // Add the cropped file to the DataTransfer object
-                        dataTransfer.items.add(croppedFile);
-                        currentFileInput.files = dataTransfer.files;
+                            <input type="file" id="file-input-1" name="images"
+                                   accept="image/jpeg,image/jpg,image/png" multiple>
 
-                        const img = document.createElement('img');
-                        img.src = URL.createObjectURL(blob);
-                        previewContainer.appendChild(img);
+                            <!-- Queue progress -->
+                            <div class="queue-bar" id="queueBar">
+                                <div class="queue-fill" id="queueFill" style="width:0%"></div>
+                            </div>
+                            <div class="queue-label" id="queueLabel"></div>
 
+                            <!-- Preview grid -->
+                            <div id="preview-container"></div>
+                            <div id="imageError" class="field-error"></div>
+                        </div>
+
+<<<<<<< HEAD
                         modal.style.display = 'none';
                         cropper.destroy();
                         modal.remove();
@@ -549,12 +921,25 @@
                     }
                 }
             }
+=======
+                        <button type="submit" class="submit-btn">
+                            <i class="ti ti-upload"></i> Upload product
+                        </button>
 
-            window.validateImage = function(input) {
-                handleFiles(input, input.files);
-                return true; // Ensure the validateImage returns true for form submission validation
-            };
+                    </form>
+                </div>
+            </div>
 
+        </div>
+>>>>>>> 003d3dd (update ui)
+
+        <footer>
+            <script>document.write(new Date().getFullYear())</script> &copy; Sandglass &mdash; All rights reserved
+        </footer>
+    </div>
+</div>
+
+<<<<<<< HEAD
             document.getElementById('file-input-1').addEventListener('change', function(e) {
                 validateImage(e.target);  // This will trigger the cropping process when the image is selected
             });
@@ -624,5 +1009,470 @@
 
     </script>
 </body>
+=======
+<!-- ── Cropper modal (single reusable instance) ── -->
+<div class="cropper-modal-overlay" id="cropperOverlay">
+    <div class="cropper-modal-box">
+        <div class="cropper-modal-header">
+            <div class="cropper-modal-meta">
+                <div class="cropper-modal-title">Crop image</div>
+                <div class="cropper-modal-sub" id="cropperSub">Image 1 of 1</div>
+            </div>
+            <div class="cropper-close" id="cropperClose">&times;</div>
+        </div>
+        <div class="cropper-modal-body">
+            <img id="cropperImage" src="" alt="Crop preview">
+        </div>
+        <div class="cropper-modal-footer">
+            <div class="cropper-tools">
+                <button type="button" class="tool-btn" title="Rotate left"  onclick="cropperRotate(-90)"><i class="ti ti-rotate-clockwise-2" style="transform:scaleX(-1)"></i></button>
+                <button type="button" class="tool-btn" title="Rotate right" onclick="cropperRotate(90)"><i class="ti ti-rotate-clockwise-2"></i></button>
+                <button type="button" class="tool-btn" title="Flip horizontal" onclick="cropperFlip('x')"><i class="ti ti-flip-horizontal"></i></button>
+                <button type="button" class="tool-btn" title="Flip vertical"   onclick="cropperFlip('y')"><i class="ti ti-flip-vertical"></i></button>
+                <button type="button" class="tool-btn" title="Reset" onclick="cropperReset()"><i class="ti ti-refresh"></i></button>
+            </div>
+            <div style="display:flex;gap:8px">
+                <button type="button" class="skip-btn" id="skipBtn">Skip crop</button>
+                <button type="button" class="crop-btn" id="cropBtn">
+                    <i class="ti ti-crop"></i> Crop &amp; save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
+<script src="/admin/assets/js/vendors/jquery-3.6.0.min.js"></script>
+<script src="/admin/assets/js/vendors/bootstrap.bundle.min.js"></script>
+<script src="/admin/assets/js/vendors/select2.min.js"></script>
+<script src="/admin/assets/js/vendors/perfect-scrollbar.js"></script>
+<script src="/admin/assets/js/vendors/jquery.fullscreen.min.js"></script>
+<script src="/admin/assets/js/main.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+
+<script>
+/* =========================================================
+   IMAGE UPLOAD, CROP & PREVIEW MANAGER
+   ========================================================= */
+(function () {
+
+    /* ── State ── */
+    const VALID_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
+
+    // Each entry: { id, file, originalSrc, croppedBlob|null, previewEl, status }
+    let images = [];
+    let idCounter = 0;
+
+    // Queue of image IDs waiting to be cropped
+    let cropQueue = [];
+    let currentCropId = null;
+    let cropperInstance = null;
+    let scaleX = 1, scaleY = 1;  // track flips
+
+    /* ── DOM refs ── */
+    const fileInput       = document.getElementById('file-input-1');
+    const previewContainer = document.getElementById('preview-container');
+    const uploadZone      = document.getElementById('uploadZone');
+    const queueBar        = document.getElementById('queueBar');
+    const queueFill       = document.getElementById('queueFill');
+    const queueLabel      = document.getElementById('queueLabel');
+    const imageError      = document.getElementById('imageError');
+
+    const overlay         = document.getElementById('cropperOverlay');
+    const cropperImage    = document.getElementById('cropperImage');
+    const cropperSub      = document.getElementById('cropperSub');
+    const cropperClose    = document.getElementById('cropperClose');
+    const cropBtn         = document.getElementById('cropBtn');
+    const skipBtn         = document.getElementById('skipBtn');
+
+    /* ── File input change ── */
+    fileInput.addEventListener('change', function () {
+        ingestFiles(Array.from(this.files));
+        // Reset so same file can be re-selected
+        this.value = '';
+    });
+
+    /* ── Drag & drop ── */
+    window.handleDragOver = function (e) {
+        e.preventDefault();
+        uploadZone.classList.add('drag-over');
+    };
+    window.handleDragLeave = function () {
+        uploadZone.classList.remove('drag-over');
+    };
+    window.handleDrop = function (e) {
+        e.preventDefault();
+        uploadZone.classList.remove('drag-over');
+        ingestFiles(Array.from(e.dataTransfer.files));
+    };
+
+    /* ── Ingest new files ── */
+    function ingestFiles(files) {
+        const valid = files.filter(f => VALID_TYPES.includes(f.type));
+        const invalid = files.length - valid.length;
+
+        if (invalid > 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Some files skipped',
+                text: `${invalid} file(s) were not JPEG or PNG and have been ignored.`,
+                confirmButtonText: 'OK'
+            });
+        }
+
+        valid.forEach(file => {
+            const id = ++idCounter;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const entry = {
+                    id,
+                    file,
+                    originalSrc: e.target.result,
+                    croppedBlob: null,
+                    previewEl: null,
+                    status: 'pending'
+                };
+                images.push(entry);
+                entry.previewEl = createPreviewCard(entry);
+                previewContainer.appendChild(entry.previewEl);
+                cropQueue.push(id);
+                updateQueueUI();
+                processQueue();
+            };
+            reader.readAsDataURL(file);
+        });
+>>>>>>> 003d3dd (update ui)
+
+        hideError();
+    }
+
+    /* ── Create preview card ── */
+    function createPreviewCard(entry) {
+        const item = document.createElement('div');
+        item.className = 'preview-item';
+        item.dataset.id = entry.id;
+
+        const img = document.createElement('img');
+        img.src = entry.originalSrc;
+        img.alt = entry.file.name;
+
+        const badge = document.createElement('span');
+        badge.className = 'preview-badge badge-pending';
+        badge.textContent = 'Pending';
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'preview-remove';
+        removeBtn.title = 'Remove';
+        removeBtn.innerHTML = '&times;';
+        removeBtn.addEventListener('click', () => removeImage(entry.id));
+
+        const recropBtn = document.createElement('button');
+        recropBtn.type = 'button';
+        recropBtn.className = 'preview-recrop';
+        recropBtn.title = 'Re-crop';
+        recropBtn.innerHTML = '<i class="ti ti-crop" style="font-size:13px"></i>';
+        recropBtn.style.display = 'none';
+        recropBtn.addEventListener('click', () => recropImage(entry.id));
+
+        item.appendChild(img);
+        item.appendChild(badge);
+        item.appendChild(removeBtn);
+        item.appendChild(recropBtn);
+
+        return item;
+    }
+
+    /* ── Update preview card state ── */
+    function updatePreviewCard(entry) {
+        const item = entry.previewEl;
+        const img   = item.querySelector('img');
+        const badge = item.querySelector('.preview-badge');
+        const recropBtn = item.querySelector('.preview-recrop');
+
+        if (entry.status === 'pending') {
+            badge.className = 'preview-badge badge-pending';
+            badge.textContent = 'Pending';
+            img.src = entry.originalSrc;
+            recropBtn.style.display = 'none';
+        } else if (entry.status === 'cropping') {
+            badge.className = 'preview-badge badge-cropping';
+            badge.textContent = 'Cropping…';
+            recropBtn.style.display = 'none';
+        } else if (entry.status === 'done') {
+            badge.className = 'preview-badge badge-done';
+            badge.textContent = 'Done';
+            if (entry.croppedBlob) {
+                img.src = URL.createObjectURL(entry.croppedBlob);
+            }
+            recropBtn.style.display = 'flex';
+        }
+    }
+
+    /* ── Queue processing ── */
+    function processQueue() {
+        if (currentCropId !== null) return; // modal already open
+        if (cropQueue.length === 0) {
+            rebuildFileInput();
+            updateQueueUI();
+            return;
+        }
+
+        const nextId = cropQueue.shift();
+        const entry = getEntry(nextId);
+        if (!entry) { processQueue(); return; } // was removed
+
+        currentCropId = nextId;
+        entry.status = 'cropping';
+        updatePreviewCard(entry);
+        updateQueueUI();
+        openCropper(entry);
+    }
+
+    /* ── Open cropper modal ── */
+    function openCropper(entry) {
+        scaleX = 1; scaleY = 1;
+
+        // Update subtitle: position in total
+        const totalQueued = images.filter(e => e.status === 'cropping' || e.status === 'pending').length;
+        const pos = images.filter(e => e.status === 'done').length + 1;
+        cropperSub.textContent = `Image ${pos} of ${images.length}`;
+
+        // Destroy any previous instance
+        if (cropperInstance) { cropperInstance.destroy(); cropperInstance = null; }
+
+        cropperImage.src = '';
+        overlay.classList.add('is-open');
+
+        cropperImage.onload = function () {
+            cropperInstance = new Cropper(cropperImage, {
+                aspectRatio: 1,
+                viewMode: 1,
+                autoCropArea: 0.85,
+                movable: true,
+                zoomable: true,
+                rotatable: true,
+                scalable: true,
+            });
+        };
+        cropperImage.src = entry.originalSrc;
+    }
+
+    /* ── Close cropper ── */
+    function closeCropper() {
+        overlay.classList.remove('is-open');
+        if (cropperInstance) { cropperInstance.destroy(); cropperInstance = null; }
+        cropperImage.src = '';
+        currentCropId = null;
+    }
+
+    /* ── Crop & save ── */
+    cropBtn.addEventListener('click', function () {
+        if (!cropperInstance || currentCropId === null) return;
+        const canvas = cropperInstance.getCroppedCanvas({ width: 800, height: 800 });
+        canvas.toBlob(function (blob) {
+            const entry = getEntry(currentCropId);
+            if (entry) {
+                entry.croppedBlob = blob;
+                entry.status = 'done';
+                updatePreviewCard(entry);
+            }
+            closeCropper();
+            rebuildFileInput();
+            processQueue();
+        }, 'image/jpeg', 0.92);
+    });
+
+    /* ── Skip (use original) ── */
+    skipBtn.addEventListener('click', function () {
+        const entry = getEntry(currentCropId);
+        if (entry) {
+            entry.croppedBlob = null; // will use original file
+            entry.status = 'done';
+            updatePreviewCard(entry);
+        }
+        closeCropper();
+        rebuildFileInput();
+        processQueue();
+    });
+
+    /* ── Close via × ── */
+    cropperClose.addEventListener('click', function () {
+        // Treat close same as skip — don't lose the image
+        skipBtn.click();
+    });
+
+    /* ── Re-crop a finished image ── */
+    window.recropImage = function (id) {
+        const entry = getEntry(id);
+        if (!entry) return;
+
+        if (currentCropId !== null) {
+            // Queue it at the front after current finishes
+            cropQueue.unshift(id);
+            return;
+        }
+
+        entry.status = 'pending';
+        entry.croppedBlob = null;
+        updatePreviewCard(entry);
+        cropQueue.unshift(id);
+        processQueue();
+    };
+
+    /* ── Remove image ── */
+    window.removeImage = function (id) {
+        // Remove from queue
+        cropQueue = cropQueue.filter(qid => qid !== id);
+
+        // If currently cropping this one, close modal and continue
+        if (currentCropId === id) {
+            closeCropper();
+        }
+
+        const entry = getEntry(id);
+        if (entry && entry.previewEl) {
+            entry.previewEl.remove();
+        }
+
+        images = images.filter(e => e.id !== id);
+        rebuildFileInput();
+        updateQueueUI();
+
+        if (currentCropId === id) {
+            processQueue();
+        }
+    };
+
+    /* ── Rebuild the hidden file input's FileList from cropped blobs ── */
+    function rebuildFileInput() {
+        const dt = new DataTransfer();
+        images.forEach(entry => {
+            if (entry.status !== 'done') return;
+            if (entry.croppedBlob) {
+                dt.items.add(new File([entry.croppedBlob], entry.file.name, { type: 'image/jpeg', lastModified: Date.now() }));
+            } else {
+                dt.items.add(entry.file);
+            }
+        });
+        fileInput.files = dt.files;
+    }
+
+    /* ── Cropper tool helpers ── */
+    window.cropperRotate = function (deg) { if (cropperInstance) cropperInstance.rotate(deg); };
+    window.cropperFlip = function (axis) {
+        if (!cropperInstance) return;
+        if (axis === 'x') { scaleX *= -1; cropperInstance.scaleX(scaleX); }
+        else               { scaleY *= -1; cropperInstance.scaleY(scaleY); }
+    };
+    window.cropperReset = function () {
+        if (!cropperInstance) return;
+        scaleX = 1; scaleY = 1;
+        cropperInstance.reset();
+    };
+
+    /* ── Queue UI ── */
+    function updateQueueUI() {
+        const total   = images.length;
+        const done    = images.filter(e => e.status === 'done').length;
+        const pending = cropQueue.length + (currentCropId !== null ? 1 : 0);
+
+        if (total === 0) {
+            queueBar.classList.remove('visible');
+            queueLabel.classList.remove('visible');
+            return;
+        }
+
+        const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+        queueFill.style.width = pct + '%';
+        queueBar.classList.add('visible');
+
+        if (pending > 0) {
+            queueLabel.textContent = `${pending} image${pending > 1 ? 's' : ''} waiting to crop…`;
+            queueLabel.classList.add('visible');
+        } else {
+            queueLabel.textContent = `${done} of ${total} image${total > 1 ? 's' : ''} ready`;
+            queueLabel.classList.add('visible');
+        }
+    }
+
+    /* ── Helpers ── */
+    function getEntry(id) { return images.find(e => e.id === id) || null; }
+
+    function hideError() {
+        imageError.textContent = '';
+        imageError.classList.remove('show');
+    }
+
+    function showError(msg) {
+        imageError.textContent = msg;
+        imageError.classList.add('show');
+    }
+
+    /* ── Expose validateImage for form submit check ── */
+    window.validateImage = function () {
+        const doneCount = images.filter(e => e.status === 'done').length;
+        const pendingCount = cropQueue.length + (currentCropId !== null ? 1 : 0);
+
+        if (images.length === 0) {
+            showError('Please add at least one product image.');
+            return false;
+        }
+        if (pendingCount > 0) {
+            showError('Please finish cropping all images before submitting.');
+            return false;
+        }
+        hideError();
+        return true;
+    };
+
+})();
+
+/* =========================================================
+   FORM VALIDATION
+   ========================================================= */
+function productValidate() {
+    const productName        = document.getElementById('product_name').value.trim();
+    const productDescription = document.getElementById('product_description').value.trim();
+    const productAprice      = document.getElementById('product_Aprice').value.trim();
+    const productPprice      = document.getElementById('product_Pprice').value.trim();
+
+    let isValid = true;
+
+    function showError(id, msg) {
+        const el = document.getElementById(id);
+        el.textContent = msg;
+        el.classList.add('show');
+    }
+    function clearError(id) {
+        const el = document.getElementById(id);
+        el.textContent = '';
+        el.classList.remove('show');
+    }
+
+    if (!productName)        { showError('error_Pname',   'Please fill in the product name'); isValid = false; }
+    else                       clearError('error_Pname');
+
+    if (!productDescription) { showError('error_PD',      'Please fill in the description'); isValid = false; }
+    else                       clearError('error_PD');
+
+    if (!productAprice) {
+        showError('error_Paprice', 'Please fill in the regular price'); isValid = false;
+    } else if (isNaN(productAprice) || Number(productAprice) <= 0) {
+        showError('error_Paprice', 'Please enter a valid regular price'); isValid = false;
+    } else clearError('error_Paprice');
+
+    if (!productPprice) {
+        showError('error_Ppprice', 'Please fill in the sale price'); isValid = false;
+    } else if (isNaN(productPprice) || Number(productPprice) <= 0) {
+        showError('error_Ppprice', 'Please enter a valid sale price'); isValid = false;
+    } else clearError('error_Ppprice');
+
+    if (!window.validateImage()) isValid = false;
+
+    return isValid;
+}
+</script>
+
+</body>
 </html>

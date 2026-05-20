@@ -5,8 +5,7 @@ const isLoggedIn = async(req, res, next) => {
         } else {
             return res.redirect('/admin');
         }
-    } catch (error) {
-        console.log(error);
+    } catch {
         return res.status(500);
     }
 };
@@ -18,8 +17,7 @@ const isLoggedOut = async(req, res, next) => {
         } else {
             return next();
         }
-    } catch (error) {
-        console.log(error);
+    } catch {
         return res.status(500);
     }
 };

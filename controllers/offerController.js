@@ -1,10 +1,9 @@
 const Product = require('../models/productModel');
 const Category = require('../models/categoryModel');
 const Offer = require('../models/offerModel');
-// const User = require('../models/userModel');
 
 
-const createOffer = async(req, res) => {
+const createOffer = async (req, res) => {
     try {
         const categoryData = await Category.find({});
         const productData = await Product.find({});
@@ -12,8 +11,13 @@ const createOffer = async(req, res) => {
             categoryData,
             productData
         });
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send('Internal Server Error');
+>>>>>>> 003d3dd (update ui)
 
     }
 };
@@ -22,7 +26,6 @@ const saveOffer = async (req, res) => {
     try {
         const { name, offerType, discountPercentage, startDate, endDate } = req.body;
 
-        // Validate offerType
         if (!['category', 'product'].includes(offerType)) {
             return res.status(400).send('Invalid offer type');
         }
@@ -35,14 +38,19 @@ const saveOffer = async (req, res) => {
             endDate
         };
 
-        // Create the new offer
         const newOffer = new Offer(offerData);
         await newOffer.save();
 
+<<<<<<< HEAD
         // Redirect to the offers list page after successful save
         return res.redirect('/admin/offers');
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+        return res.redirect('/admin/offers');
+    } catch {
+        return res.status(500).send('Internal Server Error');
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -71,32 +79,17 @@ const loadOffersPage = async (req, res) => {
             totalPages,
             currentPage: Number(page)
         });
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send('Internal Server Error');
+>>>>>>> 003d3dd (update ui)
     }
 };
 
-// const loadProductsForOffer = async (req, res) => {
-//     try {
-//         const { offerId } = req.query;
-//         const products = await Product.find().populate('category', 'name');
-//         res.render('partials/productModal', { products });
-//     } catch (error) {
-//         console.log('Error loading products:', error);
-//         res.status(500).send('Internal Server Error');
-//     }
-// };
 
-// const loadCategoriesForOffer = async (req, res) => {
-//     try {
-//         const { offerId } = req.query;
-//         const categories = await Category.find();
-//         res.render('partials/categoryModal', { categories });
-//     } catch (error) {
-//         console.log('Error loading categories:', error);
-//         res.status(500).send('Internal Server Error');
-//     }
-// };
 
 const toggleOfferStatus = async (req, res) => {
     try {
@@ -111,12 +104,17 @@ const toggleOfferStatus = async (req, res) => {
         await offer.save();
 
         return res.status(200).json({ success: true, newStatus: offer.isActive });
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send('Internal Server Error');
+>>>>>>> 003d3dd (update ui)
     }
 };
 
-const editOffer = async(req, res) => {
+const editOffer = async (req, res) => {
     try {
         const offerId = req.params.id;
         const offer = await Offer.findById(offerId);
@@ -126,12 +124,17 @@ const editOffer = async(req, res) => {
         }
 
         return res.render('admin/edit_offer', { offer });
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send('Internal Server Error');
+>>>>>>> 003d3dd (update ui)
     }
 };
 
-const updateOffer = async(req, res) => {
+const updateOffer = async (req, res) => {
     try {
         const { offerId, name, discountPercentage, startDate, endDate } = req.body;
 
@@ -141,7 +144,6 @@ const updateOffer = async(req, res) => {
             return res.status(404).send('Offer not found');
         }
 
-        // Update the offer details except for the offerType
         offer.name = name;
         offer.discountPercentage = discountPercentage;
         offer.startDate = new Date(startDate);
@@ -149,13 +151,18 @@ const updateOffer = async(req, res) => {
 
         await offer.save();
         return res.redirect('/admin/offers');
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send('Internal Server Error');
+>>>>>>> 003d3dd (update ui)
     }
 };
 
 
-const selectItems = async(req, res) => {
+const selectItems = async (req, res) => {
     try {
         const offerId = req.params.id;
         const products = await Product.find({});
@@ -179,8 +186,13 @@ const selectItems = async(req, res) => {
             });
         }
 
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send('Internal Server Error');
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -194,10 +206,10 @@ const addOfferProduct = async (req, res) => {
             return res.status(404).json({ error: 'Offer not found' });
         }
 
-        // Check if the product is already in the offer
         if (offer.product.includes(productId)) {
             return res.status(400).json({ error: 'Product already in offer' });
         }
+<<<<<<< HEAD
 
         // Find other offers that include this product
         const otherOffers = await Offer.find({ product: productId });
@@ -216,6 +228,10 @@ const addOfferProduct = async (req, res) => {
         return res.status(200).json({ message: 'Product added to offer, and any existing offers were removed.' });
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).json({ error: 'Internal server error' });
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -228,18 +244,22 @@ const removeOfferProduct = async (req, res) => {
             return res.status(404).json({ error: 'Offer not found' });
         }
 
-        // Check if the product is in the offer
         const productIndex = offer.product.indexOf(productId);
         if (productIndex === -1) {
 
             return res.status(400).json({ error: 'Product not in offer' });
         } else {
-            offer.product.splice(productIndex, 1); // Remove product from array
+            offer.product.splice(productIndex, 1);
             await offer.save();
             return res.status(200).json({ message: 'Product removed from offer' });
         }
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).json({ error: 'Internal server error' });
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -253,10 +273,10 @@ const addOfferCategory = async (req, res) => {
             return res.status(404).json({ error: 'Offer not found' });
         }
 
-        // Check if the category is already in the offer
         if (offer.category.includes(categoryId)) {
             return res.status(400).json({ error: 'Category already in offer' });
         }
+<<<<<<< HEAD
 
         // Find other offers that include this category
         const otherOffers = await Offer.find({ category: categoryId });
@@ -275,6 +295,10 @@ const addOfferCategory = async (req, res) => {
         return res.status(200).json({ message: 'Category added to offer, and any existing offers were removed.' });
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).json({ error: 'Internal server error' });
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -288,18 +312,22 @@ const removeOfferCategory = async (req, res) => {
             return res.status(404).json({ error: 'Offer not found' });
         }
 
-        // Check if the category is in the offer
         const categoryIndex = offer.category.indexOf(categoryId);
         if (categoryIndex === -1) {
             return res.status(400).json({ error: 'Category not in offer' });
         } else {
 
-            offer.category.splice(categoryIndex, 1); // Remove category from array
+            offer.category.splice(categoryIndex, 1); 
             await offer.save();
             return res.status(200).json({ message: 'Category removed from offer' });
         }
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).json({ error: 'Internal server error' });
+>>>>>>> 003d3dd (update ui)
     }
 };
 

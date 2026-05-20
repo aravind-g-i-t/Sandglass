@@ -1,211 +1,681 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en">
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
-    <title>Evara - eCommerce HTML Template</title>
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="description" content="">
+    <title>Sandglass — Wishlist</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta property="og:title" content="">
-    <meta property="og:type" content="">
-    <meta property="og:url" content="">
-    <meta property="og:image" content="">
-    <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="user/assets/imgs/theme/favicon.svg">
-    <!-- Template CSS -->
-    <link rel="stylesheet" href="user/assets/css/main.css?v=3.4">
-    <link rel="stylesheet" href="user/assets/css/auto_complete.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Serif+Display&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --purple-50: #EEEDFE;
+            --purple-100: #CECBF6;
+            --purple-400: #7F77DD;
+            --purple-600: #534AB7;
+            --purple-800: #3C3489;
+            --purple-900: #26215C;
+            --gray-50: #F7F6F3;
+            --gray-100: #EEECE8;
+            --gray-200: #D3D1C7;
+            --gray-400: #888780;
+            --gray-600: #5F5E5A;
+            --gray-900: #1A1918;
+            --white: #FFFFFF;
+            --success: #16A34A;
+            --success-bg: #DCFCE7;
+            --danger: #E24B4A;
+            --danger-bg: #FCEBEB;
+        }
+
+        html,
+        body {
+            font-family: 'DM Sans', sans-serif;
+            color: var(--gray-900);
+            -webkit-font-smoothing: antialiased;
+            background: var(--gray-50);
+        }
+
+        /* ── Header ── */
+        .header-area {
+            display: none !important;
+        }
+
+        .sg-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .sg-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--purple-800);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sg-logo-text {
+            font-family: 'DM Serif Display', serif;
+            font-size: 20px;
+            color: var(--gray-900);
+            letter-spacing: -0.2px;
+        }
+
+        .sg-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1050;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .sg-header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 48px;
+            height: 64px;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .sg-user-btn {
+            transition: background 0.15s;
+        }
+
+        .sg-user-btn:hover {
+            background: var(--gray-50);
+            color: var(--gray-900);
+        }
+
+        .sg-search {
+            position: relative;
+            flex: 0 0 240px;
+        }
+
+        .sg-search input {
+            width: 100%;
+            padding: 8px 12px 8px 36px;
+            font-size: 13px;
+            font-family: 'DM Sans', sans-serif;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            background: var(--gray-50);
+            color: var(--gray-900);
+            outline: none;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        .sg-search input:focus {
+            border-color: var(--purple-400);
+            box-shadow: 0 0 0 3px var(--purple-50);
+            background: var(--white);
+        }
+
+        .sg-search input::placeholder {
+            color: var(--gray-200);
+        }
+
+        .sg-search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+        }
+
+        .sg-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sg-icon-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            border: 1px solid var(--gray-100);
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--gray-600);
+            position: relative;
+            transition: background 0.15s, border-color 0.15s;
+        }
+
+        .sg-icon-btn:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-200);
+            color: var(--gray-900);
+        }
+
+        .sg-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 18px;
+            height: 18px;
+            background: var(--purple-800);
+            color: #fff;
+            border-radius: 50%;
+            font-size: 10px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sg-user-wrap {
+            position: relative;
+        }
+
+        .sg-user-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border: 1px solid var(--gray-100);
+            border-radius: 8px;
+            background: var(--white);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--gray-900);
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.15s;
+        }
+
+        .sg-user-btn:hover {
+            background: var(--gray-50);
+            color: var(--gray-900);
+        }
+
+        .sg-user-avatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--purple-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--purple-800);
+        }
+
+        .sg-dropdown {
+            position: absolute;
+            right: 0;
+            top: calc(100% + 8px);
+            background: var(--white);
+            border: 1px solid var(--gray-100);
+            border-radius: 12px;
+            padding: 6px;
+            min-width: 180px;
+            box-shadow: 0 8px 24px rgba(60, 52, 137, 0.10);
+            display: none;
+            z-index: 200;
+        }
+
+        .sg-dropdown.active {
+            display: block;
+        }
+
+        .sg-dropdown a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 12px;
+            font-size: 13px;
+            color: var(--gray-900);
+            text-decoration: none;
+            border-radius: 8px;
+        }
+
+        .sg-dropdown a:hover {
+            background: var(--gray-50);
+        }
+
+        .sg-dropdown-divider {
+            height: 1px;
+            background: var(--gray-100);
+            margin: 4px 0;
+        }
+
+        .sg-navbar {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            right: 0;
+            z-index: 1040;
+            background: var(--purple-900);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            padding: 0 48px;
+            height: 46px;
+        }
+
+        .sg-navbar a {
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.75);
+            text-decoration: none;
+            transition: color 0.15s;
+            letter-spacing: 0.01em;
+        }
+
+        .sg-navbar a:hover {
+            color: #fff;
+        }
+
+        .sg-page-offset {
+            padding-top: 110px;
+        }
+
+
+
+        .sg-breadcrumb {
+            padding: 35px 0 0;
+            font-size: 13px;
+            color: var(--gray-400);
+            margin-bottom: 20px;
+        }
+
+        .sg-breadcrumb a {
+            color: var(--gray-400);
+            text-decoration: none;
+        }
+
+        .sg-breadcrumb a:hover {
+            color: var(--purple-800);
+        }
+
+        .sg-breadcrumb span {
+            margin: 0 8px;
+        }
+
+        .sg-page-heading {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-bottom: 32px;
+        }
+
+        .sg-page-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 32px;
+            font-weight: 400;
+            color: var(--gray-900);
+            margin-bottom: 6px;
+        }
+
+        .sg-page-subtitle {
+            font-size: 14px;
+            color: var(--gray-400);
+        }
+
+        .sg-dropdown a.danger {
+            color: var(--danger);
+        }
+
+        .sg-dropdown a.danger:hover {
+            background: var(--danger-bg);
+        }
+
+        @media (max-width:768px) {
+            .sg-header-inner {
+                padding: 0 20px;
+            }
+
+            .sg-search {
+                display: none;
+            }
+
+            .sg-navbar {
+                display: none;
+            }
+
+            .sg-page-offset {
+                padding-top: 70px;
+            }
+
+            .sg-page {
+                padding: 20px 16px 40px;
+            }
+
+            .sg-page-heading {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+        }
+
+        /* ── Page wrapper ── */
+
+        .sg-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px 64px;
+}
+
+        /* ── Page heading ── */
+        .sg-page-heading {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 32px;
+        }
+
+        .sg-page-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 28px;
+            font-weight: 400;
+            color: var(--gray-900);
+        }
+
+        .sg-page-count {
+            font-size: 14px;
+            color: var(--gray-400);
+        }
+
+        .sg-continue-btn {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--purple-600);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sg-continue-btn:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Wishlist table ── */
+        .sg-table-wrap {
+            background: var(--white);
+            border: 1px solid var(--gray-100);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 16px rgba(60, 52, 137, 0.05);
+            overflow-x: auto;
+        }
+
+        .sg-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .sg-table thead tr {
+            background: var(--gray-50);
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .sg-table thead th {
+            padding: 14px 20px;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--gray-400);
+            text-align: left;
+        }
+
+        .sg-table thead th:last-child {
+            text-align: center;
+        }
+
+        .sg-table tbody tr {
+            border-bottom: 1px solid var(--gray-100);
+            transition: background 0.12s;
+        }
+
+        .sg-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .sg-table tbody tr:hover {
+            background: var(--gray-50);
+        }
+
+        .sg-table td {
+            padding: 18px 20px;
+            vertical-align: middle;
+        }
+
+        /* product cell */
+        .sg-product-cell {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .sg-product-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid var(--gray-100);
+            background: var(--gray-50);
+            flex-shrink: 0;
+        }
+
+        .sg-product-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-900);
+            text-decoration: none;
+        }
+
+        .sg-product-name:hover {
+            color: var(--purple-600);
+        }
+
+        /* price */
+        .sg-price {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--gray-900);
+        }
+
+        /* status badges */
+
+        .sg-badge-out {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--danger);
+            background: var(--danger-bg);
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        /* action buttons */
+        .sg-btn-cart {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: var(--purple-800);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            transition: background 0.15s;
+            text-decoration: none;
+        }
+
+        .sg-btn-cart:hover {
+            background: var(--purple-900);
+        }
+
+        .sg-btn-contact {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: var(--white);
+            color: var(--gray-600);
+            border: 1px solid var(--gray-200);
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+        }
+
+        .sg-remove-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: var(--gray-400);
+            border-radius: 6px;
+            transition: color 0.15s, background 0.15s;
+            margin: 0 auto;
+        }
+
+        .sg-remove-btn:hover {
+            color: var(--danger);
+            background: var(--danger-bg);
+        }
+
+        /* ── Empty state ── */
+        .sg-empty {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .sg-empty-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--purple-50);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .sg-empty h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 22px;
+            font-weight: 400;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+        }
+
+        .sg-empty p {
+            font-size: 14px;
+            color: var(--gray-400);
+            margin-bottom: 24px;
+        }
+
+        .sg-empty-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 22px;
+            background: var(--purple-800);
+            color: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.15s;
+        }
+
+        .sg-empty-btn:hover {
+            background: var(--purple-900);
+        }
+
+        .sg-page-footer {
+            text-align: center;
+            padding: 24px;
+            font-size: 12px;
+            color: var(--gray-400);
+            margin-top: 16px;
+        }
+
+        @media(max-width:768px) {
+
+
+            .sg-header {
+                padding: 14px 20px;
+            }
+
+            .sg-header-nav {
+                display: none;
+            }
+
+            .sg-table thead th:nth-child(3),
+            .sg-table td:nth-child(3) {
+                display: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <!-- Quick view -->
-    <div class="modal fade custom-modal" id="quickViewModal" tabindex="-1" aria-labelledby="quickViewModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-        <div class="modal-content">              
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>       
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12 col-xs-12">
-                            <div class="detail-gallery">
-                                <span class="zoom-icon"><i class="fi-rs-search"></i></span>
-                                <!-- MAIN SLIDES -->
-                                <div class="product-image-slider">
-                                    <figure class="border-radius-10">
-                                        <img src="user/assets/imgs/shop/product-16-2.jpg" alt="product image">
-                                    </figure>
-                                    <figure class="border-radius-10">
-                                        <img src="user/assets/imgs/shop/product-16-1.jpg" alt="product image">
-                                    </figure>
-                                    <figure class="border-radius-10">
-                                        <img src="user/assets/imgs/shop/product-16-3.jpg" alt="product image">
-                                    </figure>
-                                    <figure class="border-radius-10">
-                                        <img src="user/assets/imgs/shop/product-16-4.jpg" alt="product image">
-                                    </figure>
-                                    <figure class="border-radius-10">
-                                        <img src="user/assets/imgs/shop/product-16-5.jpg" alt="product image">
-                                    </figure>
-                                    <figure class="border-radius-10">
-                                        <img src="user/assets/imgs/shop/product-16-6.jpg" alt="product image">
-                                    </figure>
-                                    <figure class="border-radius-10">
-                                        <img src="user/assets/imgs/shop/product-16-7.jpg" alt="product image">
-                                    </figure>
-                                </div>
-                                <!-- THUMBNAILS -->
-                                <div class="slider-nav-thumbnails pl-15 pr-15">
-                                    <div><img src="user/assets/imgs/shop/thumbnail-3.jpg" alt="product image"></div>
-                                    <div><img src="user/assets/imgs/shop/thumbnail-4.jpg" alt="product image"></div>
-                                    <div><img src="user/assets/imgs/shop/thumbnail-5.jpg" alt="product image"></div>
-                                    <div><img src="user/assets/imgs/shop/thumbnail-6.jpg" alt="product image"></div>
-                                    <div><img src="user/assets/imgs/shop/thumbnail-7.jpg" alt="product image"></div>
-                                    <div><img src="user/assets/imgs/shop/thumbnail-8.jpg" alt="product image"></div>
-                                    <div><img src="user/assets/imgs/shop/thumbnail-9.jpg" alt="product image"></div>
-                                </div>
-                            </div>
-                            <!-- End Gallery -->
-                            <div class="social-icons single-share">
-                                <ul class="text-grey-5 d-inline-block">
-                                    <li><strong class="mr-10">Share this:</strong></li>
-                                    <li class="social-facebook"><a href="#"><img src="user/assets/imgs/theme/icons/icon-facebook.svg" alt=""></a></li>
-                                    <li class="social-twitter"> <a href="#"><img src="user/assets/imgs/theme/icons/icon-twitter.svg" alt=""></a></li>
-                                    <li class="social-instagram"><a href="#"><img src="user/assets/imgs/theme/icons/icon-instagram.svg" alt=""></a></li>
-                                    <li class="social-linkedin"><a href="#"><img src="user/assets/imgs/theme/icons/icon-pinterest.svg" alt=""></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-12 col-xs-12">
-                            <div class="detail-info">
-                                <h3 class="title-detail mt-30">Colorful Pattern Shirts HD450</h3>
-                                <div class="product-detail-rating">
-                                    <div class="pro-details-brand">
-                                        <span> Brands: <a href="shop-grid-right.html">Bootstrap</a></span>
-                                    </div>
-                                    <div class="product-rate-cover text-end">
-                                        <div class="product-rate d-inline-block">
-                                            <div class="product-rating" style="width:90%">
-                                            </div>
-                                        </div>
-                                        <span class="font-small ml-5 text-muted"> (25 reviews)</span>
-                                    </div>
-                                </div>
-                                <div class="clearfix product-price-cover">
-                                    <div class="product-price primary-color float-left">
-                                        <ins><span class="text-brand">$120.00</span></ins>
-                                        <ins><span class="old-price font-md ml-15">$200.00</span></ins>
-                                        <span class="save-price  font-md color3 ml-15">25% Off</span>
-                                    </div>
-                                </div>
-                                <div class="bt-1 border-color-1 mt-15 mb-15"></div>
-                                <div class="short-desc mb-30">
-                                    <p class="font-sm">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam rem officia, corrupti reiciendis minima nisi modi,!</p>
-                                </div>
-                                
-                                <div class="attr-detail attr-color mb-15">
-                                    <strong class="mr-10">Color</strong>
-                                    <ul class="list-filter color-filter">
-                                        <li><a href="#" data-color="Red"><span class="product-color-red"></span></a></li>
-                                        <li><a href="#" data-color="Yellow"><span class="product-color-yellow"></span></a></li>
-                                        <li class="active"><a href="#" data-color="White"><span class="product-color-white"></span></a></li>
-                                        <li><a href="#" data-color="Orange"><span class="product-color-orange"></span></a></li>
-                                        <li><a href="#" data-color="Cyan"><span class="product-color-cyan"></span></a></li>
-                                        <li><a href="#" data-color="Green"><span class="product-color-green"></span></a></li>
-                                        <li><a href="#" data-color="Purple"><span class="product-color-purple"></span></a></li>
-                                    </ul>
-                                </div>
-                                <div class="attr-detail attr-size">
-                                    <strong class="mr-10">Size</strong>
-                                    <ul class="list-filter size-filter font-small">
-                                        <li><a href="#">S</a></li>
-                                        <li class="active"><a href="#">M</a></li>
-                                        <li><a href="#">L</a></li>
-                                        <li><a href="#">XL</a></li>
-                                        <li><a href="#">XXL</a></li>
-                                    </ul>
-                                </div>
-                                <div class="bt-1 border-color-1 mt-30 mb-30"></div>
-                                <div class="detail-extralink">
-                                    <div class="detail-qty border radius">
-                                        <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
-                                        <span class="qty-val">1</span>
-                                        <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
-                                    </div>
-                                    <div class="product-extra-link2">
-                                        <button type="submit" class="button button-add-to-cart">Add to cart</button>
-                                        <a aria-label="Add To Wishlist" class="action-btn hover-up" href="/wishlist"><i class="fi-rs-heart"></i></a>
-                                        <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
-                                    </div>
-                                </div>
-                                <ul class="product-meta font-xs color-grey mt-50">
-                                    <li class="mb-5">SKU: <a href="#">FWM15VKT</a></li>
-                                    <li class="mb-5">Tags: <a href="#" rel="tag">Cloth</a>, <a href="#" rel="tag">Women</a>, <a href="#" rel="tag">Dress</a> </li>
-                                    <li>Availability:<span class="in-stock text-success ml-5">8 Items In Stock</span></li>
-                                </ul>
-                            </div>
-                            <!-- Detail Info -->
-                        </div>
-                    </div>
-                </div>        
-        </div>
-        </div>
-    </div>
-    <header class="header-area header-style-1 header-height-2">
-        <div class="header-top header-top-ptb-1 d-none d-lg-block">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-xl-3 col-lg-4">
-                        <div class="header-info">
-                            <!-- <ul>
-                                <li><i class="fi-rs-smartphone"></i> <a href="#">(+01) - 2345 - 6789</a></li>
-                                <li><i class="fi-rs-marker"></i><a  href="page-contact.html">Our location</a></li>
-                            </ul> -->
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-lg-4">
-                        <div class="text-center">
-                            <div id="news-flash" class="d-inline-block">
-                                <!-- <ul>
-                                    <li>Get great devices up to 50% off <a href="shop-grid-right.html">View details</a></li>
-                                    <li>Supper Value Deals - Save more with coupons</li>
-                                    <li>Trendy 25silver jewelry, save up 35% off today <a href="shop-grid-right.html">Shop now</a></li>
-                                </ul> -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4">
-                        <div class="header-info header-info-right">
-                            <ul>
-                                <li>
-                                    <!-- <a class="language-dropdown-active" href="#"> <i class="fi-rs-world"></i> English <i class="fi-rs-angle-small-down"></i></a>
-                                    <ul class="language-dropdown">
-                                        <li><a href="#"><img src="user/assets/imgs/theme/flag-fr.png" alt="">Français</a></li>
-                                        <li><a href="#"><img src="user/assets/imgs/theme/flag-dt.png" alt="">Deutsch</a></li>
-                                        <li><a href="#"><img src="user/assets/imgs/theme/flag-ru.png" alt="">Pусский</a></li>
-                                    </ul> -->
-                                </li>
-                                <% if(userData) { %>
-                                    <li class="dropdown nav-item">
-                                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="" id="dropdownAccount" aria-expanded="false"><%= userData.username%></a>
-                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                                            <a class="dropdown-item text-dark" href="/profile"><i class="material-icons md-perm_identity"></i>Profile</a>
-                                            <!-- <a class="dropdown-item text-dark" href="#"><i class="material-icons md-settings"></i>Account Settings</a> -->
-                                            <!-- <a class="dropdown-item text-dark" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a> -->
-                                            <!-- <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
-                                            <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a> -->
-                                            <div class="dropdown-divider">
-                                            </div>
-                                            <a class="dropdown-item text-danger" href="/logout"><i class="material-icons md-exit_to_app"></i>Logout</a>
-                                        </div>
-                                    </li>
-                                    <% }else{ %>
-                                        <li><i class="fi-rs-user"></i><a href="/login">Log In / Sign Up</a></li>
-                                    <% } %>
-                            </ul>
-                        </div>
-                    </div>
+    <header class="sg-header">
+        <div class="sg-header-inner">
+            <a href="/" class="sg-logo">
+                <div class="sg-logo-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 3h14M5 21h14M8 3v4a4 4 0 008 0V3M8 21v-4a4 4 0 018 0v4" />
+                    </svg>
                 </div>
+                <span class="sg-logo-text">Sandglass</span>
+            </a>
+
+            <div class="sg-search">
+                <span class="sg-search-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="m21 21-4.35-4.35" />
+                    </svg>
+                </span>
+                <form action="/shop" method="get">
+                    <input name="search" type="text" placeholder="Search for items…">
+                </form>
             </div>
+<<<<<<< HEAD
         </div>
         <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
             <div class="container">
@@ -236,780 +706,296 @@
                                     </div>
                                 <%} %>    
                             
+=======
+
+            <div class="sg-header-actions">
+                <a href="/wishlist" class="sg-icon-btn" title="Wishlist">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                    </svg>
+                </a>
+
+                <a href="/cart" class="sg-icon-btn" title="Cart">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <path d="M16 10a4 4 0 01-8 0" />
+                    </svg>
+                </a>
+
+                <% if(userData) { %>
+                    <div class="sg-user-wrap">
+                        <a href="#" id="userDropdownBtn" class="sg-user-btn">
+                            <div class="sg-user-avatar">
+                                <%= userData.username ? userData.username.charAt(0).toUpperCase() : 'U' %>
+>>>>>>> 003d3dd (update ui)
                             </div>
+                            <%= userData.username %>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9" />
+                                </svg>
+                        </a>
+
+                        <div class="sg-dropdown">
+                            <a href="/profile">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                                    <circle cx="12" cy="7" r="4" />
+                                </svg>
+                                Profile
+                            </a>
+
+                            <div class="sg-dropdown-divider"></div>
+
+                            <a href="/logout" class="danger">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+                                    <polyline points="16 17 21 12 16 7" />
+                                    <line x1="21" y1="12" x2="9" y2="12" />
+                                </svg>
+                                Logout
+                            </a>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="header-bottom header-bottom-bg-color sticky-bar">
-            <div class="container">
-                <div class="header-wrap header-space-between position-relative">
-                    <div class="logo logo-width-1 d-block d-lg-none">
-                        <a href="index.html"><img src="user/assets/imgs/theme/logo.svg" alt="logo"></a>
-                    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                     <!-- <div class="header-nav d-none d-lg-flex">  
-                        <div class="main-categori-wrap d-none d-lg-block"> 
-                            <a class="categori-button-active" href="#">
-                                <span class="fi-rs-apps"></span> Browse Categories
-                            </a> 
-                            <div class="categori-dropdown-wrap categori-dropdown-active-large">
-                                <ul>
-                                    <li class="has-children">
-                                        <a href="shop-grid-right.html"><i class="evara-font-dress"></i>Women's Clothing</a>
-                                        <div class="dropdown-menu">
-                                            <ul class="mega-menu d-lg-flex">
-                                                <li class="mega-menu-col col-lg-7">
-                                                    <ul class="d-lg-flex">
-                                                        <li class="mega-menu-col col-lg-6">
-                                                            <ul>
-                                                                <li><span class="submenu-title">Hot & Trending</span></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Dresses</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Blouses & Shirts</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Hoodies & Sweatshirts</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Women's Sets</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Suits & Blazers</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Bodysuits</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Tanks & Camis</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Coats & Jackets</a></li>
-                                                            </ul>
-                                                        </li>
-                                                        <li class="mega-menu-col col-lg-6">
-                                                            <ul>
-                                                                <li><span class="submenu-title">Bottoms</span></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Leggings</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Skirts</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Shorts</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Jeans</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Pants & Capris</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Bikini Sets</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Cover-Ups</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Swimwear</a></li>
-                                                            </ul>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                                <li class="mega-menu-col col-lg-5">
-                                                    <div class="header-banner2">
-                                                        <img src="user/assets/imgs/banner/menu-banner-2.jpg" alt="menu_banner1">
-                                                        <div class="banne_info">
-                                                            <h6>10% Off</h6>
-                                                            <h4>New Arrival</h4>
-                                                            <a href="#">Shop now</a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="header-banner2">
-                                                        <img src="user/assets/imgs/banner/menu-banner-3.jpg" alt="menu_banner2">
-                                                        <div class="banne_info">
-                                                            <h6>15% Off</h6>
-                                                            <h4>Hot Deals</h4>
-                                                            <a href="#">Shop now</a>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li class="has-children">
-                                        <a href="shop-grid-right.html"><i class="evara-font-tshirt"></i>Men's Clothing</a>
-                                        <div class="dropdown-menu">
-                                            <ul class="mega-menu d-lg-flex">
-                                                <li class="mega-menu-col col-lg-7">
-                                                    <ul class="d-lg-flex">
-                                                        <li class="mega-menu-col col-lg-6">
-                                                            <ul>
-                                                                <li><span class="submenu-title">Jackets & Coats</span></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Down Jackets</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Jackets</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Parkas</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Faux Leather Coats</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Trench</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Wool & Blends</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Vests & Waistcoats</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Leather Coats</a></li>
-                                                            </ul>
-                                                        </li>
-                                                        <li class="mega-menu-col col-lg-6">
-                                                            <ul>
-                                                                <li><span class="submenu-title">Suits & Blazers</span></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Blazers</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Suit Jackets</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Suit Pants</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Suits</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Vests</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Tailor-made Suits</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Cover-Ups</a></li>
-                                                            </ul>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                                <li class="mega-menu-col col-lg-5">
-                                                    <div class="header-banner2">
-                                                        <img src="user/assets/imgs/banner/menu-banner-4.jpg" alt="menu_banner1">
-                                                        <div class="banne_info">
-                                                            <h6>10% Off</h6>
-                                                            <h4>New Arrival</h4>
-                                                            <a href="#">Shop now</a>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li class="has-children">
-                                        <a href="shop-grid-right.html"><i class="evara-font-smartphone"></i> Cellphones</a>
-                                        <div class="dropdown-menu">
-                                            <ul class="mega-menu d-lg-flex">
-                                                <li class="mega-menu-col col-lg-7">
-                                                    <ul class="d-lg-flex">
-                                                        <li class="mega-menu-col col-lg-6">
-                                                            <ul>
-                                                                <li><span class="submenu-title">Hot & Trending</span></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Cellphones</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">iPhones</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Refurbished Phones</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Mobile Phone</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Mobile Phone Parts</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Phone Bags & Cases</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Communication Equipments</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Walkie Talkie</a></li>
-                                                            </ul>
-                                                        </li>
-                                                        <li class="mega-menu-col col-lg-6">
-                                                            <ul>
-                                                                <li><span class="submenu-title">Accessories</span></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Screen Protectors</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Wire Chargers</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Wireless Chargers</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Car Chargers</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Power Bank</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Armbands</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Dust Plug</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Signal Boosters</a></li>
-                                                            </ul>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                                <li class="mega-menu-col col-lg-5">
-                                                    <div class="header-banner2">
-                                                        <img src="user/assets/imgs/banner/menu-banner-5.jpg" alt="menu_banner1">
-                                                        <div class="banne_info">
-                                                            <h6>10% Off</h6>
-                                                            <h4>New Arrival</h4>
-                                                            <a href="#">Shop now</a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="header-banner2">
-                                                        <img src="user/assets/imgs/banner/menu-banner-6.jpg" alt="menu_banner2">
-                                                        <div class="banne_info">
-                                                            <h6>15% Off</h6>
-                                                            <h4>Hot Deals</h4>
-                                                            <a href="#">Shop now</a>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li><a href="shop-grid-right.html"><i class="evara-font-desktop"></i>Computer & Office</a></li>
-                                    <li><a href="shop-grid-right.html"><i class="evara-font-cpu"></i>Consumer Electronics</a></li>
-                                    <li><a href="shop-grid-right.html"><i class="evara-font-diamond"></i>Jewelry & Accessories</a></li>
-                                    <li><a href="shop-grid-right.html"><i class="evara-font-home"></i>Home & Garden</a></li>
-                                    <li><a href="shop-grid-right.html"><i class="evara-font-high-heels"></i>Shoes</a></li>
-                                    <li><a href="shop-grid-right.html"><i class="evara-font-teddy-bear"></i>Mother & Kids</a></li>
-                                    <li><a href="shop-grid-right.html"><i class="evara-font-kite"></i>Outdoor fun</a></li>
-                                    <li>
-                                        <ul class="more_slide_open" style="display: none;">
-                                            <li><a href="shop-grid-right.html"><i class="evara-font-desktop"></i>Beauty, Health</a></li>
-                                            <li><a href="shop-grid-right.html"><i class="evara-font-cpu"></i>Bags and Shoes</a></li>
-                                            <li><a href="shop-grid-right.html"><i class="evara-font-diamond"></i>Consumer Electronics</a></li>
-                                            <li><a href="shop-grid-right.html"><i class="evara-font-home"></i>Automobiles & Motorcycles</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                                <div class="more_categories">Show more...</div>
-                            </div>
-                        </div> -->
-                        
-                    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    <!-- <div class="hotline d-none d-lg-block">
-                        <p><i class="fi-rs-headset"></i><span>Hotline</span> 1900 - 888 </p>
-                    </div> -->
-                    <p class="mobile-promotion">Happy <span class="text-brand">Mother's Day</span>. Big Sale Up to 40%</p>
-                    <div class="header-action-right d-block d-lg-none">
-                        <div class="header-action-2">
-                            <div class="header-action-icon-2">
-                                <a href="/wishlist">
-                                    <img alt="Evara" src="user/assets/imgs/theme/icons/icon-heart.svg">
-                                    <span class="pro-count white">4</span>
-                                </a>
-                            </div>
-                            <div class="header-action-icon-2">
-                                <a class="mini-cart-icon" href="/cart">
-                                    <img alt="Evara" src="user/assets/imgs/theme/icons/icon-cart.svg">
-                                    <span class="pro-count white">2</span>
-                                </a>
-                                <div class="cart-dropdown-wrap cart-dropdown-hm2">
-                                    <ul>
-                                        <li>
-                                            <div class="shopping-cart-img">
-                                                <a href="shop-product-right.html"><img alt="Evara" src="user/assets/imgs/shop/thumbnail-3.jpg"></a>
-                                            </div>
-                                            <div class="shopping-cart-title">
-                                                <h4><a href="shop-product-right.html">Plain Striola Shirts</a></h4>
-                                                <h3><span>1 × </span>$800.00</h3>
-                                            </div>
-                                            <div class="shopping-cart-delete">
-                                                <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="shopping-cart-img">
-                                                <a href="shop-product-right.html"><img alt="Evara" src="user/assets/imgs/shop/thumbnail-4.jpg"></a>
-                                            </div>
-                                            <div class="shopping-cart-title">
-                                                <h4><a href="shop-product-right.html">Macbook Pro 2022</a></h4>
-                                                <h3><span>1 × </span>$3500.00</h3>
-                                            </div>
-                                            <div class="shopping-cart-delete">
-                                                <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                    <div class="shopping-cart-footer">
-                                        <div class="shopping-cart-total">
-                                            <h4>Total <span>$383.00</span></h4>
-                                        </div>
-                                        <div class="shopping-cart-button">
-                                            <a href="/cart">View cart</a>
-                                            <a href="shop-checkout.html">Checkout</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="header-action-icon-2 d-block d-lg-none">
-                                <div class="burger-icon burger-icon-white">
-                                    <span class="burger-icon-top"></span>
-                                    <span class="burger-icon-mid"></span>
-                                    <span class="burger-icon-bottom"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <% } else { %>
+                        <a href="/login" class="sg-user-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg>
+                            Log in
+                        </a>
+                        <% } %>
             </div>
         </div>
     </header>
-    <div class="mobile-header-active mobile-header-wrapper-style">
-        <div class="mobile-header-wrapper-inner">
-            <div class="mobile-header-top">
-                <div class="mobile-header-logo">
-                    <a href="index.html"><img src="user/assets/imgs/theme/logo.svg" alt="logo"></a>
-                </div>
-                <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
-                    <button class="close-style search-close">
-                        <i class="icon-top"></i>
-                        <i class="icon-bottom"></i>
-                    </button>
-                </div>
+
+    <nav class="sg-navbar">
+        <a href="/">Home</a>
+        <a href="/shop">Shop</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+    </nav>
+
+    <div class="sg-page-offset"></div>
+
+        <div class="sg-wrap">
+            <div class="sg-breadcrumb">
+                <a href="/">Home</a>
+                <span>›</span>
+                <a href="/shop">Shop</a>
+                <span>›</span>
+                <span>Wishlist</span>
             </div>
-            <div class="mobile-header-content-area">
-                <div class="mobile-search search-style-3 mobile-header-border">
-                    <form action="#">
-                        <input type="text" placeholder="Search for items…">
-                        <button type="submit"><i class="fi-rs-search"></i></button>
-                    </form>
-                </div>
-                <div class="mobile-menu-wrap mobile-header-border">
-                    <div class="main-categori-wrap mobile-header-border">
-                        <a class="categori-button-active-2" href="#">
-                            <span class="fi-rs-apps"></span> Browse Categories
-                        </a>
-                        <div class="categori-dropdown-wrap categori-dropdown-active-small">
-                            <ul>
-                                <li><a href="shop-grid-right.html"><i class="evara-font-dress"></i>Women's Clothing</a></li>
-                                <li><a href="shop-grid-right.html"><i class="evara-font-tshirt"></i>Men's Clothing</a></li>
-                                <li> <a href="shop-grid-right.html"><i class="evara-font-smartphone"></i> Cellphones</a></li>
-                                <li><a href="shop-grid-right.html"><i class="evara-font-desktop"></i>Computer & Office</a></li>
-                                <li><a href="shop-grid-right.html"><i class="evara-font-cpu"></i>Consumer Electronics</a></li>
-                                <li><a href="shop-grid-right.html"><i class="evara-font-home"></i>Home & Garden</a></li>
-                                <li><a href="shop-grid-right.html"><i class="evara-font-high-heels"></i>Shoes</a></li>
-                                <li><a href="shop-grid-right.html"><i class="evara-font-teddy-bear"></i>Mother & Kids</a></li>
-                                <li><a href="shop-grid-right.html"><i class="evara-font-kite"></i>Outdoor fun</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!-- mobile menu start -->
-                    <nav>
-                        <ul class="mobile-menu">
-                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="index.html">Home</a>
-                                <ul class="dropdown">
-                                    <li><a href="index.html">Home 1</a></li>
-                                    <li><a href="index-2.html">Home 2</a></li>
-                                    <li><a href="index-3.html">Home 3</a></li>
-                                    <li><a href="index-4.html">Home 4</a></li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="shop-grid-right.html">shop</a>
-                                <ul class="dropdown">
-                                    <li><a href="shop-grid-right.html">Shop Grid – Right Sidebar</a></li>
-                                    <li><a href="shop-grid-left.html">Shop Grid – Left Sidebar</a></li>
-                                    <li><a href="shop-list-right.html">Shop List – Right Sidebar</a></li>
-                                    <li><a href="shop-list-left.html">Shop List – Left Sidebar</a></li>
-                                    <li><a href="shop-fullwidth.html">Shop - Wide</a></li>
-                                    <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">Single Product</a>
-                                        <ul class="dropdown">
-                                            <li><a href="shop-product-right.html">Product – Right Sidebar</a></li>
-                                            <li><a href="shop-product-left.html">Product – Left Sidebar</a></li>
-                                            <li><a href="shop-product-full.html">Product – No sidebar</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="shop-filter.html">Shop – Filter</a></li>
-                                    <li><a href="/wishlist">Shop – Wishlist</a></li>
-                                    <li><a href="/cart">Shop – Cart</a></li>
-                                    <li><a href="shop-checkout.html">Shop – Checkout</a></li>
-                                    <li><a href="shop-compare.html">Shop – Compare</a></li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">Mega menu</a>
-                                <ul class="dropdown">
-                                    <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">Women's Fashion</a>
-                                        <ul class="dropdown">
-                                            <li><a href="shop-product-right.html">Dresses</a></li>
-                                            <li><a href="shop-product-right.html">Blouses & Shirts</a></li>
-                                            <li><a href="shop-product-right.html">Hoodies & Sweatshirts</a></li>
-                                            <li><a href="shop-product-right.html">Women's Sets</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">Men's Fashion</a>
-                                        <ul class="dropdown">
-                                            <li><a href="shop-product-right.html">Jackets</a></li>
-                                            <li><a href="shop-product-right.html">Casual Faux Leather</a></li>
-                                            <li><a href="shop-product-right.html">Genuine Leather</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">Technology</a>
-                                        <ul class="dropdown">
-                                            <li><a href="shop-product-right.html">Gaming Laptops</a></li>
-                                            <li><a href="shop-product-right.html">Ultraslim Laptops</a></li>
-                                            <li><a href="shop-product-right.html">Tablets</a></li>
-                                            <li><a href="shop-product-right.html">Laptop Accessories</a></li>
-                                            <li><a href="shop-product-right.html">Tablet Accessories</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="blog-category-fullwidth.html">Blog</a>
-                                <ul class="dropdown">
-                                    <li><a href="blog-category-grid.html">Blog Category Grid</a></li>
-                                    <li><a href="blog-category-list.html">Blog Category List</a></li>
-                                    <li><a href="blog-category-big.html">Blog Category Big</a></li>
-                                    <li><a href="blog-category-fullwidth.html">Blog Category Wide</a></li>
-                                    <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">Single Product Layout</a>
-                                        <ul class="dropdown">
-                                            <li><a href="blog-post-left.html">Left Sidebar</a></li>
-                                            <li><a href="blog-post-right.html">Right Sidebar</a></li>
-                                            <li><a href="blog-post-fullwidth.html">No Sidebar</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">Pages</a>
-                                <ul class="dropdown">
-                                    <li><a href="page-about.html">About Us</a></li>
-                                    <li><a href="page-contact.html">Contact</a></li>
-                                    <li><a href="page-account.html">My Account</a></li>
-                                    <li><a href="page-login-register.html">login/register</a></li>
-                                    <li><a href="page-purchase-guide.html">Purchase Guide</a></li>
-                                    <li><a href="page-privacy-policy.html">Privacy Policy</a></li>
-                                    <li><a href="page-terms.html">Terms of Service</a></li>
-                                    <li><a href="page-404.html">404 Page</a></li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">Language</a>
-                                <ul class="dropdown">
-                                    <li><a href="#">English</a></li>
-                                    <li><a href="#">French</a></li>
-                                    <li><a href="#">German</a></li>
-                                    <li><a href="#">Spanish</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </nav>
-                    <!-- mobile menu end -->
-                </div>
-                <div class="mobile-header-info-wrap mobile-header-border">
-                    <div class="single-mobile-header-info mt-30">
-                        <a  href="page-contact.html"> Our location </a>
-                    </div>
-                    <div class="single-mobile-header-info">
-                        <a href="page-login-register.html">Log In / Sign Up </a>
-                    </div>
-                    <div class="single-mobile-header-info">
-                        <a href="#">(+01) - 2345 - 6789 </a>
-                    </div>
-                </div>
-                <div class="mobile-social-icon">
-                    <h5 class="mb-15 text-grey-4">Follow Us</h5>
-                    <a href="#"><img src="user/assets/imgs/theme/icons/icon-facebook.svg" alt=""></a>
-                    <a href="#"><img src="user/assets/imgs/theme/icons/icon-twitter.svg" alt=""></a>
-                    <a href="#"><img src="user/assets/imgs/theme/icons/icon-instagram.svg" alt=""></a>
-                    <a href="#"><img src="user/assets/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
-                    <a href="#"><img src="user/assets/imgs/theme/icons/icon-youtube.svg" alt=""></a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <main class="main">
-        
-        <div class="page-header breadcrumb-wrap1 ">
-            <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block ">
-                    <nav>
-                        <ul class="cat">
-                            <li><a  href="/">Home </a>
-                                
-                            </li>
-                            
-                            <li><a  href="/shop">Shop </a>
-                                
-                            </li>
-                            
-                            
-                            <li>
-                                <a href="/about">About</a>
-                            </li>
-                            <li>
-                                <a href="/contact">Contact</a>
-                            </li>
-                        </ul>
-                    </nav>
-            </div>
-        </div>
-        <div class="page-header breadcrumb-wrap">
-            <div class="container">
-                <div class="breadcrumb">
-                    <a href="index.html" rel="nofollow">Home</a>
-                    <span></span> Wishlist
-                </div>
-            </div>
-        </div>
-        
-        <section class="mt-50 mb-50">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="table-responsive">
-                            <% if(wishlistData?.products[0]) { %>
-                            <table class="table shopping-summery text-center">
-                                <thead>
-                                    <tr class="main-heading">
-                                        <th scope="col" colspan="2">Product</th>
-                                        <th scope="col">Price</th>
-                                        <th scope="col">Stock Status</th>
-                                        <th scope="col">Action</th>
-                                        <th scope="col">Remove</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% wishlistData.products.forEach(data => { %>
-                                    <tr>
-                                        <td class="image product-thumbnail"><img src="/uploads/<%= data.productId.productImage[0] %>" alt="#"></td>
-                                        <td class="product-des product-name">
-                                            <h5 class="product-name"><a href="/product_details?id=<%= data.productId._id %>"><%= data.productId.productName %></a></h5>
-                                            <!-- <p class="font-xs">Maboriosam in a tonto nesciung eget<br> distingy magndapibus.
-                                            </p> -->
-                                        </td>
-                                        
-                                        <td class="price" data-title="Price"><span>₹<%= data.finalPrice %></span></td>
-                                        <%if(data.productId.stock){ %>
-                                            <td class="text-center" data-title="Stock">
-                                                <span class="color3 font-weight-bold">In Stock</span>
-                                            </td>
-                                        
-                                            <td class="text-right" data-title="Cart">
-                                                <button class="btn btn-sm" onclick="addToCart('<%=data.productId._id%>')"><i class="fi-rs-shopping-bag mr-5"></i>Add to cart</button>
-                                            </td>
-                                        <%}else{%>
-                                            <td class="text-center" data-title="Stock">
-                                                <span class="text-danger font-weight-bold">Out of stock</span>
-                                            </td>
-                                            <td class="text-right" data-title="Cart">
-                                                <button class="btn btn-sm btn-secondary"><i class="fi-rs-headset mr-5"></i>Contact Us</button>
-                                            </td>
-                                        <%}%>
-                                        <td class="action" data-title="Remove"><a onclick="removeFromWishlist('<%= data.productId._id %>')" href="#"><i class="fi-rs-trash"></i></a></td>
-                                    </tr>
-                                    <% }) %>
- 
-                                    
-                                </tbody>
-                            </table>
-                            <% } else { %>
-                                <div class="d-flex justify-content-center align-items-center mb-custom mt-100">
-                                    <div class="text-center">
-                                        <h3>Wishlist is empty</h3>
-                                        <a href="/shop" class="btn">Continue Shopping</a>
-                                    </div>
-                                </div>
-                            <% } %>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-    <!-- <footer class="main">
-        <section class="newsletter p-30 text-white wow fadeIn animated">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-7 mb-md-3 mb-lg-0">
-                        <div class="row align-items-center">
-                            <div class="col flex-horizontal-center">
-                                <img class="icon-email" src="user/assets/imgs/theme/icons/icon-email.svg" alt="">
-                                <h4 class="font-size-20 mb-0 ml-3">Sign up to Newsletter</h4>
-                            </div>
-                            <div class="col my-4 my-md-0 des">
-                                <h5 class="font-size-15 ml-4 mb-0">...and receive <strong>$25 coupon for first shopping.</strong></h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-5">
-                        
-                        <form class="form-subcriber d-flex wow fadeIn animated">
-                            <input type="email" class="form-control bg-white font-small" placeholder="Enter your email">
-                            <button class="btn bg-dark text-white" type="submit">Subscribe</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <section class="section-padding footer-mid">
-            <div class="container pt-15 pb-20">
-                <div class="row">
-                    <div class="col-lg-4 col-md-6">
-                        <div class="widget-about font-md mb-md-5 mb-lg-0">
-                            <div class="logo logo-width-1 wow fadeIn animated">
-                                <a href="index.html"><img src="user/assets/imgs/theme/logo.svg" alt="logo"></a>
-                            </div>
-                            <h5 class="mt-20 mb-10 fw-600 text-grey-4 wow fadeIn animated">Contact</h5>
-                            <p class="wow fadeIn animated">
-                                <strong>Address: </strong>562 Wellington Road, Street 32, San Francisco
-                            </p>
-                            <p class="wow fadeIn animated">
-                                <strong>Phone: </strong>+01 2222 365 /(+91) 01 2345 6789
-                            </p>
-                            <p class="wow fadeIn animated">
-                                <strong>Hours: </strong>10:00 - 18:00, Mon - Sat
-                            </p>
-                            <h5 class="mb-10 mt-30 fw-600 text-grey-4 wow fadeIn animated">Follow Us</h5>
-                            <div class="mobile-social-icon wow fadeIn animated mb-sm-5 mb-md-0">
-                                <a href="#"><img src="user/assets/imgs/theme/icons/icon-facebook.svg" alt=""></a>
-                                <a href="#"><img src="user/assets/imgs/theme/icons/icon-twitter.svg" alt=""></a>
-                                <a href="#"><img src="user/assets/imgs/theme/icons/icon-instagram.svg" alt=""></a>
-                                <a href="#"><img src="user/assets/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
-                                <a href="#"><img src="user/assets/imgs/theme/icons/icon-youtube.svg" alt=""></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-3">
-                        <h5 class="widget-title wow fadeIn animated">About</h5>
-                        <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">Delivery Information</a></li>
-                            <li><a href="#">Privacy Policy</a></li>
-                            <li><a href="#">Terms &amp; Conditions</a></li>
-                            <li><a href="#">Contact Us</a></li>
-                            <li><a href="#">Support Center</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-2  col-md-3">
-                        <h5 class="widget-title wow fadeIn animated">My Account</h5>
-                        <ul class="footer-list wow fadeIn animated">
-                            <li><a href="#">Sign In</a></li>
-                            <li><a href="#">View Cart</a></li>
-                            <li><a href="#">My Wishlist</a></li>
-                            <li><a href="#">Track My Order</a></li>
-                            <li><a href="#">Help</a></li>
-                            <li><a href="#">Order</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-4">
-                        <h5 class="widget-title wow fadeIn animated">Install App</h5>
-                        <div class="row">
-                            <div class="col-md-8 col-lg-12">
-                                <p class="wow fadeIn animated">From App Store or Google Play</p>
-                                <div class="download-app wow fadeIn animated">
-                                    <a href="#" class="hover-up mb-sm-4 mb-lg-0"><img class="active" src="user/assets/imgs/theme/app-store.jpg" alt=""></a>
-                                    <a href="#" class="hover-up"><img src="user/assets/imgs/theme/google-play.jpg" alt=""></a>
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-lg-12 mt-md-3 mt-lg-0">
-                                <p class="mb-20 wow fadeIn animated">Secured Payment Gateways</p>
-                                <img class="wow fadeIn animated" src="user/assets/imgs/theme/payment-method.png" alt="">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <div class="container pb-20 wow fadeIn animated">
-            <div class="row">
-                <div class="col-12 mb-20">
-                    <div class="footer-bottom"></div>
-                </div>
-                <div class="col-lg-6">
-                    <p class="float-md-left font-sm text-muted mb-0">&copy; 2022, <strong class="text-brand">Evara</strong> - HTML Ecommerce Template </p>
-                </div>
-                <div class="col-lg-6">
-                    <p class="text-lg-end text-start font-sm text-muted mb-0">
-                        Designed by <a href="http://alithemes.com" target="_blank">Alithemes.com</a>. All rights reserved
+
+            <div class="sg-page-heading">
+                <div>
+                    <h1 class="sg-page-title">My Wishlist</h1>
+                    <p class="sg-page-subtitle">
+                        Save your favorite products and revisit them anytime.
                     </p>
                 </div>
+
+                <a href="/shop" class="sg-continue-btn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12" />
+                        <polyline points="12 19 5 12 12 5" />
+                    </svg>
+                    Continue shopping
+                </a>
             </div>
-        </div>
-    </footer>
-    <div id="preloader-active">
-        <div class="preloader d-flex align-items-center justify-content-center">
-            <div class="preloader-inner position-relative">
-                <div class="text-center">
-                    <h5 class="mb-5">Now Loading</h5>
-                    <div class="loader">
-                        <div class="bar bar1"></div>
-                        <div class="bar bar2"></div>
-                        <div class="bar bar3"></div>
-                    </div>
+
+            <% if(wishlistData?.products[0]) { %>
+                <div class="sg-table-wrap">
+                    <table class="sg-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Action</th>
+                                <th>Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% wishlistData.products.forEach(data=> { %>
+                                <tr>
+                                    <td>
+                                        <div class="sg-product-cell">
+                                            <img class="sg-product-img"
+                                                src="/uploads/<%= data.productId.productImage[0] %>"
+                                                alt="<%= data.productId.productName %>">
+                                            <a class="sg-product-name"
+                                                href="/product_details?id=<%= data.productId._id %>">
+                                                <%= data.productId.productName %>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td><span class="sg-price">₹<%= data.finalPrice %></span></td>
+                                    <td>
+                                        <% if(data.productId.stock) { %>
+                                            <span class="sg-badge-in">
+                                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                                    stroke-linejoin="round">
+                                                    <polyline points="20 6 9 17 4 12" />
+                                                </svg>
+                                                In Stock
+                                            </span>
+                                            <% } else { %>
+                                                <span class="sg-badge-out">
+                                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                                        stroke-linejoin="round">
+                                                        <line x1="18" y1="6" x2="6" y2="18" />
+                                                        <line x1="6" y1="6" x2="18" y2="18" />
+                                                    </svg>
+                                                    Out of Stock
+                                                </span>
+                                                <% } %>
+                                    </td>
+                                    <td>
+                                        <% if(data.productId.stock) { %>
+                                            <button class="sg-btn-cart"
+                                                onclick="addToCart('<%= data.productId._id %>')">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round">
+                                                    <circle cx="9" cy="21" r="1" />
+                                                    <circle cx="20" cy="21" r="1" />
+                                                    <path
+                                                        d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6" />
+                                                </svg>
+                                                Add to cart
+                                            </button>
+                                            <% } else { %>
+                                                <button class="sg-btn-contact">Contact Us</button>
+                                                <% } %>
+                                    </td>
+                                    <td>
+                                        <button class="sg-remove-btn"
+                                            onclick="removeFromWishlist('<%= data.productId._id %>')" title="Remove">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <polyline points="3 6 5 6 21 6" />
+                                                <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+                                                <path d="M10 11v6M14 11v6" />
+                                                <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
+                                            </svg>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
+
+                <% } else { %>
+                    <div class="sg-table-wrap">
+                        <div class="sg-empty">
+                            <div class="sg-empty-icon">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#534AB7"
+                                    stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path
+                                        d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+                                </svg>
+                            </div>
+                            <h3>Your wishlist is empty</h3>
+                            <p>Save items you love and come back to them anytime.</p>
+                            <a href="/shop" class="sg-empty-btn">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="9" cy="21" r="1" />
+                                    <circle cx="20" cy="21" r="1" />
+                                    <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6" />
+                                </svg>
+                                Browse products
+                            </a>
+                        </div>
+                    </div>
+                    <% } %>
         </div>
-    </div> -->
+        <p class="sg-page-footer">© 2026 Sandglass. All rights reserved.</p>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        async function addToCart(productId){
+        async function addToCart(productId) {
             let response = await fetch('product/add_to_cart', {
                 method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({productId})
-            })
-            if(!response.ok){
-                console.log(`error ---${response.statusText}`)
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ productId })
+            });
+            if (!response.ok) {
+                console.log(`error --- ${response.statusText}`);
             } else {
-                window.location.href = "/cart"
+                window.location.href = "/cart";
             }
-            const data = await response.json()
-            console.log(`Data is ${data}`)
-            
         }
 
         async function removeFromWishlist(productId) {
-            console.log('Selected product Id - ', productId);
-            
-            // Show SweetAlert confirmation dialog
             const result = await Swal.fire({
-                title: 'Are you sure?',
-                text: 'Do you really want to remove this product from your wishlist?',
+                title: 'Remove from wishlist?',
+                text: 'This item will be removed from your wishlist.',
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, remove it!',
-                cancelButtonText: 'No, keep it'
+                confirmButtonColor: '#3C3489',
+                cancelButtonColor: '#888780',
+                confirmButtonText: 'Yes, remove it',
+                cancelButtonText: 'Keep it'
             });
 
-            // If the user confirms, proceed with the removal
             if (result.isConfirmed) {
                 try {
                     const response = await fetch('/removefromwishlist', {
                         method: "DELETE",
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ productId })
                     });
-
                     if (response.ok) {
-                        const data = await response.json();
-                        console.log(data);
                         Swal.fire({
                             icon: 'success',
                             title: 'Removed!',
-                            text: 'The product has been successfully removed from your wishlist.'
+                            text: 'The product has been removed from your wishlist.',
+                            confirmButtonColor: '#3C3489'
                         }).then(result => {
-                            if(result.isConfirmed){
-                                location.reload()
-                            }
-                        })
+                            if (result.isConfirmed) location.reload();
+                        });
                     } else {
                         throw new Error('Failed to remove from wishlist');
                     }
                 } catch (error) {
-                    console.error(error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Something went wrong!'
-                    });
+                    Swal.fire({ icon: 'error', title: 'Oops...', text: 'Something went wrong!' });
                 }
             }
         }
     </script>
-    <!-- Vendor JS-->
-    <script src="user/assets/js/vendor/modernizr-3.6.0.min.js"></script>
-    <script src="user/assets/js/vendor/jquery-3.6.0.min.js"></script>
-    <script src="user/assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
-    <script src="user/assets/js/vendor/bootstrap.bundle.min.js"></script>
-    <script src="user/assets/js/plugins/slick.js"></script>
-    <script src="user/assets/js/plugins/jquery.syotimer.min.js"></script>
-    <script src="user/assets/js/plugins/wow.js"></script>
-    <script src="user/assets/js/plugins/jquery-ui.js"></script>
-    <script src="user/assets/js/plugins/perfect-scrollbar.js"></script>
-    <script src="user/assets/js/plugins/magnific-popup.js"></script>
-    <script src="user/assets/js/plugins/select2.min.js"></script>
-    <script src="user/assets/js/plugins/waypoints.js"></script>
-    <script src="user/assets/js/plugins/counterup.js"></script>
-    <script src="user/assets/js/plugins/jquery.countdown.min.js"></script>
-    <script src="user/assets/js/plugins/images-loaded.js"></script>
-    <script src="user/assets/js/plugins/isotope.js"></script>
-    <script src="user/assets/js/plugins/scrollup.js"></script>
-    <script src="user/assets/js/plugins/jquery.vticker-min.js"></script>
-    <!-- Template  JS -->
-    <script src="./user/assets/js/main.js?v=3.4"></script>
-    <script src="./user/assets/js/shop.js?v=3.4"></script>
+
+    <script>
+        const userBtn = document.getElementById('userDropdownBtn');
+        const dropdown = document.querySelector('.sg-dropdown');
+
+        if (userBtn) {
+            userBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                dropdown.classList.toggle('active');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.sg-user-wrap')) {
+                    dropdown.classList.remove('active');
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>

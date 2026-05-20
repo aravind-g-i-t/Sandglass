@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 /* eslint-disable no-use-before-define */
 /* eslint-disable object-shorthand */
+=======
+>>>>>>> 003d3dd (update ui)
 const hashing = require('../helpers/passwordHash');
 const Admin = require('../models/adminModel');
 const Product = require('../models/productModel');
@@ -17,14 +20,18 @@ const moment = require('moment');
 
 const loadLogin = async (req, res) => {
     try {
-        res.render('admin/login');
+        return res.render('admin/login');
     } catch (error) {
 
+<<<<<<< HEAD
         res.status(500).json({
             success: false,
             message: 'Failed to load login page',
             error: error.message
         });
+=======
+        return res.status(500).json({ error, message: "Failed to load login page" });
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -45,9 +52,46 @@ const adminLogin = async (req, res) => {
         } else {
             return res.render('admin/login', { message: 'Incorrect credentials' });
         }
+<<<<<<< HEAD
     } catch {
         return res.status(500).render('admin/login', { message: 'An error occurred. Please try again.' });
     }
+=======
+
+    } catch (error) {
+        return res.status(500).json({ error, message: "Failed to login to admin dashboard" });
+
+    }
+
+    // const admin = {
+    //     username: "Admin",
+    //     password: "Admin@123",
+    //   };
+    //   let { adminId, adminPassword } = req.body;
+    //   console.log(adminId + " -- " + adminPassword);
+    //   if (admin.username === adminId) {
+    //     console.log("usernamatch match");
+    //     if (admin.password === adminPassword) {
+    //       console.log("password match");
+    //       const hash = await hashing.hashPassword(adminPassword);
+    //       const adminData = await Admin.create({
+    //         adminId: adminId,
+    //         adminPassword: hash,
+    //       });
+    //       const adminsave = await adminData.save();
+    //       if (adminsave) {
+    //         console.log("saved");
+    //         return res.redirect("/admin/dashboard");
+    //       } else {
+    //         console.log("not savedd");
+    //       }
+    //     } else {
+    //       console.log("password dosend match");
+    //     }
+    //   } else {
+    //     console.log("username doesent match");
+    //   }
+>>>>>>> 003d3dd (update ui)
 };
 
 
@@ -57,7 +101,6 @@ const loadDashboard = async (req, res) => {
         const { dateFrom, dateTo, page = 1, limit = 10, interval = 'day' } = req.query;
         const isAjax = req.xhr;
 
-        // Convert query params to Date objects for filtering
         const fromDate = dateFrom ? new Date(dateFrom) : new Date(new Date().setFullYear(new Date().getFullYear() - 1));
 
         // Set the end of the day for `toDate` to include orders created later in the day
@@ -70,11 +113,9 @@ const loadDashboard = async (req, res) => {
             toDate.setHours(23, 59, 59, 999); // Ensure today's `toDate` is at 23:59:59
         }
 
-        // Set graph end date to the later of toDate or today, and start date 6 units before
         const graphEndDate = new Date(Math.max(toDate, new Date()));
         const graphStartDate = new Date(graphEndDate);
 
-        // eslint-disable-next-line default-case
         switch (interval) {
             case 'day':
                 graphStartDate.setDate(graphEndDate.getDate() - 6);
@@ -85,19 +126,23 @@ const loadDashboard = async (req, res) => {
             case 'year':
                 graphStartDate.setFullYear(graphEndDate.getFullYear() - 6);
                 break;
+            default:
+                graphStartDate.setDate(graphEndDate.getDate() - 6);
+                break;
         }
 
-        // Calculate total number of orders for pagination
         const totalOrders = await Order.countDocuments({
             orderDate: { $gte: fromDate, $lte: toDate } // Use adjusted toDate
         });
 
-        // Fetch all orders within the date range for graph data
         const allOrders = await Order.find({
             orderDate: { $gte: graphStartDate, $lte: graphEndDate }
         });
+<<<<<<< HEAD
 
         // Fetch paginated order data
+=======
+>>>>>>> 003d3dd (update ui)
         const orderData = await Order.find({
             orderDate: { $gte: fromDate, $lte: toDate } // Use adjusted toDate
         }).skip((page - 1) * limit)
@@ -105,27 +150,33 @@ const loadDashboard = async (req, res) => {
             .populate('userId')
             .sort({ orderDate: -1 });
 
+<<<<<<< HEAD
         // Calculate total revenue
         const orders = await Order.find();
         const totalRevenue = orders.reduce((acc, order) => {
             const orderTotal = parseFloat(order.payableAmount);
+=======
+        const totalRevenue = orderData.reduce((acc, order) => {
+            let orderTotal = parseFloat(order.payableAmount);
+            if (order.returnedAmount) {
+                orderTotal -= parseFloat(order.returnedAmount);
+            }
+>>>>>>> 003d3dd (update ui)
             return acc + orderTotal;
         }, 0);
 
         if (isAjax) {
-            // Send only the necessary data for AJAX requests
-            res.json({
+            return res.json({
                 orderData,
                 totalRevenue,
                 currentPage: parseInt(page, 10),
                 totalPages: Math.ceil(totalOrders / limit)
             });
         } else {
-            // For full page load, include additional data
             const productData = await Product.find({});
             const graphData = await processGraphData(allOrders, interval, graphStartDate, graphEndDate);
 
-            res.render('admin/dashboard', {
+            return res.render('admin/dashboard', {
                 orderData,
                 productData,
                 totalRevenue,
@@ -135,12 +186,20 @@ const loadDashboard = async (req, res) => {
                 dateTo: toDate.toISOString().split('T')[0], // Use adjusted toDate
                 limit: parseInt(limit, 10),
                 graphData: JSON.stringify(graphData),
+<<<<<<< HEAD
                 interval: interval,
                 totalOrders
             });
         }
     } catch {
         res.status(500).send('An error occurred while loading the dashboard');
+=======
+                interval
+            });
+        }
+    } catch {
+        return res.status(500).send('An error occurred while loading the dashboard');
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -149,8 +208,11 @@ const loadDashboard = async (req, res) => {
 function processGraphData(orders, interval, startDate, endDate) {
     const graphData = {};
 
+<<<<<<< HEAD
     // Initialize graphData with all 7 points
     // eslint-disable-next-line no-plusplus
+=======
+>>>>>>> 003d3dd (update ui)
     for (let i = 0; i < 7; i++) {
         const date = new Date(endDate);
         // eslint-disable-next-line default-case
@@ -164,6 +226,8 @@ function processGraphData(orders, interval, startDate, endDate) {
             case 'year':
                 date.setFullYear(date.getFullYear() - i);
                 break;
+            default:
+                date.setDate(date.getDate() - i);
         }
         const key = formatDate(date, interval);
         graphData[key] = 0;
@@ -173,9 +237,17 @@ function processGraphData(orders, interval, startDate, endDate) {
         const date = new Date(order.orderDate);
         const key = formatDate(date, interval);
 
+<<<<<<< HEAD
         // eslint-disable-next-line no-prototype-builtins
         if (graphData.hasOwnProperty(key)) {
             const turnover = parseFloat(order.payableAmount);
+=======
+        if (Object.prototype.hasOwnProperty.call(graphData, key)) {
+            let turnover = parseFloat(order.payableAmount);
+            if (order.returnedAmount) {
+                turnover -= parseFloat(order.returnedAmount);
+            }
+>>>>>>> 003d3dd (update ui)
             graphData[key] += turnover;
         }
     });
@@ -195,6 +267,8 @@ function formatDate(date, interval) {
             return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
         case 'year':
             return date.getFullYear().toString();
+        default:
+            return date.toISOString().split('T')[0];
     }
 }
 
@@ -205,6 +279,7 @@ const adminLogout = async (req, res) => {
     try {
 
         req.session.admin = null;
+<<<<<<< HEAD
         res.redirect('/admin');
     } catch (error) {
         res.status(500).send(`An error occurred: ${error.message}`);
@@ -213,6 +288,15 @@ const adminLogout = async (req, res) => {
 
 
 const loadUsers = async(req, res) => {
+=======
+        return res.redirect('/admin');
+    } catch {
+        return res.redirect('/admin');
+    }
+};
+
+const loadUsers = async (req, res) => {
+>>>>>>> 003d3dd (update ui)
     try {
         let query = {};
         if (req.query.searchUser) {
@@ -225,8 +309,9 @@ const loadUsers = async(req, res) => {
         const userData = await User.find(query).skip(startIndex).limit(limit);
         const totalDocuments = await User.countDocuments();
         const totalPages = Math.ceil(totalDocuments / limit);
-        res.render('admin/users', { userData, totalPages, page });
+        return res.render('admin/users', { userData, totalPages, page });
 
+<<<<<<< HEAD
     } catch (error) {
         res.status(500).send(`An error occurred: ${error.message}`);
     }
@@ -235,6 +320,42 @@ const loadUsers = async(req, res) => {
 
 
 const userStatusUpdate = async(req, res) => {
+=======
+    } catch {
+        return res.status(500).send("Something went wrong");
+    }
+};
+
+// const blockUser=async(req,res)=>{
+//     try {
+//         const id=req.query.id;
+//         req.session.temp=req.session.user;
+//         req.session.user.destroy=false;
+//         await User.findByIdAndUpdate(id,{
+//             $set:{isActive:false}
+//         });
+//         return res.redirect('/admin/users')
+//     } catch (error) {
+//         console.log(error.message);
+//     }
+// }
+
+
+// const unblockUser=async(req,res)=>{
+//     try {
+//         const id=req.query.id;
+//         req.session.temp=req.session.user;
+//         const userData=await User.findByIdAndUpdate(id,{
+//             $set:{isActive:false}
+//         });
+//         return res.redirect('/admin/users')
+//     } catch (error) {
+//         console.log(error.message);
+//     }
+// }
+
+const userStatusUpdate = async (req, res) => {
+>>>>>>> 003d3dd (update ui)
     try {
         const id = req.query.id;
 
@@ -250,10 +371,15 @@ const userStatusUpdate = async(req, res) => {
                 { $set: { isActive: true } }
             );
         }
-        res.redirect('/admin/users');
+        return res.redirect('/admin/users');
 
+<<<<<<< HEAD
     } catch (error) {
         res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.redirect('/admin/users');
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -263,7 +389,11 @@ const orderList = async (req, res) => {
         let query = {};
 
         if (req.query.searchId) {
+<<<<<<< HEAD
             const searchQuery = req.query.searchId.trim(); // Trim the search query to remove leading/trailing whitespace and tab characters
+=======
+            const searchQuery = req.query.searchId.trim();
+>>>>>>> 003d3dd (update ui)
 
             if (searchQuery !== "") {
                 query = { orderId: searchQuery }; // Ensure you use the correct field name `orderId`
@@ -281,23 +411,32 @@ const orderList = async (req, res) => {
         const totalDocuments = await Order.countDocuments(query);
         const totalPages = Math.ceil(totalDocuments / limit);
 
-        res.render('admin/orders', {
+        return res.render('admin/orders', {
             orderData,
             page,
             totalPages
         });
+<<<<<<< HEAD
     } catch (error) {
         res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send("Something went wrong");
+>>>>>>> 003d3dd (update ui)
     }
 };
 
 
 
-const orderDetails = async(req, res) => {
+const orderDetails = async (req, res) => {
     try {
         const orderId = req.query.orderId;
 
+<<<<<<< HEAD
         const orderData = await Order.findOne({ orderId: orderId }).populate('userId').populate('products.productId');
+=======
+        const orderData = await Order.findOne({ orderId }).populate('userId').populate('products.productId');
+>>>>>>> 003d3dd (update ui)
         let totalPrice = 0;
         let invoice;
         orderData.products.forEach(item => {
@@ -306,7 +445,6 @@ const orderDetails = async(req, res) => {
                 invoice = true;
             }
         });
-        // const userData=await User.findById(orderData.userId);
         const address = await Address.findOne(
             { 'address._id': orderData.addressId },
             { 'address.$': 1 }
@@ -318,15 +456,20 @@ const orderDetails = async(req, res) => {
                 couponDiscount = coupon.discountPercentage;
             }
         }
-        res.render('admin/orderDetails', {
+        return res.render('admin/orderDetails', {
             orderData,
             totalPrice,
             address,
             couponDiscount,
             invoice
         });
+<<<<<<< HEAD
     } catch (error) {
         res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send("Something went wrong");
+>>>>>>> 003d3dd (update ui)
     }
 
 };
@@ -339,21 +482,21 @@ const updateOrderStatus = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Missing orderId, productId, or status' });
         }
 
-        // Find the order and update the product status
+
         const updatedOrder = await Order.findOneAndUpdate(
             { "_id": orderId, 'products._id': productId },
             { $set: { 'products.$.status': status } },
             { new: true }
         );
-
         if (!updatedOrder) {
             return res.status(404).json({ success: false, message: 'Order or Product not found' });
         }
 
-        // Check if the status is "Delivered" and the payment method is "COD"
         if (status === "Delivered") {
             updatedOrder.paymentStatus = "Success";
-            const order = await Order.findOne({ orderId });
+
+            const order = await Order.findById(orderId);
+
             order.products.forEach(product => {
                 if (product.status !== 'Cancelled') {
                     product.status = 'Delivered';
@@ -362,7 +505,6 @@ const updateOrderStatus = async (req, res) => {
             await updatedOrder.save();
         }
 
-        // Check if the status is "Returned" and paymentStatus is "Success"
         if (status === "Returned" && updatedOrder.paymentStatus === "Success") {
             const product = updatedOrder.products.find(product => product._id.toString() === productId);
             if (product) {
@@ -379,7 +521,6 @@ const updateOrderStatus = async (req, res) => {
                     refundAmount = updatedOrder.payableAmount;
                 }
                 updatedOrder.returnedAmount = refundAmount;
-                // Update the wallet balance and add a transaction
                 const walletData = await Wallet.findOneAndUpdate(
                     { userId: updatedOrder.userId },
                     {
@@ -399,23 +540,26 @@ const updateOrderStatus = async (req, res) => {
                     return res.status(404).json({ success: false, message: 'Wallet not found' });
                 }
 
-                // Optionally update order's payableAmount if needed
                 updatedOrder.payableAmount = refundAmount;
                 updatedOrder.paymentStatus = 'Refunded';
 
-                // Save the updated order
                 await updatedOrder.save();
             }
         }
 
         return res.json({ success: true, order: updatedOrder });
 
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).json({ success: false, message: `${error.message}` });
+=======
+    } catch {
+        return res.status(500).json({ success: false, message: 'Server error' });
+>>>>>>> 003d3dd (update ui)
     }
 };
 
-const coupons = async(req, res) => {
+const coupons = async (req, res) => {
     try {
         const page = parseInt(req.query.page, 10) || 1;
         const limit = 10;
@@ -433,20 +577,30 @@ const coupons = async(req, res) => {
             totalPages,
             currentPage: page
         });
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).json({ success: false, message: `${error.message}` });
+=======
+    } catch {
+        return res.status(500).json({ success: false, message: 'Server error' });
+>>>>>>> 003d3dd (update ui)
     }
 };
 
-const addCoupon = async(req, res) => {
+const addCoupon = async (req, res) => {
     try {
         return res.render('admin/add_coupon');
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).json({ success: false, message: `${error.message}` });
+=======
+    } catch {
+        return res.status(500).json({ success: false, message: 'Server error' });
+>>>>>>> 003d3dd (update ui)
     }
 };
 
-const editCoupon = async(req, res) => {
+const editCoupon = async (req, res) => {
     try {
         const coupon = await Coupon.findById(req.params.id);
         if (!coupon) {
@@ -454,15 +608,20 @@ const editCoupon = async(req, res) => {
         }
 
         return res.render('admin/edit_coupon', { coupon });
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).json({ success: false, message: `${error.message}` });
+=======
+    } catch {
+        return res.status(500).json({ success: false, message: 'Server error' });
+>>>>>>> 003d3dd (update ui)
     }
 };
 
-const updateCoupon = async(req, res) => {
+const updateCoupon = async (req, res) => {
     try {
         const { code, description, discountPercentage, minPurchaseAmount, quantityLimit, expiryDate } = req.body;
-        const couponExists = await Coupon.findOne({ code: code, _id: { $ne: req.params.id } });
+        const couponExists = await Coupon.findOne({ code, _id: { $ne: req.params.id } });
         if (couponExists) {
             const coupon = await Coupon.findById(req.params.id);
             return res.render(`admin/edit_coupon`, { coupon, message: "Code already exists" });
@@ -479,24 +638,27 @@ const updateCoupon = async(req, res) => {
         }
 
 
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).json({ success: false, message: `${error.message}` });
+=======
+    } catch {
+        return res.status(500).json({ success: false, message: 'Server error' });
+>>>>>>> 003d3dd (update ui)
     }
 };
 
-const saveCoupon = async(req, res) => {
+const saveCoupon = async (req, res) => {
     try {
         const { code, description, discountPercentage, minPurchaseAmount, quantityLimit, expiryDate } = req.body;
 
-        // Validate the required fields
         if (!code || !description || !discountPercentage || !minPurchaseAmount || !quantityLimit || !expiryDate) {
             return res.status(400).json({ error: 'All fields are required' });
         }
-        const couponExists = await Coupon.findOne({ code: code });
+        const couponExists = await Coupon.findOne({ code });
         if (couponExists) {
             return res.render('admin/add_coupon', { message: "Code already exists" });
         } else {
-            // Create a new coupon object
             const newCoupon = new Coupon({
                 code,
                 description,
@@ -506,18 +668,21 @@ const saveCoupon = async(req, res) => {
                 expiryDate
             });
 
-            // Save the coupon to the database
             await newCoupon.save();
 
-            // Redirect to the coupons list page or send a success response
             return res.status(201).redirect('/admin/coupons');
         }
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).json({ success: false, message: `${error.message}` });
+=======
+    } catch {
+        return res.status(500).json({ success: false, message: 'Server error' });
+>>>>>>> 003d3dd (update ui)
     }
 };
 
-const updateCouponStatus = async(req, res) => {
+const updateCouponStatus = async (req, res) => {
     try {
         const { isActive } = req.body;
         const coupon = await Coupon.findByIdAndUpdate(req.params.id, { isActive }, { new: true });
@@ -526,8 +691,14 @@ const updateCouponStatus = async(req, res) => {
         } else {
             return res.json({ success: false });
         }
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).json({ success: false, message: `${error.message}` });
+=======
+    } catch {
+        return res.status(500).json({ success: false, message: 'Something went wrong' });
+
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -537,40 +708,70 @@ const generateReport = async (req, res) => {
     try {
         const { dateFrom, dateTo, format } = req.query;
 
-        // Convert query params to Date objects
         const fromDate = dateFrom ? new Date(dateFrom) : new Date('1970-01-01');
         const toDate = dateTo ? new Date(dateTo) : new Date();
 
-        // Fetch orders within the date range
         const orders = await Order.find({
             orderDate: { $gte: fromDate, $lte: toDate }
         }).populate('userId').sort({ orderDate: 1 });
 
-        // Calculate summary statistics
         const totalSales = orders.reduce((sum, order) => sum + Number(order.payableAmount), 0);
         const averageOrderValue = orders.length ? totalSales / orders.length : 0;
         const numberOfOrders = orders.length;
 
         if (format === 'pdf') {
+<<<<<<< HEAD
             await generatePDFReport(res, orders, { totalSales, averageOrderValue, numberOfOrders, fromDate, toDate });
         } else if (format === 'excel') {
             await generateExcelReport(res, orders, { totalSales, averageOrderValue, numberOfOrders, fromDate, toDate });
         } else {
             return res.status(400).send('Invalid format. Supported formats are "pdf" and "excel".');
+=======
+            return await generatePDFReport(res, orders, {
+                totalSales,
+                averageOrderValue,
+                numberOfOrders,
+                fromDate,
+                toDate
+            });
+>>>>>>> 003d3dd (update ui)
         }
+
+        if (format === 'excel') {
+            return await generateExcelReport(res, orders, {
+                totalSales,
+                averageOrderValue,
+                numberOfOrders,
+                fromDate,
+                toDate
+            });
+        }
+
+        return res.status(400).json({
+            success: false,
+            message: 'Invalid format. Supported formats are "pdf" and "excel".'
+        });
+
     } catch (error) {
+<<<<<<< HEAD
         return res.status(500).json({ success: false, message: `${error.message}` });
+=======
+        console.log(error);
+
+        return res.status(500).send(
+            'An error occurred while generating the report. Please try again later.'
+        );
+>>>>>>> 003d3dd (update ui)
     }
 };
 
-const generatePDFReport = async (res, orders, summary) => {
+async function generatePDFReport(res, orders, summary) {
     const doc = new PDFDocument({ size: 'A4', margin: 50 });
     res.setHeader('Content-Disposition', 'attachment; filename="sales_report.pdf"');
     res.setHeader('Content-Type', 'application/pdf');
 
     doc.pipe(res);
 
-    // Helper function to format currency
     const formatCurrency = (amount) => {
         return `₹${new Intl.NumberFormat('en-IN', {
             minimumFractionDigits: 2,
@@ -578,22 +779,18 @@ const generatePDFReport = async (res, orders, summary) => {
         }).format(amount)}`;
     };
 
-    // Embed a Unicode-compatible font
     doc.registerFont('DejaVuSans', 'public/admin/assets/fonts/DejaVuSans.ttf');
     doc.font('DejaVuSans');
 
-    // Title
     doc.fontSize(18).text('Sales Report', { align: 'center' });
     doc.moveDown();
 
-    // Summary
     doc.fontSize(12).text(`Total Sales: ${formatCurrency(summary.totalSales)}`);
     doc.text(`Average Order Value: ${formatCurrency(summary.averageOrderValue)}`);
     doc.text(`Number of Orders: ${summary.numberOfOrders}`);
     doc.text(`Date Range: ${moment(summary.fromDate).format('DD-MM-YYYY')} to ${moment(summary.toDate).format('DD-MM-YYYY')}`);
     doc.moveDown();
 
-    // Table headers
     const tableHeaders = ['Order ID', 'Billing Name', 'Date', 'Total', 'Payment Status', 'Payment Method'];
     const tableColumnWidths = [50, 100, 80, 80, 80, 80];
 
@@ -639,7 +836,6 @@ const generatePDFReport = async (res, orders, summary) => {
         doc.moveDown(0.8);
     });
 
-    // Footer
     const pageCount = doc.bufferedPageRange().count;
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i < pageCount; i++) {
@@ -653,13 +849,12 @@ const generatePDFReport = async (res, orders, summary) => {
     }
 
     doc.end();
-};
+}
 
-const generateExcelReport = async (res, orders, summary) => {
+async function generateExcelReport(res, orders, summary) {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Sales Report');
 
-    // Add summary
     worksheet.addRow(['Sales Report']);
     worksheet.addRow(['Total Sales', `₹${summary.totalSales.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`]);
     worksheet.addRow(['Average Order Value', `₹${summary.averageOrderValue.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`]);
@@ -667,7 +862,6 @@ const generateExcelReport = async (res, orders, summary) => {
     worksheet.addRow(['Date Range', `${moment(summary.fromDate).format('DD-MM-YYYY')} to ${moment(summary.toDate).format('DD-MM-YYYY')}`]);
     worksheet.addRow([]);
 
-    // Add headers
     const headers = ['Order ID', 'Billing Name', 'Date', 'Total', 'Payment Status', 'Payment Method'];
     const headerRow = worksheet.addRow(headers);
     headerRow.font = { bold: true };
@@ -677,7 +871,6 @@ const generateExcelReport = async (res, orders, summary) => {
         fgColor: { argb: 'FFD3D3D3' }
     };
 
-    // Add data
     orders.forEach(order => {
         worksheet.addRow([
             order.orderId,
@@ -689,7 +882,6 @@ const generateExcelReport = async (res, orders, summary) => {
         ]);
     });
 
-    // Format columns
     worksheet.columns.forEach((column, index) => {
         column.width = 15;
         if (index === 3) { // Assuming the 'Total' column is at index 3
@@ -697,14 +889,12 @@ const generateExcelReport = async (res, orders, summary) => {
         }
     });
 
-    // Set content type and disposition
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     res.setHeader('Content-Disposition', 'attachment; filename="sales_report.xlsx"');
 
-    // Write to response
     await workbook.xlsx.write(res);
-    res.end();
-};
+    return;
+}
 
 
 

@@ -1,429 +1,632 @@
 <!DOCTYPE HTML>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
-    <title>Evara Dashboard</title>
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="description" content="">
+    <title>Sandglass – Order Detail</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta property="og:title" content="">
-    <meta property="og:type" content="">
-    <meta property="og:url" content="">
-    <meta property="og:image" content="">
-    <!-- Favicon -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
     <link rel="shortcut icon" type="image/x-icon" href="/admin/assets/imgs/theme/favicon.svg">
-    <!-- Template CSS -->
     <link href="/admin/assets/css/main.css" rel="stylesheet" type="text/css" />
     <style>
-        .centered-text {
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --purple-50:  #EEEDFE;
+            --purple-100: #CECBF6;
+            --purple-200: #AFA9EC;
+            --purple-400: #7F77DD;
+            --purple-600: #534AB7;
+            --purple-800: #3C3489;
+            --green-50:   #EAF3DE;
+            --green-600:  #3B6D11;
+            --green-800:  #27500A;
+            --amber-50:   #FAEEDA;
+            --amber-600:  #854F0B;
+            --red-50:     #FCEBEB;
+            --red-600:    #A32D2D;
+            --blue-50:    #E6F1FB;
+            --blue-600:   #185FA5;
+            --bg-primary:   #ffffff;
+            --bg-secondary: #f8f7fc;
+            --bg-tertiary:  #f2f0f9;
+            --text-primary:   #1a1825;
+            --text-secondary: #6b6880;
+            --text-tertiary:  #9b98ab;
+            --border:    rgba(83,74,183,0.12);
+            --border-md: rgba(83,74,183,0.2);
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .shell {
+            display: grid;
+            grid-template-columns: 230px 1fr;
+            min-height: 100vh;
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border);
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .brand {
+            padding: 1.25rem 1.25rem 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
             align-items: center;
-            height: 100vh; /* Full viewport height */
-            text-align: center; /* Center text within the flex container */
+            gap: 10px;
+        }
+
+        .brand-icon {
+            width: 34px; height: 34px;
+            background: var(--purple-600);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .brand-name { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+        .brand-sub  { font-size: 11px; color: var(--text-tertiary); }
+
+        nav { padding: 1rem 0.75rem; flex: 1; overflow-y: auto; }
+
+        .nav-label {
+            font-size: 10px; letter-spacing: .08em;
+            color: var(--text-tertiary);
+            padding: 0 0.5rem; margin: 1rem 0 0.35rem;
+            text-transform: uppercase; font-weight: 500;
+        }
+
+        .nav-item {
+            display: flex; align-items: center; gap: 9px;
+            padding: 8px 10px; border-radius: var(--radius-md);
+            font-size: 13.5px; color: var(--text-secondary);
+            margin-bottom: 1px;
+            transition: background .15s, color .15s;
+            text-decoration: none;
+        }
+
+        .nav-item:hover  { background: var(--bg-secondary); color: var(--text-primary); }
+        .nav-item.active { background: var(--purple-50); color: var(--purple-600); font-weight: 500; }
+        .nav-item i { font-size: 17px; }
+        .nav-item.active i { color: var(--purple-600); }
+
+        .sidebar-footer { padding: 1rem 1.25rem; border-top: 1px solid var(--border); }
+
+        .user-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+
+        .avatar {
+            width: 34px; height: 34px; border-radius: 50%;
+            background: var(--purple-50);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 600; color: var(--purple-600); flex-shrink: 0;
+        }
+
+        .user-name { font-size: 13px; font-weight: 500; }
+        .user-role { font-size: 11px; color: var(--text-tertiary); }
+
+        .logout-btn {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 13px; color: var(--text-secondary);
+            padding: 7px 10px; border-radius: var(--radius-md);
+            transition: background .15s; text-decoration: none;
+        }
+        .logout-btn:hover { background: var(--bg-secondary); }
+
+        /* ── Main ── */
+        .main { display: flex; flex-direction: column; }
+
+        .topbar {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 1.5rem;
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 10;
+        }
+
+        .search {
+            display: flex; align-items: center; gap: 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 6px 12px; width: 260px;
+        }
+
+        .search input {
+            background: none; border: none; outline: none;
+            font-size: 13px; color: var(--text-primary); width: 100%;
+        }
+
+        .search input::placeholder { color: var(--text-tertiary); }
+        .search i { font-size: 16px; color: var(--text-tertiary); }
+
+        .topbar-right { display: flex; align-items: center; gap: 8px; }
+
+        .icon-btn {
+            width: 34px; height: 34px; border-radius: var(--radius-md);
+            border: 1px solid var(--border); background: var(--bg-primary);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: background .15s; text-decoration: none;
+        }
+
+        .icon-btn:hover { background: var(--bg-secondary); }
+        .icon-btn i { font-size: 17px; color: var(--text-secondary); }
+
+        /* ── Content ── */
+        .content { padding: 1.5rem; flex: 1; }
+
+        .page-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 1.5rem; gap: 12px; flex-wrap: wrap;
+        }
+
+        .page-title { font-size: 20px; font-weight: 600; }
+        .page-sub   { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 14px; border-radius: var(--radius-md);
+            font-size: 13px; font-weight: 500;
+            border: 1px solid var(--border-md);
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all .15s;
+        }
+
+        .back-btn:hover { background: var(--purple-50); color: var(--purple-600); border-color: var(--purple-200); }
+
+        /* ── Cards ── */
+        .card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: 1.25rem;
+        }
+
+        .card-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        .card-header-title {
+            font-size: 14px; font-weight: 600; color: var(--text-primary);
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .card-header-title i { font-size: 17px; color: var(--purple-400); }
+
+        .card-body { padding: 1.25rem; }
+
+        /* ── Info grid ── */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+        }
+
+        .info-block {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1rem 1.1rem;
+        }
+
+        .info-block-label {
+            font-size: 10px; font-weight: 500; letter-spacing: .07em;
+            text-transform: uppercase; color: var(--text-tertiary);
+            margin-bottom: 10px;
+            display: flex; align-items: center; gap: 6px;
+        }
+
+        .info-block-label i { font-size: 15px; color: var(--purple-400); }
+
+        .info-line {
+            font-size: 13px; color: var(--text-primary);
+            margin-bottom: 3px; line-height: 1.55;
+        }
+
+        .info-line strong { font-weight: 500; }
+
+        /* ── Table ── */
+        .table-wrap { overflow-x: auto; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+
+        th {
+            text-align: left;
+            font-size: 11px; font-weight: 500;
+            color: var(--text-tertiary);
+            padding: 10px 16px;
+            text-transform: uppercase; letter-spacing: .05em;
+            background: var(--bg-secondary);
+            white-space: nowrap;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 13px 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+            vertical-align: middle;
+        }
+
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr:hover td { background: var(--bg-secondary); }
+
+        .product-cell { display: flex; align-items: center; gap: 12px; }
+
+        .product-thumb {
+            width: 44px; height: 44px; border-radius: var(--radius-md);
+            object-fit: cover; border: 1px solid var(--border); flex-shrink: 0;
+            background: var(--bg-secondary);
+        }
+
+        .product-name { font-weight: 500; font-size: 13px; }
+
+        /* ── Status select ── */
+        .status-select {
+            padding: 5px 10px; border-radius: var(--radius-md);
+            border: 1px solid var(--border-md);
+            background: var(--bg-secondary);
+            font-size: 12px; font-weight: 500;
+            color: var(--text-secondary);
+            font-family: 'Segoe UI', sans-serif;
+            cursor: pointer; outline: none;
+            transition: border-color .15s;
+            min-width: 155px;
+        }
+
+        .status-select:focus { border-color: var(--purple-400); }
+
+        .return-reason {
+            font-size: 11.5px; color: var(--text-secondary);
+            margin-top: 5px; font-style: italic;
+        }
+
+        /* ── Status badges ── */
+        .badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 3px 9px; border-radius: 20px;
+            font-size: 11px; font-weight: 500; white-space: nowrap;
+        }
+
+        .badge-delivered  { background: var(--green-50);  color: var(--green-800); }
+        .badge-pending    { background: var(--amber-50);  color: var(--amber-600); }
+        .badge-processing { background: var(--blue-50);   color: var(--blue-600); }
+        .badge-shipped    { background: var(--purple-50); color: var(--purple-800); }
+        .badge-cancelled  { background: var(--red-50);    color: var(--red-600); }
+        .badge-returned   { background: var(--amber-50);  color: var(--amber-600); }
+        .badge-paid       { background: var(--green-50);  color: var(--green-800); }
+        .badge-unpaid     { background: var(--red-50);    color: var(--red-600); }
+
+        /* ── Summary ── */
+        .summary-table { width: 100%; border-collapse: collapse; }
+
+        .summary-table td {
+            padding: 8px 0; border: none;
+            font-size: 13px; border-bottom: 1px solid var(--border);
+        }
+
+        .summary-table tr:last-child td { border-bottom: none; }
+
+        .summary-label { color: var(--text-secondary); }
+        .summary-value { text-align: right; font-weight: 500; color: var(--text-primary); }
+        .summary-value.discount { color: var(--green-600); }
+
+        .total-row td { padding-top: 12px; }
+        .total-label { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+        .total-value { font-size: 18px; font-weight: 600; color: var(--purple-600); text-align: right; }
+
+        /* ── Footer ── */
+        footer {
+            padding: 1rem 1.5rem;
+            font-size: 12px; color: var(--text-tertiary);
+            border-top: 1px solid var(--border);
+            background: var(--bg-primary);
         }
     </style>
 </head>
-
 <body>
-    <div class="screen-overlay"></div>
-    <aside class="navbar-aside" id="offcanvas_aside">
-        <div class="aside-top">
-            <a href="index.html" class="brand-wrap">
-                <img src="/admin/assets/imgs/theme/sandglass-high-resolution-logo-transparent.svg" class="logo" alt="Hourglass Dashboard">
-            </a>
+
+<div class="shell">
+
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">
+                <img src="/admin/assets/imgs/theme/sandglass-high-resolution-logo-transparent.svg"
+                     style="width:22px;height:22px;object-fit:contain;filter:brightness(0) invert(1)" alt="Sandglass">
+            </div>
             <div>
-                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
+                <div class="brand-name">Sandglass</div>
+                <div class="brand-sub">Admin panel</div>
             </div>
         </div>
+
         <nav>
-            <ul class="menu-aside">
-                <li class="menu-item ">
-                    <a class="menu-link" href="/admin/dashboard"> <i class="icon material-icons md-home"></i>
-                        <span class="text">Dashboard</span>
-                    </a>
-                </li>
-                <li class="menu-item ">
-                    <a class="menu-link" href="/admin/products"> <i class="icon material-icons md-shopping_bag"></i>
-                        <span class="text">Products</span>
-                    </a>
-                    <!-- <div class="submenu">
-                        <a href="page-products-list.html">Product List</a>
-                        <a href="page-products-grid.html">Product grid</a>
-                        <a href="page-products-grid-2.html">Product grid 2</a>
-                        <a href="page-categories.html">Categories</a>
-                    </div> -->
-                </li>
-                <li class="menu-item active">
-                    <a class="menu-link" href="/admin/orders"> <i class="icon material-icons md-shopping_cart"></i>
-                        <span class="text">Orders</span>
-                    </a>
-                    <!-- <div class="submenu">
-                        <a href="page-orders-1.html">Order list 1</a>
-                        <a href="page-orders-2.html">Order list 2</a>
-                        <a href="page-orders-detail.html">Order detail</a>
-                        <a href="page-orders-tracking.html">Order tracking</a>
-                        <a href="page-invoice.html">Invoice</a>
-                    </div> -->
-                </li>
-                <li class="menu-item ">
-                    <a class="menu-link" href="/admin/users"> <i class="icon material-icons md-public"></i>
-                        <span class="text">Users</span>
-                    </a>
-                    <!-- <div class="submenu">
-                        <a href="page-sellers-cards.html">Sellers cards</a>
-                        <a href="page-sellers-list.html">Sellers list</a>
-                        <a href="page-seller-detail.html">Seller profile</a>
-                    </div> -->
-                </li>
-                <li class="menu-item ">
-                    <a class="menu-link" href="/admin/add_product"> <i class="icon material-icons md-add_box"></i>
-                        <span class="text">Add product</span>
-                    </a>
-                    <!-- <div class="submenu">
-                        <a href="page-form-product-1.html">Add product 1</a>
-                        <a href="page-form-product-2.html">Add product 2</a>
-                        <a href="page-form-product-3.html">Add product 3</a>
-                        <a href="page-form-product-4.html">Add product 4</a>
-                    </div> -->
-                </li>
-                <li class="menu-item ">
-                    <a class="menu-link" href="/admin/categories"> <i class="icon material-icons md-apps"></i>
-                        <span class="text">Categories</span>
-                    </a>
-                    <!-- <div class="submenu">
-                        <a href="page-transactions-1.html">Transaction 1</a>
-                        <a href="page-transactions-2.html">Transaction 2</a>
-                        <a href="page-transactions-details.html">Transaction Details</a>
-                    </div> -->
-                </li>
-                <li class="menu-item ">
-                    <a class="menu-link" href="/admin/coupons"> <i class="icon material-icons md-payment"></i>
-                        <span class="text">Coupons</span>
-                    </a>
-                    <!-- <div class="submenu">
-                        <a href="page-account-login.html">User login</a>
-                        <a href="page-account-register.html">User registration</a>
-                        <a href="page-error-404.html">Error 404</a>
-                    </div> -->
-                </li>
-                <!-- <li class="menu-item">
-                    <a class="menu-link" href="/admin/reviews"> <i class="icon material-icons md-comment"></i>
-                        <span class="text">Reviews</span>
-                    </a>
-                </li> -->
-                <li class="menu-item">
-                    <a class="menu-link" href="/admin/offers"> <i class="icon material-icons md-local_offer"></i>
-                        <span class="text">Offers</span> </a>
-                </li>
-                <li class="menu-item">
-                    <a class="menu-link" disabled href="/admin/statistics"> <i class="icon material-icons md-pie_chart"></i>
-                        <span class="text">Statistics</span>
-                    </a>
-                </li>
-            </ul>
-            <hr>
-            <!-- <ul class="menu-aside">
-                <li class="menu-item has-submenu">
-                    <a class="menu-link" href="#"> <i class="icon material-icons md-settings"></i>
-                        <span class="text">Settings</span>
-                    </a>
-                    <div class="submenu">
-                        <a href="page-settings-1.html">Setting sample 1</a>
-                        <a href="page-settings-2.html">Setting sample 2</a>
-                    </div>
-                </li>
-                <li class="menu-item">
-                    <a class="menu-link" href="page-blank.html"> <i class="icon material-icons md-local_offer"></i>
-                        <span class="text"> Starter page </span>
-                    </a>
-                </li>
-            </ul> -->
-            <br>
-            <br>
+            <div class="nav-label">Main</div>
+            <a href="/admin/dashboard" class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+            <a href="/admin/products"  class="nav-item"><i class="ti ti-shopping-bag"></i> Products</a>
+            <a href="/admin/orders"    class="nav-item active"><i class="ti ti-shopping-cart"></i> Orders</a>
+            <a href="/admin/users"     class="nav-item"><i class="ti ti-users"></i> Users</a>
+
+            <div class="nav-label">Catalog</div>
+            <a href="/admin/add_product" class="nav-item"><i class="ti ti-circle-plus"></i> Add product</a>
+            <a href="/admin/categories"  class="nav-item"><i class="ti ti-apps"></i> Categories</a>
+            <a href="/admin/coupons"     class="nav-item"><i class="ti ti-ticket"></i> Coupons</a>
+
+            <div class="nav-label">Analytics</div>
+            <a href="/admin/offers"      class="nav-item"><i class="ti ti-tag"></i> Offers</a>
         </nav>
-    </aside>
-    <main class="main-wrap">
-        <header class="main-header navbar">
-            <div class="col-search">
-                
+
+        <div class="sidebar-footer">
+            <div class="user-row">
+                <div class="avatar">AD</div>
+                <div>
+                    <div class="user-name">Admin</div>
+                    <div class="user-role">Store manager</div>
+                </div>
             </div>
-            <div class="col-nav">
-                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
-                <ul class="nav">
-                    <!-- <li class="nav-item">
-                        <a class="nav-link btn-icon" href="#">
-                            <i class="material-icons md-notifications animation-shake"></i>
-                            <span class="badge rounded-pill">3</span>
-                        </a>
-                    </li> -->
-                    <li class="nav-item">
-                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/admin/logout" ><i class="material-icons md-exit_to_app"></i></a>
-                    </li>
-                    <!-- <li class="dropdown nav-item">
-                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false"><i class="material-icons md-public"></i></a>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
-                            <a class="dropdown-item text-brand" href="#"><img src="/admin/assets/imgs/theme/flag-us.png" alt="English">English</a>
-                            <a class="dropdown-item" href="#"><img src="/admin/assets/imgs/theme/flag-fr.png" alt="Français">Français</a>
-                            <a class="dropdown-item" href="#"><img src="/admin/assets/imgs/theme/flag-jp.png" alt="Français">日本語</a>
-                            <a class="dropdown-item" href="#"><img src="/admin/assets/imgs/theme/flag-cn.png" alt="Français">中国人</a>
-                        </div>
-                    </li>-->
-                    <!-- <li class="dropdown nav-item">
-                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="/admin/assets/imgs/people/avatar2.jpg" alt="User"></a>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                            <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
-                        </div>
-                    </li>  -->
-                </ul>
+            <a href="/admin/logout" class="logout-btn"><i class="ti ti-logout"></i> Sign out</a>
+        </div>
+    </aside>
+
+    <!-- ── Main ── -->
+    <div class="main">
+
+        <header class="topbar">
+            <div class="search">
+                <i class="ti ti-search"></i>
+                <input type="text" placeholder="Search products, orders…">
+            </div>
+            <div class="topbar-right">
+                <a href="#" class="icon-btn darkmode" title="Dark mode"><i class="ti ti-moon"></i></a>
+                <a href="#" class="icon-btn requestfullscreen" title="Fullscreen"><i class="ti ti-maximize"></i></a>
+                <a href="/admin/logout" class="icon-btn" title="Logout"><i class="ti ti-logout"></i></a>
             </div>
         </header>
-        <section class="content-main">
-            <div class="content-header">
-                <div>
-                    <h2 class="content-title card-title">Order detail</h2>
-                    <p>Details for Order ID: <%=orderData.orderId%></p>
-                </div>
-            </div>
-            <div class="card">
-                <header class="card-header">
-                    <div class="row align-items-center">
-                        <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
-                            <span>
-                                <i class="material-icons md-calendar_today"></i> <b><%=orderData.orderDate.toLocaleString()%></b>
-                            </span> <br>
-                            <small class="text-muted">Order ID: <%=orderData.orderId%></small>
-                        </div>
-                        <div class="col-lg-6 col-md-6 ms-auto text-md-end">
-                            
-                            <a class="btn btn-primary" href="#">Save</a>
-                            <a class="btn btn-secondary print ms-2" href="#"><i class="icon material-icons md-print"></i></a>
-                        </div>
-                    </div>
-                </header> <!-- card-header end// -->
-                <div class="card-body">
-                    <div class="row mb-50 mt-20 order-info-wrap">
-                        <div class="col-md-4">
-                            <article class="icontext align-items-start">
-                                <span class="icon icon-sm rounded-circle bg-primary-light">
-                                    <i class="text-primary material-icons md-person"></i>
-                                </span>
-                                <div class="text">
-                                    <h6 class="mb-1">Customer</h6>
-                                    <p class="mb-1">
-                                        <%=orderData.userId.username%> <br> <%=orderData.userId.email%> <br> <%=orderData.userId.phone%>
-                                    </p>
-                                    <a href="#">View profile</a>
-                                </div>
-                            </article>
-                        </div> <!-- col// -->
-                        <div class="col-md-4">
-                            <article class="icontext align-items-start">
-                                <span class="icon icon-sm rounded-circle bg-primary-light">
-                                    <i class="text-primary material-icons md-local_shipping"></i>
-                                </span>
-                                <div class="text">
-                                    <h6 class="mb-1">Order info</h6>
-                                    <p class="mb-1">
-                                        Shipping: Fargo express <br> Pay method: <%=orderData.paymentMethod%> <br> Payment status: <%=orderData.paymentStatus%>
-                                    </p>
-                                    <a href="#">Download info</a>
-                                </div>
-                            </article>
-                        </div> <!-- col// -->
-                        <div class="col-md-4">
-                            <article class="icontext align-items-start">
-                                <span class="icon icon-sm rounded-circle bg-primary-light">
-                                    <i class="text-primary material-icons md-place"></i>
-                                </span>
-                                <div class="text">
-                                    <h6 class="mb-1">Deliver to</h6>
-                                    <p class="mb-1">
-                                        <%=address.address[0].addressLine1%>, <%=address.address[0].addressLine2%> <br><%=address.address[0].city%>, <%=address.address[0].state%> <br> Pincode: <%=address.address[0].pincode%> <br>Phone: <%=address.address[0].phone%>
-                                    </p>
-                                    <a href="#">View profile</a>
-                                </div>
-                            </article>
-                        </div> <!-- col// -->
-                    </div> <!-- row // -->
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th width="40%">Product</th>
-                                            <th width="16%">Unit Price</th>
-                                            <th width="15%">Quantity</th>
-                                            <th width="15%" class="text-end">Total</th>
-                                            <th width="15%" class="text-end">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <%orderData.products.forEach(product=>{%>
-                                        <tr>
-                                            <td>
-                                                <a class="itemside" href="#">
-                                                    <div class="left">
-                                                        <img src="/uploads/<%=product.productId.productImage[0]%>" width="40" height="40" class="img-xs" alt="Item">
-                                                    </div>
-                                                    <div class="info"> <%=product.productId.productName%></div>
-                                                </a>
-                                            </td>
-                                            <td> <%=product.productPrice%> </td>
-                                            <td> <%=product.quantity%> </td>
-                                            <td class="text-end"> <%=product.productPrice*product.quantity%> </td>
-                                            <td>
-                                                <div>
-                                                    <select class="form-select d-inline-block mb-lg-0 mb-15" style="width: 150px;" onchange="updateProductStatus('<%=orderData._id%>','<%=product._id%>', this.value)">
-                                                        <option><%=product.status%></option>
-                                                        <% 
-                                                            const statusList = ["Pending", "Processing", "Shipped", "Delivered", "Return Requested", "Return Approved", "Return Rejected", "Returned"];
-                                                            const currentIndex = statusList.indexOf(product.status);
-                                                            
-                                                            let filteredStatuses = [];
-                                                            if (currentIndex >= 0 && currentIndex < 3) {
-                                                                filteredStatuses = statusList.slice(currentIndex + 1, 4); // Show options from the next status to "Delivered"
-                                                            } else if (product.status === "Return Requested") {
-                                                                filteredStatuses = ["Return Approved", "Return Rejected"]; // Show only 'Return Approved' and 'Return Rejected'
-                                                            } else if (product.status === "Return Approved") {
-                                                                filteredStatuses = ["Returned"]; // Show only 'Returned'
-                                                            }
-                                                            
-                                                            filteredStatuses.forEach(item => { %>
-                                                                <option value="<%= item %>"><%= item %></option>
-                                                        <% }) %>
-                                                    </select>
-                                                </div>
-                                                <% if(product.reason){ %>
-                                                <p>
-                                                    Reason: <%=product.reason%>
-                                                </p>
-                                                <% } %>
-                                            </td>
-                                            
-                                            
-                                            
-                                        </tr>
-                                        <%})%>
-                                        
-                                        <tr>
-                                            <td colspan="4">
-                                                <article class="float-end">
-                                                    <dl class="dlist">
-                                                        <dt>Subtotal:</dt>
-                                                        <dd>₹ <%=totalPrice.toFixed(2)%></dd>
-                                                    </dl>
-                                                    <% if (orderData.coupon) { %>
-                                                        <dl class="dlist">
-                                                            <dt>Coupon discount (<%= orderData.coupon %>):</dt>
-                                                            <dd>-₹ <%= ((totalPrice )* (couponDiscount / 100) ).toFixed(2)%></dd>
-                                                        </dl>
-                                                        <% }%>
-                                                    <dl class="dlist">
-                                                        <dt>Shipping cost:</dt>
-                                                        <dd>₹ 300</dd>
-                                                    </dl>
-                                                    <dl class="dlist">
-                                                        <dt>Grand total:</dt>
-                                                        <dd> <b class="h5">₹ <%=orderData.payableAmount.toFixed(2)%></b> </dd>
-                                                    </dl>
-                                                    <dl class="dlist">
-                                                        <dt class="text-muted">Payment status:</dt>
-                                                        <dd>
-                                                            <span class="badge rounded-pill alert-success text-success"><%=orderData.paymentStatus%></span>
-                                                        </dd>
-                                                    </dl>
-                                                </article>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div> <!-- table-responsive// -->
-                            <a class="btn btn-primary" href="page-orders-tracking.html">View Order Tracking</a>
-                        </div> <!-- col// -->
-                        <div class="col-lg-1"></div>
-                        <!-- <div class="col-lg-4">
-                            <div class="box shadow-sm bg-light">
-                                <h6 class="mb-15">Payment info</h6>
-                                <p>
-                                    <img src="assets/imgs/card-brands/2.png" class="border" height="20"> Master Card **** **** 4768 <br>
-                                    Business name: Grand Market LLC <br>
-                                    Phone: +1 (800) 555-154-52
-                                </p>
-                            </div>
-                            <div class="h-25 pt-4">
-                                <div class="mb-3">
-                                    <label>Notes</label>
-                                    <textarea class="form-control" name="notes" id="notes" placeholder="Type some note"></textarea>
-                                </div>
-                                <button class="btn btn-primary">Save note</button>
-                            </div>
-                        </div> col// -->
-                    </div>
-                </div> <!-- card-body end// -->
-            </div> <!-- card end// -->
-        </section>
-            
-        <!-- <footer class="main-footer font-xs">
-            <div class="row pb-30 pt-15">
-                <div class="col-sm-6">
-                    <script>
-                    document.write(new Date().getFullYear())
-                    </script> ©, Evara - HTML Ecommerce Template .
-                </div>
-                <div class="col-sm-6">
-                    <div class="text-sm-end">
-                        All rights reserved
-                    </div>
-                </div>
-            </div>
-        </footer> -->
-    </main>
-    <script>
-        function updateProductStatus(orderId,productId, newStatus) {
-            fetch('/admin/update-order-status', {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({orderId:orderId, productId: productId, status: newStatus }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    console.log('Product status updated successfully');
-                    // Optionally update the UI to reflect the change
-                } else {
-                    console.error('Failed to update product status');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
-    </script>
-        
-    <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
-    <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/vendors/select2.min.js"></script>
-    <script src="assets/js/vendors/perfect-scrollbar.js"></script>
-    <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
-    <!-- Main Script -->
-    <script src="assets/js/main.js" type="text/javascript"></script>
-</body>
 
+        <div class="content">
+
+            <!-- Page header -->
+            <div class="page-header">
+                <div>
+                    <div class="page-title">Order Detail</div>
+                    <div class="page-sub">Order ID: <%= orderData.orderId %></div>
+                </div>
+                <a href="/admin/orders" class="back-btn">
+                    <i class="ti ti-arrow-left" style="font-size:15px"></i> Back to orders
+                </a>
+            </div>
+
+            <!-- ── Meta card: customer / order info / address ── -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-header-title">
+                        <i class="ti ti-file-description"></i>
+                        Order summary
+                    </span>
+                    <span style="font-size:12px; color:var(--text-tertiary)">
+                        <i class="ti ti-calendar" style="font-size:14px; vertical-align:-2px; margin-right:4px"></i>
+                        <%= orderData.orderDate.toLocaleString() %>
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="info-grid">
+
+                        <!-- Customer -->
+                        <div class="info-block">
+                            <div class="info-block-label">
+                                <i class="ti ti-user"></i> Customer
+                            </div>
+                            <div class="info-line"><strong><%= orderData.userId.username %></strong></div>
+                            <div class="info-line" style="color:var(--text-secondary)"><%= orderData.userId.email %></div>
+                            <div class="info-line" style="color:var(--text-secondary)"><%= orderData.userId.phone %></div>
+                        </div>
+
+                        <!-- Order info -->
+                        <div class="info-block">
+                            <div class="info-block-label">
+                                <i class="ti ti-truck"></i> Order info
+                            </div>
+                            <div class="info-line">
+                                <strong>Carrier:</strong> Fargo Express
+                            </div>
+                            <div class="info-line">
+                                <strong>Payment:</strong> <%= orderData.paymentMethod %>
+                            </div>
+                            <div class="info-line" style="margin-top:6px">
+                                <span class="badge <%= orderData.paymentStatus === 'Paid' ? 'badge-paid' : 'badge-unpaid' %>">
+                                    <i class="ti ti-<%= orderData.paymentStatus === 'Paid' ? 'check' : 'clock' %>" style="font-size:11px"></i>
+                                    <%= orderData.paymentStatus %>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Delivery address -->
+                        <div class="info-block">
+                            <div class="info-block-label">
+                                <i class="ti ti-map-pin"></i> Deliver to
+                            </div>
+                            <div class="info-line">
+                                <%= address.address[0].addressLine1 %>, <%= address.address[0].addressLine2 %>
+                            </div>
+                            <div class="info-line">
+                                <%= address.address[0].city %>, <%= address.address[0].state %>
+                            </div>
+                            <div class="info-line" style="color:var(--text-secondary)">
+                                Pincode: <%= address.address[0].pincode %>
+                            </div>
+                            <div class="info-line" style="color:var(--text-secondary)">
+                                Phone: <%= address.address[0].phone %>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Products table + summary side-by-side ── -->
+            <div style="display:grid; grid-template-columns: 1fr 280px; gap:1.25rem; align-items:start;">
+
+                <!-- Products table -->
+                <div class="card" style="margin-bottom:0">
+                    <div class="card-header">
+                        <span class="card-header-title">
+                            <i class="ti ti-shopping-bag"></i> Products
+                        </span>
+                        <span style="font-size:12px; color:var(--text-tertiary)">
+                            <%= orderData.products.length %> item<%= orderData.products.length !== 1 ? 's' : '' %>
+                        </span>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Unit price</th>
+                                    <th>Qty</th>
+                                    <th>Subtotal</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% orderData.products.forEach(product => { %>
+                                <tr>
+                                    <td>
+                                        <div class="product-cell">
+                                            <img class="product-thumb"
+                                                src="/uploads/<%= product.productId.productImage[0] %>"
+                                                alt="<%= product.productId.productName %>">
+                                            <span class="product-name"><%= product.productId.productName %></span>
+                                        </div>
+                                    </td>
+                                    <td>₹<%= product.productPrice %></td>
+                                    <td><%= product.quantity %></td>
+                                    <td style="font-weight:500; color:var(--purple-600)">
+                                        ₹<%= product.productPrice * product.quantity %>
+                                    </td>
+                                    <td>
+                                        <%
+                                            const statusList = ["Pending", "Processing", "Shipped", "Delivered", "Return Requested", "Return Approved", "Return Rejected", "Returned"];
+                                            const currentIndex = statusList.indexOf(product.status);
+                                            let filteredStatuses = [];
+                                            if (currentIndex >= 0 && currentIndex < 3) {
+                                                filteredStatuses = statusList.slice(currentIndex + 1, 4);
+                                            } else if (product.status === "Return Requested") {
+                                                filteredStatuses = ["Return Approved", "Return Rejected"];
+                                            } else if (product.status === "Return Approved") {
+                                                filteredStatuses = ["Returned"];
+                                            }
+                                        %>
+                                        <select class="status-select"
+                                            onchange="updateProductStatus('<%= orderData._id %>', '<%= product._id %>', this.value)">
+                                            <option><%= product.status %></option>
+                                            <% filteredStatuses.forEach(item => { %>
+                                                <option value="<%= item %>"><%= item %></option>
+                                            <% }) %>
+                                        </select>
+                                        <% if (product.reason) { %>
+                                            <div class="return-reason">
+                                                <i class="ti ti-message-circle" style="font-size:12px; vertical-align:-1px"></i>
+                                                Reason: <%= product.reason %>
+                                            </div>
+                                        <% } %>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Order summary -->
+                <div class="card" style="margin-bottom:0">
+                    <div class="card-header">
+                        <span class="card-header-title">
+                            <i class="ti ti-receipt"></i> Summary
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <table class="summary-table">
+                            <tr>
+                                <td class="summary-label">Subtotal</td>
+                                <td class="summary-value">₹<%= totalPrice.toFixed(2) %></td>
+                            </tr>
+                            <% if (orderData.coupon) { %>
+                            <tr>
+                                <td class="summary-label">
+                                    Coupon
+                                    <span style="font-size:11px; color:var(--purple-600); font-weight:500;
+                                        background:var(--purple-50); padding:1px 6px; border-radius:4px; margin-left:4px;">
+                                        <%= orderData.coupon %>
+                                    </span>
+                                </td>
+                                <td class="summary-value discount">
+                                    −₹<%= (totalPrice * (couponDiscount / 100)).toFixed(2) %>
+                                </td>
+                            </tr>
+                            <% } %>
+                            <tr>
+                                <td class="summary-label">Shipping</td>
+                                <td class="summary-value">₹300.00</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td class="total-label">Grand total</td>
+                                <td class="total-value">₹<%= orderData.payableAmount.toFixed(2) %></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </div><!-- /content -->
+
+        <footer>
+            <script>document.write(new Date().getFullYear())</script> &copy; Sandglass &mdash; All rights reserved
+        </footer>
+
+    </div><!-- /main -->
+</div><!-- /shell -->
+
+<script>
+    function updateProductStatus(orderId, productId, newStatus) {
+        fetch('/admin/update-order-status', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orderId, productId, status: newStatus })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (!data.success) console.error('Failed to update product status');
+        })
+        .catch(err => console.error('Error:', err));
+    }
+</script>
+
+<script src="/admin/assets/js/vendors/jquery-3.6.0.min.js"></script>
+<script src="/admin/assets/js/vendors/bootstrap.bundle.min.js"></script>
+<script src="/admin/assets/js/vendors/select2.min.js"></script>
+<script src="/admin/assets/js/vendors/perfect-scrollbar.js"></script>
+<script src="/admin/assets/js/vendors/jquery.fullscreen.min.js"></script>
+<script src="/admin/assets/js/main.js" type="text/javascript"></script>
+
+</body>
 </html>

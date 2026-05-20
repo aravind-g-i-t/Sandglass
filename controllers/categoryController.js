@@ -1,4 +1,3 @@
-// const { ResultWithContextImpl } = require('express-validator/lib/chain');
 const Category = require('../models/categoryModel');
 const Cart = require('../models/cartModel');
 
@@ -11,26 +10,46 @@ const loadcategories = async (req, res) => {
         const totalDocuments = await Category.countDocuments();
         const totalPages = Math.ceil(totalDocuments / limit);
         return res.status(200).render('admin/categories', { categoryData, page, totalPages });
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send("Something went wrong");
+>>>>>>> 003d3dd (update ui)
     }
 };
 
-const insertCategory = async(req, res) => {
+const insertCategory = async (req, res) => {
     try {
         const page = parseInt(req.query.page, 10) || 1;
         const limit = 5;
         const startIndex = (page - 1) * limit;
+        console.log(page, limit, startIndex);
+
         const categoryData = await Category.find().skip(startIndex).limit(limit);
+        console.log(categoryData);
+
         const totalDocuments = await Category.countDocuments();
+        console.log(totalDocuments);
+
         const totalPages = Math.ceil(totalDocuments / limit);
+
 
         let { name, description } = req.body;
         name = name.toUpperCase();
+        console.log(name, description);
+
 
         const checkCategory = await Category.findOne({
             name
         });
+<<<<<<< HEAD
+=======
+
+        console.log(checkCategory);
+>>>>>>> 003d3dd (update ui)
+
 
         if (checkCategory) {
             return res.status(200).render('admin/categories', {
@@ -39,6 +58,7 @@ const insertCategory = async(req, res) => {
                 page,
                 totalPages
             });
+<<<<<<< HEAD
         } else {
             await Category.insertMany({
                 name,
@@ -49,10 +69,31 @@ const insertCategory = async(req, res) => {
                 page,
                 totalPages
             });
+=======
+>>>>>>> 003d3dd (update ui)
         }
+        const newCat = await Category.create({
+            name,
+            description
+        });
+        categoryData.push(newCat);
+        console.log(newCat);
 
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+        return res.render('admin/categories', {
+            categoryData,
+            page,
+            totalPages
+        });
+
+
+    } catch (err) {
+        console.log(err);
+        return res.status(500).send("Something went wrong");
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -62,19 +103,16 @@ const statusUpdate = async (req, res) => {
 
         const category = await Category.findById({ _id: id });
         if (category.isActive) {
-            // Set the category as inactive
             await Category.findByIdAndUpdate(
                 { _id: id },
                 { $set: { isActive: false } }
             );
 
-            // Remove all products of this category from all carts
             await Cart.updateMany(
                 {},
                 { $pull: { products: { categoryId: id } } }
             );
         } else {
-            // Set the category as active
             await Category.findByIdAndUpdate(
                 { _id: id },
                 { $set: { isActive: true } }
@@ -83,25 +121,35 @@ const statusUpdate = async (req, res) => {
 
         return res.redirect('/admin/categories');
 
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send("Something went wrong");
+>>>>>>> 003d3dd (update ui)
     }
 };
 
 
 
-const loadEdit = async(req, res) => {
+const loadEdit = async (req, res) => {
     try {
         const id = req.query.id;
         const category = await Category.findById(id);
 
         return res.render('admin/editCategory', { category });
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send("Something went wrong");
+>>>>>>> 003d3dd (update ui)
     }
 };
 
-const editCategory = async(req, res) => {
+const editCategory = async (req, res) => {
     try {
         let { id, name, description } = req.body;
         name = name.toUpperCase();
@@ -132,8 +180,13 @@ const editCategory = async(req, res) => {
         }
 
 
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send("Something went wrong");
+>>>>>>> 003d3dd (update ui)
     }
 };
 

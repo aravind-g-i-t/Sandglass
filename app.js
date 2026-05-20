@@ -6,9 +6,8 @@ const userRoute = require('./routes/userRoute');
 const adminRoute = require('./routes/adminRoute');
 const nocache = require('nocache');
 const passport = require('passport');
+const morgan = require("morgan");
 require('./helpers/oauth20');
-
-// const { Session } = require('inspector');
 
 
 
@@ -18,7 +17,6 @@ const PORT = process.env.PORT;
 
 
 
-// connect to mongodb
 
 mongoose
     .connect(process.env.MONGO_URL)
@@ -34,6 +32,8 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }));
+
+app.use(morgan('dev'));
 
 
 

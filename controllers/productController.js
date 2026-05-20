@@ -1,7 +1,7 @@
 const Product = require('../models/productModel');
 const Categories = require('../models/categoryModel');
 const Cart = require('../models/cartModel');
-const fs = require('fs');
+const fs = require('fs/promises');
 const path = require('path');
 const Wishlist = require('../models/wishlistModel');
 
@@ -19,29 +19,30 @@ const loadProducts = async (req, res) => {
         const limit = 4;
         const startIndex = (page - 1) * limit;
 
-
-        // Fetch products
         const products = await Product.find(query)
             .sort({ _id: -1 })
             .skip(startIndex)
             .limit(limit);
 
-        // Calculate the final price for each product
         const productsWithFinalPrice = await Promise.all(
             products.map(async (product) => {
                 const finalPrice = await product.getDisplayPrice();
-                return { ...product.toObject(), finalPrice }; // Add finalPrice to the product object
+                return { ...product.toObject(), finalPrice };
             })
         );
 
-        // Count total documents to calculate total pages
         const totalDocuments = await Product.countDocuments(query);
         const totalPages = Math.ceil(totalDocuments / limit);
 
         return res.render('admin/products', { products: productsWithFinalPrice, page, totalPages });
 
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send('Internal Server Error');
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -52,8 +53,13 @@ const loadAddProduct = async(req, res) => {
     try {
         const categories = await Categories.find({ isActive: true });
         return res.render('admin/addProduct', { categories });
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send("Something went wrong");
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -65,7 +71,6 @@ const addProduct = async (req, res) => {
     try {
         const categories = await Categories.find({ isActive: true });
 
-        // Extracting product details from the request body
         const name = req.body.product_name;
         const description = req.body.product_description;
         const price = req.body.product_price;
@@ -73,26 +78,31 @@ const addProduct = async (req, res) => {
         const stock = req.body.product_stock;
         const category = req.body.product_category;
 
+<<<<<<< HEAD
 
         // Checking if the product name already exists (case-insensitive)
+=======
+>>>>>>> 003d3dd (update ui)
         const nameExists = await Product.findOne({ productName: { $regex: name, $options: 'i' } });
         if (nameExists) {
             return res.render('admin/addProduct', { message: 'Product already exists', msg: '', categories });
         } else {
-            // Extracting image filenames from the uploaded files
             const images = req.files.map(file => file.filename);
+<<<<<<< HEAD
             // Creating a new product instance
+=======
+
+>>>>>>> 003d3dd (update ui)
             const productAdding = await Product.create({
                 productName: name,
                 category,
                 description,
                 price,
-                salePrice, // Adding sale price
+                salePrice,
                 stock,
                 productImage: images
             });
 
-            // Saving the product to the database
             const product = await productAdding.save();
             if (product) {
                 return res.redirect('/admin/products');
@@ -101,8 +111,13 @@ const addProduct = async (req, res) => {
             }
         }
 
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send("Internal Server Error");
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -134,8 +149,13 @@ const editProduct = async(req, res) => {
         );
 
         return res.redirect('/admin/products');
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send("Something went wrong");
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -165,8 +185,13 @@ const productStatusUpdate = async(req, res) => {
         }
         return res.redirect('/admin/products');
 
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send("Something went wrong");
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -175,6 +200,7 @@ const loadEditProduct = async (req, res) => {
         const categories = await Categories.find({ isActive: true });
         const id = req.query.id;
         const product = await Product.findOne({ _id: id });
+<<<<<<< HEAD
 
         // Check if the product was found
         if (!product) {
@@ -207,29 +233,47 @@ const loadEditProduct = async (req, res) => {
             },
             categories: [] // Optional: Pass empty categories to prevent errors in the view
         });
+=======
+        return res.render('admin/editProduct', { product, categories });
+    } catch {
+        return res.status(500).send("Something went wrong");
+>>>>>>> 003d3dd (update ui)
     }
 };
 
 
+<<<<<<< HEAD
 // eslint-disable-next-line consistent-return
 const removeImage = async(req, res) => {
     try {
         const { productId, image } = req.body;
         // Find the product by ID
+=======
+
+const removeImage = async (req, res) => {
+    try {
+        const { productId, image } = req.body;
+
+>>>>>>> 003d3dd (update ui)
         const product = await Product.findById(productId);
+
         if (!product) {
-            return res.status(404).json({ error: 'Product not found' });
+            return res.status(404).json({
+                error: 'Product not found'
+            });
         }
 
-        // Check if the image exists in the product's image array
         const imageIndex = product.productImage.indexOf(image);
+
         if (imageIndex === -1) {
-            return res.status(404).json({ error: 'Image not found in product' });
+            return res.status(404).json({
+                error: 'Image not found in product'
+            });
         }
 
-        // Remove the image from the product's image array
         product.productImage.splice(imageIndex, 1);
 
+<<<<<<< HEAD
         // Delete the image file from the server
         const imagePath = path.join(__dirname, '../public/uploads', image);
         fs.unlink(imagePath, async (err) => {
@@ -248,6 +292,29 @@ const removeImage = async(req, res) => {
 
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+        const imagePath = path.join(
+            __dirname,
+            '../public/uploads',
+            image
+        );
+
+        await fs.unlink(imagePath);
+
+        await product.save();
+
+        return res.status(200).json({
+            success: true,
+            message: 'Image removed successfully'
+        });
+
+    } catch {
+
+
+        return res.status(500).json({
+            error: 'An error occurred while removing the image'
+        });
+>>>>>>> 003d3dd (update ui)
     }
 };
 

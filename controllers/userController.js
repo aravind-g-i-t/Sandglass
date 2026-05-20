@@ -8,13 +8,18 @@ const Address = require('../models/addressModel');
 const Wishlist = require('../models/wishlistModel');
 const Order = require('../models/orderModel');
 const Wallet = require('../models/walletModel');
+<<<<<<< HEAD
 // const Offer = require('../models/offerModel');
 // const { ResultWithContextImpl } = require('express-validator/lib/chain');
+=======
+const Cart = require("../models/cartModel");
 
-// to load the signup page
+>>>>>>> 003d3dd (update ui)
+
 const loadSignup = (req, res) => {
     try {
         return res.render('user/signup');
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
     }
@@ -22,6 +27,16 @@ const loadSignup = (req, res) => {
 
 // to save the signup credentials in the session storage before otp verification
 // eslint-disable-next-line consistent-return
+=======
+    } catch {
+        return res.status(500).send('Internal Server Error');
+
+    }
+};
+
+// done
+
+>>>>>>> 003d3dd (update ui)
 const insertUser = async (req, res) => {
     try {
         const { username, email, phone, password } = req.body;
@@ -32,12 +47,12 @@ const insertUser = async (req, res) => {
         const checkPhone = await User.findOne({
             phone
         });
-        // checks if the credentials are already used
 
         if (checkPhone && checkMail) {
             return res.render('user/signup', {
                 message: 'Email and Phone number already exist!'
             });
+<<<<<<< HEAD
         } else if (checkMail) {
             return res.render('user/signup', {
                 message: 'Email already exists!'
@@ -77,18 +92,61 @@ const insertUser = async (req, res) => {
         }
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+        }
+        if (checkMail) {
+            return res.render('user/signup', {
+                message: 'Email already exists!'
+            });
+        }
+        if (checkPhone) {
+            return res.render('user/signup', {
+                message: 'Phone number already exists!'
+            });
+        }
+
+
+        await validate(password);
+        const hashedPassword = await hashing.hashPassword(password);
+        const userData = {
+            username,
+            email,
+            phone,
+            password: hashedPassword
+        };
+
+        req.session.tempUser = userData;
+
+
+        const otpCode = otp.generate();
+        console.log(otpCode);
+        
+        req.session.email = email;
+        req.session.otp = otpCode;
+        req.session.otpExpire = Date.now() + (5 * 60 * 1000);
+        await otp.sendOtp(req.session.email, otpCode);
+        return res.redirect('/verify');
+
+    } catch {
+        return res.render('user/signup', {
+            message: 'There was an error sending OTP.'
+        });
+>>>>>>> 003d3dd (update ui)
     }
 };
 
 
-
-//  load OTP
-
 const loadVerify = async (req, res) => {
     try {
         return res.render('user/verify');
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send('Internal Server Error');
+
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -97,20 +155,35 @@ const loadVerify = async (req, res) => {
 const resendOtp = async (req, res) => {
     try {
         const otpCode = otp.generate();
+<<<<<<< HEAD
         req.session.otp = otpCode;
         req.session.otpExpire = Date.now() + (5 * 60 * 1000);
         await otp.sendOtp(req.session.email, req.session.otp);
         // .then((result) => {
         //     console.log(result);
         // });
+=======
+        console.log(otpCode);
+        
+        req.session.otp = otpCode;
+        req.session.otpExpire = Date.now() + (5 * 60 * 1000);
+        await otp.sendOtp(req.session.email, req.session.otp);
+>>>>>>> 003d3dd (update ui)
         if (req.session.tempUser) {
             return res.redirect('/verify');
         } else {
             return res.render('user/verifyForgot');
         }
 
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).render('user/verifyForgot', {
+            message: "Something went wrong."
+        });
+>>>>>>> 003d3dd (update ui)
 
     }
 };
@@ -137,6 +210,23 @@ const verifyOtp = async (req, res) => {
             });
             await newWallet.save();
 
+<<<<<<< HEAD
+=======
+            const wishlistData = new Wishlist({
+                userId: req.session.user._id,
+                products: []
+            });
+            await wishlistData.save();
+
+            const cart = new Cart({
+                userId: userData._id,
+                product: [
+
+                ]
+            });
+            await cart.save();
+
+>>>>>>> 003d3dd (update ui)
             return res.redirect('/');
 
 
@@ -147,24 +237,36 @@ const verifyOtp = async (req, res) => {
                 message: 'Incorrect OTP or expired OTP. Please try again.'
             });
         }
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+
+        return res.status(500).render('user/verify', {
+            message: 'Something went wrong'
+        });
+>>>>>>> 003d3dd (update ui)
     }
 };
 
 
 
-// to load the login page
 const loadLogin = (req, res) => {
     try {
         return res.render('user/login');
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send('Internal Server Error');
+
+>>>>>>> 003d3dd (update ui)
     }
 };
 
 
-// verify login credentials
 
 const verifyLogin = async (req, res) => {
     try {
@@ -195,41 +297,44 @@ const verifyLogin = async (req, res) => {
                 message: 'Incorrect mail'
             });
         }
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).render('user/login', {
+            message: 'Something went wrong'
+        });
+>>>>>>> 003d3dd (update ui)
     }
 };
 
 
 
 
-// to load the home page
 const loadHome = async (req, res) => {
     try {
         let userData;
-        // Fetch active categories
         const activeCategories = await Category.find({ isActive: true });
         const activeCategoryIds = activeCategories.map(category => category._id);
 
-        // Fetch featured products with active categories and calculate final price
         const featuredProducts = await Product.find({ isActive: true, category: { $in: activeCategoryIds } })
             .sort({ orderCount: -1 })
             .limit(8);
         const featuredWithFinalPrice = await Promise.all(
             featuredProducts.map(async (product) => {
                 const finalPrice = await product.getDisplayPrice();
-                return { ...product.toObject(), finalPrice }; // Add finalPrice to the product object
+                return { ...product.toObject(), finalPrice };
             })
         );
 
-        // Fetch new arrival products with active categories and calculate final price
         const newArrivalProducts = await Product.find({ isActive: true, category: { $in: activeCategoryIds } })
             .sort({ _id: -1 })
             .limit(8);
         const newArrivalWithFinalPrice = await Promise.all(
             newArrivalProducts.map(async (product) => {
                 const finalPrice = await product.getDisplayPrice();
-                return { ...product.toObject(), finalPrice }; // Add finalPrice to the product object
+                return { ...product.toObject(), finalPrice };
             })
         );
 
@@ -237,16 +342,25 @@ const loadHome = async (req, res) => {
             userData = await User.findById(req.session.user._id);
         }
 
+<<<<<<< HEAD
         // Render the home page with user data, featured products, new arrivals, and categories
+=======
+
+>>>>>>> 003d3dd (update ui)
         return res.render('user/home', {
             userData,
             featured: featuredWithFinalPrice,
             newArrival: newArrivalWithFinalPrice,
-            categories: activeCategories // Send only active categories to the view
+            categories: activeCategories
         });
 
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send('Internal Server Error');
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -256,8 +370,13 @@ const userLogout = async (req, res) => {
     try {
         req.session.user = null;
         return res.redirect('/login');
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.redirect('/login');
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -267,8 +386,14 @@ const userLogout = async (req, res) => {
 const loadForgotPassword = async (req, res) => {
     try {
         return res.render('user/forgotPassword');
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send('Internal Server Error');
+
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -281,11 +406,19 @@ const forgotPassword = async (req, res) => {
         if (userExists) {
             req.session.email = mail;
             req.session.otp = otp.generate();
+<<<<<<< HEAD
             req.session.otpExpire = Date.now() + (5 * 60 * 1000);
             await otp.sendOtp(mail, req.session.otp)
                 .then((result) => {
                     return res.render('user/verifyForgot');
                 });
+=======
+            console.log(req.session.otp);
+            
+            req.session.otpExpire = Date.now() + (5 * 60 * 1000);
+            await otp.sendOtp(mail, req.session.otp);
+            return res.render('user/verifyForgot');
+>>>>>>> 003d3dd (update ui)
         } else {
             return res.render('user/forgotPassword', {
                 message: "User doesnot exists"
@@ -293,8 +426,15 @@ const forgotPassword = async (req, res) => {
         }
 
 
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).render('user/forgotPassword', {
+            message: "Something went wrong"
+        });
+>>>>>>> 003d3dd (update ui)
 
     }
 };
@@ -302,6 +442,11 @@ const forgotPassword = async (req, res) => {
 const verifyForgotOtp = async (req, res) => {
     try {
         const otp = req.body.otp.trim();
+        console.log(otp);
+        console.log(req.session);
+        
+        
+        
         if (otp === req.session.otp && Date.now() < req.session.otpExpire) {
 
             return res.render('user/setPassword');
@@ -310,8 +455,15 @@ const verifyForgotOtp = async (req, res) => {
                 { message: 'Entered OTP is wrong or expired' }
             );
         }
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.render('user/verifyForgot',
+            { message: 'Something went wrong' }
+        );
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -333,8 +485,15 @@ const setPassword = async (req, res) => {
                 { message: 'Password mismatch. Try again' }
             );
         }
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).render('user/setPassword',
+            { message: 'Something went wrong.' }
+        );
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -360,30 +519,34 @@ const shop = async (req, res) => {
 
 
 
+<<<<<<< HEAD
         // Fetch active categories
         const activeCategories = await Category.find({ isActive: true });
+=======
+        const activeCategories = await Category.find({ isActive: true }).select('_id');
+>>>>>>> 003d3dd (update ui)
         const activeCategoryIds = activeCategories.map(category => category._id);
 
-        // Update search query to include only products with active categories
         searchQuery.category = { $in: activeCategoryIds };
 
         if (req.query.category && req.query.category !== 'all-categories') {
             searchQuery.category = categoryFilter;
         }
+        searchQuery.stock = { $gt: 0 };
 
         const sortOptions = {
             'popularity': { orderCount: -1 },
             "price-low-high": { salePrice: 1 },
             "price-high-low": { salePrice: -1 },
             'featured': { orderCount: -1, _id: -1 },
-            "new-arrivals": { _id: -1 },
+            "new-arrivals": { createdAt: -1 },
             "aA-zZ": { productName: 1 },
             "zZ-aA": { productName: -1 }
         };
         const sortBy = req.query.sort || 'new-arrivals';
         const sortCriteria = sortOptions[sortBy] || sortOptions['new-arrivals'];
 
-        // Fetch products and calculate final prices
+
         const products = await Product.find(searchQuery)
             .populate({
                 path: 'category',
@@ -393,7 +556,6 @@ const shop = async (req, res) => {
             .skip(startIndex)
             .limit(limit);
 
-        // Calculate final prices
         const productsWithFinalPrice = await Promise.all(products.map(async (product) => {
             const finalPrice = await product.getDisplayPrice();
             return { ...product.toObject(), finalPrice };
@@ -413,50 +575,23 @@ const shop = async (req, res) => {
             userData,
             sortBy
         });
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send('Server Error');
+>>>>>>> 003d3dd (update ui)
     }
 };
 
 
 
-// const productDetails=async(req,res)=>{
-//     try {
-//         let userData;
-
-//         if (req.session.user){
-//             userData=await User.findById(req.session.user._id);
-//         };
-
-
-
-//         let id=req.query.id;
-//         let product=await Product.findById(id);
-//         console.log('product:',product);
-//         const wishlisted = await Wishlist.findOne({
-//             userId: req.session.user._id,
-//             'products.productId': product._id
-//         });
-//         console.log('wishlisted:',wishlisted);
-//         if (product) {
-//             res.render('user/productDetails',{userData,
-//                                             product,
-//                                             wishlisted
-//                                             })
-//         } else {
-//             console.log('Error in productDetails:');
-//         }
-
-//     } catch (error) {
-//         console.log(error.message);
-//     }
-// }
 
 const productDetails = async (req, res) => {
     try {
         let userData = null;
 
-        // Fetch user data if logged in
         if (req.session.user) {
             userData = await User.findById(req.session.user._id).exec();
         }
@@ -468,7 +603,6 @@ const productDetails = async (req, res) => {
             return res.status(404).render('error', { message: 'Product not found' });
         }
 
-        // Check if the product's category is active
         const category = await Category.findById(product.category).exec();
         if (!category || !category.isActive) {
             return res.status(404).render('error', { message: 'Product not found' });
@@ -483,21 +617,17 @@ const productDetails = async (req, res) => {
             wishlisted = !!wishlisted;
         }
 
-        // Fetch active categories
         const activeCategories = await Category.find({ isActive: true }).select('_id');
         const activeCategoryIds = activeCategories.map(category => category._id);
 
-        // Fetch related products excluding the current product and only include active categories
         const relatedProducts = await Product.find({
             category: { $in: activeCategoryIds },
             isActive: true,
             _id: { $ne: product._id }
         }).sort({ createdAt: -1 }).limit(4);
 
-        // Calculate final price for the current product
         const finalPrice = await product.getDisplayPrice();
 
-        // Calculate final price for each related product
         const relatedProductsWithPrice = await Promise.all(
             relatedProducts.map(async (relatedProduct) => {
                 const finalPrice = await relatedProduct.getDisplayPrice();
@@ -508,13 +638,18 @@ const productDetails = async (req, res) => {
 
         return res.render('user/productDetails', {
             userData,
-            product: { ...product.toObject(), finalPrice }, // Add finalPrice to the product object
+            product: { ...product.toObject(), finalPrice },
             wishlisted,
-            relatedProducts: relatedProductsWithPrice // Include finalPrice for related products
+            relatedProducts: relatedProductsWithPrice
         });
 
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).render('error', { message: 'Internal Server Error' });
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -529,19 +664,32 @@ const googleSuccess = async (req, res) => {
             req.session.user = await User.findById(req.user._id);
             return res.status(200).redirect('/');
         } else {
+<<<<<<< HEAD
             // res.redirect('/failure')
             return res.status(404).render('user/login', { message: 'googleSuccess failure' });
         }
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+            return res.status(404).render('user/login', { message: 'googleSuccess failure' });
+        }
+    } catch {
+        return res.status(500).render('user/login', { message: 'Something went wrong' });
+>>>>>>> 003d3dd (update ui)
     }
 };
 
 const googleFailure = async (req, res) => {
     try {
         return res.status(404).render('user/login', { message: 'You have been blocked by SANDGLASS' });
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+
+        return res.status(500).render('user/login', { message: 'Something went wrong' });
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -560,6 +708,7 @@ const profile = async (req, res) => {
             walletData
 
         });
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
     }
@@ -593,6 +742,10 @@ const getWalletTransactions = async (req, res) => {
         });
     } catch (error) {
         return res.status(500).json({ message: 'Error fetching wallet transactions', error: error.message });
+=======
+    } catch {
+        return res.status(500).send('Internal Server Error');
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -630,7 +783,7 @@ const editPhone = async (req, res) => {
 
         const phoneUpdated = await User.findByIdAndUpdate(userId,
             { $set: { phone: newPhone } },
-            { new: true } // Return the updated document
+            { new: true } 
         );
 
         if (phoneUpdated) {
@@ -702,24 +855,28 @@ const resetPassword = async (req, res) => {
 const addAddress = async (req, res) => {
     try {
         const {
-            fullname,
-            billing_address1,
-            billing_address2,
+            fullName,
+            addressLine1,
+            addressLine2,
             city,
             state,
             pincode,
             phone,
             email
         } = req.body;
+<<<<<<< HEAD
+=======
+        
+>>>>>>> 003d3dd (update ui)
         let addressData = await Address.findOne({ userId: req.session.user._id });
         // const userData = await User.findById(req.session.user._id);
         // const orderData = await Order.find({ userId: req.session.user._id });
 
         if (addressData) {
             addressData.address.push({
-                fullName: fullname,
-                addressLine1: billing_address1,
-                addressLine2: billing_address2,
+                fullName,
+                addressLine1,
+                addressLine2,
                 city,
                 state,
                 pincode,
@@ -732,9 +889,9 @@ const addAddress = async (req, res) => {
                 userId: req.session.user._id,
                 address: [
                     {
-                        fullName: fullname,
-                        addressLine1: billing_address1,
-                        addressLine2: billing_address2,
+                        fullName,
+                        addressLine1,
+                        addressLine2,
                         city,
                         state,
                         pincode,
@@ -748,8 +905,14 @@ const addAddress = async (req, res) => {
 
         return res.redirect("/profile");
 
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+
+        return res.redirect("/profile");
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -759,11 +922,14 @@ const editAddress = async (req, res) => {
         const { address, addressId } = req.body;
 
         const addressData = await Address.findOne({ userId: req.session.user._id });
-        if (addressData) {
-            const updateAddress = addressData.address.find(
-                (addr) => addr._id.toString() === addressId
-            );
+        if (!addressData) {
+            return res.status(404).json({ message: "Address doesnot exist." });
+        }
+        const updateAddress = addressData.address.find(
+            (addr) => addr._id.toString() === addressId
+        );
 
+<<<<<<< HEAD
             if (updateAddress) {
                 // Update the fields of the found address
                 updateAddress.fullName = address.fullname || updateAddress.fullName;
@@ -783,10 +949,35 @@ const editAddress = async (req, res) => {
             } else {
                 return res.status(500);
             }
+=======
+        if (!updateAddress) {
+            return res.status(404).json({ message: "Address doesnot exist." });
+>>>>>>> 003d3dd (update ui)
         }
 
+
+        updateAddress.fullName = address.fullName || updateAddress.fullName;
+        updateAddress.addressLine1 = address.addressLine1 || updateAddress.addressLine1;
+        updateAddress.addressLine2 = address.addressLine2 || updateAddress.addressLine2;
+        updateAddress.city = address.city || updateAddress.city;
+        updateAddress.state = address.state || updateAddress.state;
+        updateAddress.pincode = address.pincode || updateAddress.pincode;
+        updateAddress.phoneNo = address.phoneNo || updateAddress.phoneNo;
+        updateAddress.email = address.email || updateAddress.email;
+
+        const newAddress = await addressData.save();
+
+        if (!newAddress) {
+            return res.status(500).json({ message: "Failed to update address." });
+        }
+        return res.status(200).json({ message: "Successfully updated address" });
+
     } catch (error) {
+<<<<<<< HEAD
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+        return res.status(500).json({ error, message: "Internal server error." });
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -795,6 +986,7 @@ const deleteAddress = async (req, res) => {
     try {
         const { addressId } = req.body;
         const addressData = await Address.findOne({ userId: req.session.user._id });
+<<<<<<< HEAD
         if (addressData) {
             const findAddress = addressData.address.find(
                 (addr) => addr._id.toString() === addressId
@@ -803,13 +995,28 @@ const deleteAddress = async (req, res) => {
             addressData.address.splice(addressIndex, 1);
             addressData.save();
             return res.status(200).json({ message: "Successfully deleted" });
+=======
+        if (!addressData) {
+            return res.status(404).json({ message: "Address doesnot exist." });
+>>>>>>> 003d3dd (update ui)
         }
+        const findAddress = addressData.address.find(
+            (addr) => addr._id.toString() === addressId
+        );
+        const addressIndex = addressData.address.indexOf(findAddress);
+        addressData.address.splice(addressIndex, 1);
+        await addressData.save();
+        return res.status(200).json({ message: "Successfully deleted" });
     } catch (error) {
+<<<<<<< HEAD
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+        return res.status(500).json({ error, message: "Internal server error." });
+>>>>>>> 003d3dd (update ui)
     }
 };
 
-const autoComplete = async(req, res) => {
+const autoComplete = async (req, res) => {
     try {
         const query = req.query.query;
         const activeCategories = await Category.find({ isActive: true });
@@ -822,12 +1029,18 @@ const autoComplete = async(req, res) => {
 
         const suggestions = products.map(item => ({
             name: item.productName,
-            category: item.category.name, // Adjust based on your data structure
-            photoUrl: item.productImage[0] // Adjust to the correct path of the product photo
+            category: item.category.name,
+            photoUrl: item.productImage[0]
         }));
         return res.json(suggestions);
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).json({ message: "Internal server error." });
+
+>>>>>>> 003d3dd (update ui)
 
     }
 };

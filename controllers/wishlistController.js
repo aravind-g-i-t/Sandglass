@@ -7,7 +7,8 @@ const Wishlist = require('../models/wishlistModel');
 const wishlist = async (req, res) => {
     try {
         const userData = await User.findById(req.session.user._id);
-        const wishlistData = await Wishlist.findOne({ userId: req.session.user._id }).populate("products.productId");
+        const  wishlistData = await Wishlist.findOne({ userId: req.session.user._id }).populate("products.productId");
+        
         await Promise.all(wishlistData.products.map(async item => {
             item.finalPrice = await item.productId.getDisplayPrice();
         }));
@@ -16,8 +17,13 @@ const wishlist = async (req, res) => {
             userData,
             wishlistData
         });
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send("Something went wrong");
+>>>>>>> 003d3dd (update ui)
 
     }
 };
@@ -48,8 +54,13 @@ const addToWishlist = async (req, res) => {
         } else {
             return res.status(500).json({ message: "Log in to add products to wishlist" });
         }
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).json({ message: "An error occurred" });
+>>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -65,8 +76,13 @@ const removeFromWishlist = async (req, res) => {
             return res.status(500).json({ message: 'Product not found' });
         }
 
+<<<<<<< HEAD
     } catch (error) {
         return res.status(500).send(`An error occurred: ${error.message}`);
+=======
+    } catch {
+        return res.status(500).send("Something went wrong");
+>>>>>>> 003d3dd (update ui)
     }
 };
 
