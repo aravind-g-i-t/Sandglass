@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-/* eslint-disable camelcase */
-// const { errorMonitor } = require('nodemailer/lib/xoauth2');
-=======
->>>>>>> 003d3dd (update ui)
 const Cart = require('../models/cartModel');
 const Product = require('../models/productModel');
 const User = require('../models/userModel');
@@ -37,13 +32,8 @@ const loadCart = async (req, res) => {
             couponDiscount,
             totalPrice
         });
-<<<<<<< HEAD
-    } catch (error) {
-        res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).json({ success: false, message: "Something went wrong" });
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -97,13 +87,8 @@ const addToCart = async (req, res) => {
 
         await cart.save();
         return res.status(200).json({ success: true });
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).send('Internal Server Error');
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -114,79 +99,6 @@ const quantityUpdate = async (req, res) => {
         const { productId, status } = req.body;
 
         const productData = await Product.findById(productId);
-<<<<<<< HEAD
-        const finalPrice = await productData.getDisplayPrice();
-        const cartData = await Cart.findOne({ userId: req.session.user._id });
-        await Promise.all(cartData.product.map(async item => {
-            const product = await Product.findById(item.productId);
-            item.productPrice = await product.getDisplayPrice();
-        }));
-
-        if (!productData || !cartData) {
-            return res.status(404).json({ message: "Product or Cart not found" });
-        }
-
-        const productIndex = cartData.product.findIndex(item => item.productId.toString() === productId);
-        if (productIndex === -1) {
-            return res.status(404).json({ message: "Product not found in cart" });
-        }
-
-        if (status === "UP") {
-            const findProductStock = productData.stock;
-
-            if (cartData.product[productIndex].quantity < findProductStock) {
-                if (cartData.product[productIndex].quantity < 10) {
-                    cartData.product[productIndex].quantity += 1;
-                } else {
-                    return res.json({
-                        message: "Max 10",
-                        total: cartData.totalPrice
-                    });
-                }
-            } else {
-                return res.json({
-                    message: "product exceeded",
-                    total: cartData.totalPrice
-                });
-            }
-
-        } else if (status === "DOWN") {
-
-            if (cartData.product[productIndex].quantity > 1) {
-                cartData.product[productIndex].quantity -= 1;
-            } else {
-                return res.json({
-                    message: "Min 1",
-                    total: cartData.totalPrice
-                });
-            }
-        }
-
-        const totalPrice = cartData.product.reduce((total, item) => total + (item.productPrice * item.quantity), 0);
-
-        await cartData.save();
-        let discount = 0;
-        if (cartData.coupon) {
-            const coupon = await Coupon.findOne({ code: cartData.coupon, isActive: true });
-            discount = totalPrice * ((coupon.discountPercentage) / 100);
-
-        }
-        const quantity = cartData.product[productIndex].quantity;
-
-
-        return res.status(200).json({
-            message: "quantity updated successfully",
-            total: totalPrice,
-            products: cartData.product,
-            quantity,
-            productData,
-            finalPrice,
-            discount
-        });
-
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
 
         if (!productData) {
             return res.status(404).json({
@@ -291,7 +203,6 @@ const quantityUpdate = async (req, res) => {
         return res.status(500).json({
             message: "Internal Server Error"
         });
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -323,13 +234,8 @@ const removeProduct = async (req, res) => {
 
         return res.status(200).json("Successfully removed from cart");
 
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).send("Internal Server Error");
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -386,12 +292,6 @@ const loadCheckout = async (req, res) => {
             }
         }
 
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> 003d3dd (update ui)
         return res.render("user/checkout", {
             cartData,
             addressData,
@@ -402,13 +302,8 @@ const loadCheckout = async (req, res) => {
             walletApplicable,
             codApplicable
         });
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).send({ success: false, message: "Something went wrong" });
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -460,13 +355,8 @@ const addNewAddress = async (req, res) => {
 
         return res.redirect("/checkout");
 
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).json({ success: false, message: "Something went wrong" });
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -495,13 +385,8 @@ const applyCoupon = async (req, res) => {
         await cart.save();
 
         return res.json({ message: 'Coupon applied successfully', discountPercentage: coupon.discountPercentage });
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).send("Internal Server Error");
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -518,13 +403,8 @@ const removeCoupon = async (req, res) => {
         await cart.save();
 
         return res.json({ message: 'Coupon removed successfully' });
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).send("Internal Server Error");
->>>>>>> 003d3dd (update ui)
     }
 };
 

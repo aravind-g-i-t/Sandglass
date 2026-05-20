@@ -924,18 +924,12 @@
                                 </h3>
                                 <div class="clearfix product-price-cover">
                                     <div class="product-price primary-color float-left">
-<<<<<<< HEAD
-                                        <ins><span class="text-brand">$<%=product.finalPrice%></span></ins>
-                                        <ins><span class="old-price font-md ml-15">₹<%=product.price%></span></ins>
-                                        <span class="save-price  font-md color3 ml-15"><%=Math.round(product.finalPrice/product.price*100) %>% Off</span>
-=======
                                         <ins><span class="text-brand">₹<%= product.finalPrice %></span></ins>
                                         <ins><span class="old-price font-md ml-15">₹<%= product.price %></span></ins>
                                         <span class="save-price font-md color3 ml-15">
                                             <%= Math.round((product.price - product.finalPrice) / product.price * 100)
                                                 %>% Off
                                         </span>
->>>>>>> 003d3dd (update ui)
                                     </div>
                                 </div>
                                 <div class="bt-1 border-color-1 mt-15 mb-15"></div>
@@ -992,71 +986,6 @@
                     <input name="search" type="text" placeholder="Search for items…">
                 </form>
             </div>
-<<<<<<< HEAD
-        </div>
-        <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
-            <div class="container">
-                <div class="header-wrap">
-                    <div class="logo logo-width-1">
-                        <a href="/"><img src="user/assets/imgs/theme/sandglass-high-resolution-logo-transparent.svg" alt="logo"></a>
-                    </div>
-                    <div class="header-right">
-                        <div class="search-style-2">
-                            <form id="searchForm" action="/shop" method="get">
-                                <input name="search" type="text" placeholder="Search for items..." >
-                                
-                            </form>
-                        </div>
-                        <div class="header-action-right">
-                            <div class="header-action-2">
-                                <div class="header-action-icon-2">
-                                    <a href="/wishlist">
-                                        <img class="svgInject" alt="Evara" src="user/assets/imgs/theme/icons/icon-heart.svg">
-                                    </a>
-                                </div>
-                                <div class="header-action-icon-2">
-                                    <a class="mini-cart-icon" href="/cart">
-                                        <img alt="Evara" src="user/assets/imgs/theme/icons/icon-cart.svg">
-                                    </a>
-                                    <!-- <div class="cart-dropdown-wrap cart-dropdown-hm2">
-                                        <ul>
-                                            <li>
-                                                <div class="shopping-cart-img">
-                                                    <a href="shop-product-right.html"><img alt="Evara" src="user/assets/imgs/shop/thumbnail-3.jpg"></a>
-                                                </div>
-                                                <div class="shopping-cart-title">
-                                                    <h4><a href="shop-product-right.html">Daisy Casual Bag</a></h4>
-                                                    <h4><span>1 × </span>$800.00</h4>
-                                                </div>
-                                                <div class="shopping-cart-delete">
-                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="shopping-cart-img">
-                                                    <a href="shop-product-right.html"><img alt="Evara" src="user/assets/imgs/shop/thumbnail-2.jpg"></a>
-                                                </div>
-                                                <div class="shopping-cart-title">
-                                                    <h4><a href="shop-product-right.html">Corduroy Shirts</a></h4>
-                                                    <h4><span>1 × </span>$3200.00</h4>
-                                                </div>
-                                                <div class="shopping-cart-delete">
-                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                        <div class="shopping-cart-footer">
-                                            <div class="shopping-cart-total">
-                                                <h4>Total <span>$4000.00</span></h4>
-                                            </div>
-                                            <div class="shopping-cart-button">
-                                                <a href="/cart" class="outline">View cart</a>
-                                                <a href="shop-checkout.html">Checkout</a>
-                                            </div>
-                                        </div>
-                                    </div> -->
-                                </div>
-=======
 
             <div class="sg-header-actions">
                 <% if(userData) { %>
@@ -1079,7 +1008,6 @@
                         <a href="#" id="userDropdownBtn" class="sg-user-btn">
                             <div class="sg-user-avatar">
                                 <%= userData.username ? userData.username.charAt(0).toUpperCase() : 'U' %>
->>>>>>> 003d3dd (update ui)
                             </div>
                             <%= userData.username %>
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -1190,73 +1118,6 @@
                                     <span class="sg-star">★</span>
                                     <span class="sg-star-empty">★</span>
                                 </div>
-<<<<<<< HEAD
-                                <div class="col-md-6 col-sm-12 col-xs-12">
-                                    <div class="detail-info">
-                                        <h2 class="title-detail"><%=product.productName%></h2>
-                                        <div class="product-detail-rating">
-                                            <div class="pro-details-brand">
-                                                <!-- <span> Brands: <a href="shop-grid-right.html">Bootstrap</a></span> -->
-                                            </div>
-                                            <div class="product-rate-cover text-end">
-                                                <div class="product-rate d-inline-block">
-                                                    <div class="product-rating" style="width:90%">
-                                                    </div>
-                                                </div>
-                                                <span class="font-small ml-5 text-muted"> (25 reviews)</span>
-                                            </div>
-                                        </div>
-                                        <div class="clearfix product-price-cover">
-                                            <div class="product-price primary-color float-left">
-                                                <ins><span class="text-brand">₹<%=product.finalPrice%></span></ins>
-                                                <ins><span class="old-price font-md ml-15">₹<%=product.price%></span></ins>
-                                                <span class="save-price  font-md color3 ml-15"><%=Math.round(product.finalPrice/product.price*100) %>% Off</span>
-                                            </div>
-                                        </div>
-                                        <div class="bt-1 border-color-1 mt-15 mb-15"></div>
-                                        <div class="short-desc mb-30">
-                                            <p><%=product.description%></p>
-                                        </div>
-                                        <!-- <div class="product_sort_info font-xs mb-30">
-                                            <ul>
-                                                <li class="mb-10"><i class="fi-rs-crown mr-5"></i> 1 Year AL Jazeera Brand Warranty</li>
-                                                <li class="mb-10"><i class="fi-rs-refresh mr-5"></i> 30 Day Return Policy</li>
-                                                <li><i class="fi-rs-credit-card mr-5"></i> Cash on Delivery available</li>
-                                            </ul>
-                                        </div> -->
-                                        <!-- <div class="attr-detail attr-color mb-15">
-                                            <strong class="mr-10">Color</strong>
-                                            <ul class="list-filter color-filter">
-                                                <li><a href="#" data-color="Red"><span class="product-color-red"></span></a></li>
-                                                <li><a href="#" data-color="Yellow"><span class="product-color-yellow"></span></a></li>
-                                                <li class="active"><a href="#" data-color="White"><span class="product-color-white"></span></a></li>
-                                                <li><a href="#" data-color="Orange"><span class="product-color-orange"></span></a></li>
-                                                <li><a href="#" data-color="Cyan"><span class="product-color-cyan"></span></a></li>
-                                                <li><a href="#" data-color="Green"><span class="product-color-green"></span></a></li>
-                                                <li><a href="#" data-color="Purple"><span class="product-color-purple"></span></a></li>
-                                            </ul>
-                                        </div> -->
-                                        <!-- <div class="attr-detail attr-size">
-                                            <strong class="mr-10">Size</strong>
-                                            <ul class="list-filter size-filter font-small">
-                                                <li><a href="#">S</a></li>
-                                                <li class="active"><a href="#">M</a></li>
-                                                <li><a href="#">L</a></li>
-                                                <li><a href="#">XL</a></li>
-                                                <li><a href="#">XXL</a></li>
-                                            </ul>
-                                        </div> -->
-                                        <div class="bt-1 border-color-1 mt-30 mb-30"></div>
-                                        <div class="detail-extralink">
-                                            <!-- <div class="detail-qty border radius">
-                                                <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
-                                                <span class="qty-val">1</span>
-                                                <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
-                                            </div> -->
-                                            <div class="product-extra-link2">
-                                                <% if (product.stock == 0) { %>
-                                                    <h2>Currently unavailable</h2>
-=======
                                 <span class="sg-review-count">4.0 · (25 reviews)</span>
                             </div>
 
@@ -1312,7 +1173,6 @@
                                         <div class="sg-actions">
                                             <% if (product.stock==0) { %>
                                                 <div class="sg-unavailable">Currently unavailable</div>
->>>>>>> 003d3dd (update ui)
                                                 <% } else { %>
                                                     <button class="sg-btn-cart"
                                                         onclick="addToCart('<%= product._id %>')">

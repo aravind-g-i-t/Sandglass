@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 const otp = require('../helpers/otp');
 const hashing = require('../helpers/passwordHash');
 const User = require('../models/userModel');
@@ -8,35 +7,20 @@ const Address = require('../models/addressModel');
 const Wishlist = require('../models/wishlistModel');
 const Order = require('../models/orderModel');
 const Wallet = require('../models/walletModel');
-<<<<<<< HEAD
-// const Offer = require('../models/offerModel');
-// const { ResultWithContextImpl } = require('express-validator/lib/chain');
-=======
 const Cart = require("../models/cartModel");
+const validate = require('../helpers/validatePassword');
 
->>>>>>> 003d3dd (update ui)
 
 const loadSignup = (req, res) => {
     try {
         return res.render('user/signup');
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-    }
-};
-
-// to save the signup credentials in the session storage before otp verification
-// eslint-disable-next-line consistent-return
-=======
     } catch {
         return res.status(500).send('Internal Server Error');
 
     }
 };
 
-// done
 
->>>>>>> 003d3dd (update ui)
 const insertUser = async (req, res) => {
     try {
         const { username, email, phone, password } = req.body;
@@ -52,47 +36,6 @@ const insertUser = async (req, res) => {
             return res.render('user/signup', {
                 message: 'Email and Phone number already exist!'
             });
-<<<<<<< HEAD
-        } else if (checkMail) {
-            return res.render('user/signup', {
-                message: 'Email already exists!'
-            });
-        } else if (checkPhone) {
-            return res.render('user/signup', {
-                message: 'Phone number already exists!'
-            });
-        } else {
-
-            const hashedPassword = await hashing.hashPassword(password);
-            const userData = {
-                username,
-                email,
-                phone,
-                password: hashedPassword
-            };
-
-            req.session.tempUser = userData;
-
-            // generate otp
-
-            const otpCode = otp.generate();
-            req.session.email = email;
-            req.session.otp = otpCode;
-            req.session.otpExpire = Date.now() + (5 * 60 * 1000);
-            await otp.sendOtp(req.session.email, otpCode)
-                .then((result) => {
-                    return res.redirect('/verify');
-                })
-                .catch((err) => {
-                    return res.render('user/signup', {
-                        message: err.message
-                    });
-                });
-
-        }
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
         }
         if (checkMail) {
             return res.render('user/signup', {
@@ -131,7 +74,6 @@ const insertUser = async (req, res) => {
         return res.render('user/signup', {
             message: 'There was an error sending OTP.'
         });
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -139,14 +81,9 @@ const insertUser = async (req, res) => {
 const loadVerify = async (req, res) => {
     try {
         return res.render('user/verify');
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).send('Internal Server Error');
 
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -155,35 +92,21 @@ const loadVerify = async (req, res) => {
 const resendOtp = async (req, res) => {
     try {
         const otpCode = otp.generate();
-<<<<<<< HEAD
-        req.session.otp = otpCode;
-        req.session.otpExpire = Date.now() + (5 * 60 * 1000);
-        await otp.sendOtp(req.session.email, req.session.otp);
-        // .then((result) => {
-        //     console.log(result);
-        // });
-=======
         console.log(otpCode);
         
         req.session.otp = otpCode;
         req.session.otpExpire = Date.now() + (5 * 60 * 1000);
         await otp.sendOtp(req.session.email, req.session.otp);
->>>>>>> 003d3dd (update ui)
         if (req.session.tempUser) {
             return res.redirect('/verify');
         } else {
             return res.render('user/verifyForgot');
         }
 
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).render('user/verifyForgot', {
             message: "Something went wrong."
         });
->>>>>>> 003d3dd (update ui)
 
     }
 };
@@ -210,8 +133,6 @@ const verifyOtp = async (req, res) => {
             });
             await newWallet.save();
 
-<<<<<<< HEAD
-=======
             const wishlistData = new Wishlist({
                 userId: req.session.user._id,
                 products: []
@@ -226,7 +147,6 @@ const verifyOtp = async (req, res) => {
             });
             await cart.save();
 
->>>>>>> 003d3dd (update ui)
             return res.redirect('/');
 
 
@@ -237,16 +157,11 @@ const verifyOtp = async (req, res) => {
                 message: 'Incorrect OTP or expired OTP. Please try again.'
             });
         }
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
 
         return res.status(500).render('user/verify', {
             message: 'Something went wrong'
         });
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -255,14 +170,9 @@ const verifyOtp = async (req, res) => {
 const loadLogin = (req, res) => {
     try {
         return res.render('user/login');
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).send('Internal Server Error');
 
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -297,15 +207,10 @@ const verifyLogin = async (req, res) => {
                 message: 'Incorrect mail'
             });
         }
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).render('user/login', {
             message: 'Something went wrong'
         });
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -342,11 +247,6 @@ const loadHome = async (req, res) => {
             userData = await User.findById(req.session.user._id);
         }
 
-<<<<<<< HEAD
-        // Render the home page with user data, featured products, new arrivals, and categories
-=======
-
->>>>>>> 003d3dd (update ui)
         return res.render('user/home', {
             userData,
             featured: featuredWithFinalPrice,
@@ -354,13 +254,8 @@ const loadHome = async (req, res) => {
             categories: activeCategories
         });
 
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).send('Internal Server Error');
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -370,13 +265,8 @@ const userLogout = async (req, res) => {
     try {
         req.session.user = null;
         return res.redirect('/login');
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.redirect('/login');
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -386,14 +276,9 @@ const userLogout = async (req, res) => {
 const loadForgotPassword = async (req, res) => {
     try {
         return res.render('user/forgotPassword');
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).send('Internal Server Error');
 
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -406,19 +291,11 @@ const forgotPassword = async (req, res) => {
         if (userExists) {
             req.session.email = mail;
             req.session.otp = otp.generate();
-<<<<<<< HEAD
-            req.session.otpExpire = Date.now() + (5 * 60 * 1000);
-            await otp.sendOtp(mail, req.session.otp)
-                .then((result) => {
-                    return res.render('user/verifyForgot');
-                });
-=======
             console.log(req.session.otp);
             
             req.session.otpExpire = Date.now() + (5 * 60 * 1000);
             await otp.sendOtp(mail, req.session.otp);
             return res.render('user/verifyForgot');
->>>>>>> 003d3dd (update ui)
         } else {
             return res.render('user/forgotPassword', {
                 message: "User doesnot exists"
@@ -426,15 +303,10 @@ const forgotPassword = async (req, res) => {
         }
 
 
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).render('user/forgotPassword', {
             message: "Something went wrong"
         });
->>>>>>> 003d3dd (update ui)
 
     }
 };
@@ -455,15 +327,10 @@ const verifyForgotOtp = async (req, res) => {
                 { message: 'Entered OTP is wrong or expired' }
             );
         }
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.render('user/verifyForgot',
             { message: 'Something went wrong' }
         );
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -485,15 +352,10 @@ const setPassword = async (req, res) => {
                 { message: 'Password mismatch. Try again' }
             );
         }
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).render('user/setPassword',
             { message: 'Something went wrong.' }
         );
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -519,12 +381,7 @@ const shop = async (req, res) => {
 
 
 
-<<<<<<< HEAD
-        // Fetch active categories
-        const activeCategories = await Category.find({ isActive: true });
-=======
         const activeCategories = await Category.find({ isActive: true }).select('_id');
->>>>>>> 003d3dd (update ui)
         const activeCategoryIds = activeCategories.map(category => category._id);
 
         searchQuery.category = { $in: activeCategoryIds };
@@ -575,13 +432,8 @@ const shop = async (req, res) => {
             userData,
             sortBy
         });
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).send('Server Error');
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -643,13 +495,8 @@ const productDetails = async (req, res) => {
             relatedProducts: relatedProductsWithPrice
         });
 
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).render('error', { message: 'Internal Server Error' });
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -664,32 +511,19 @@ const googleSuccess = async (req, res) => {
             req.session.user = await User.findById(req.user._id);
             return res.status(200).redirect('/');
         } else {
-<<<<<<< HEAD
-            // res.redirect('/failure')
-            return res.status(404).render('user/login', { message: 'googleSuccess failure' });
-        }
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
             return res.status(404).render('user/login', { message: 'googleSuccess failure' });
         }
     } catch {
         return res.status(500).render('user/login', { message: 'Something went wrong' });
->>>>>>> 003d3dd (update ui)
     }
 };
 
 const googleFailure = async (req, res) => {
     try {
         return res.status(404).render('user/login', { message: 'You have been blocked by SANDGLASS' });
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
 
         return res.status(500).render('user/login', { message: 'Something went wrong' });
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -708,44 +542,8 @@ const profile = async (req, res) => {
             walletData
 
         });
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-    }
-};
-
-
-
-const getWalletTransactions = async (req, res) => {
-    try {
-        const ITEMS_PER_PAGE = 5;
-        const userId = req.session.user._id;
-        const page = parseInt(req.query.page, 10) || 1;
-
-        const wallet = await Wallet.findOne({ userId });
-
-        if (!wallet) {
-            return res.status(404).json({ message: 'Wallet not found' });
-        }
-
-        const totalTransactions = wallet.transactions.length;
-        const totalPages = Math.ceil(totalTransactions / ITEMS_PER_PAGE);
-
-        const paginatedTransactions = wallet.transactions
-            .sort((a, b) => b.time - a.time)
-            .slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
-
-        return res.json({
-            transactions: paginatedTransactions,
-            currentPage: page,
-            totalPages
-        });
-    } catch (error) {
-        return res.status(500).json({ message: 'Error fetching wallet transactions', error: error.message });
-=======
     } catch {
         return res.status(500).send('Internal Server Error');
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -864,10 +662,7 @@ const addAddress = async (req, res) => {
             phone,
             email
         } = req.body;
-<<<<<<< HEAD
-=======
         
->>>>>>> 003d3dd (update ui)
         let addressData = await Address.findOne({ userId: req.session.user._id });
         // const userData = await User.findById(req.session.user._id);
         // const orderData = await Order.find({ userId: req.session.user._id });
@@ -905,14 +700,9 @@ const addAddress = async (req, res) => {
 
         return res.redirect("/profile");
 
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
 
         return res.redirect("/profile");
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -929,30 +719,8 @@ const editAddress = async (req, res) => {
             (addr) => addr._id.toString() === addressId
         );
 
-<<<<<<< HEAD
-            if (updateAddress) {
-                // Update the fields of the found address
-                updateAddress.fullName = address.fullname || updateAddress.fullName;
-                updateAddress.addressLine1 = address.billing_address1 || updateAddress.addressLine1;
-                updateAddress.addressLine2 = address.billing_address2 || updateAddress.addressLine2;
-                updateAddress.city = address.city || updateAddress.city;
-                updateAddress.state = address.state || updateAddress.state;
-                updateAddress.pincode = address.pincode || updateAddress.pincode;
-                updateAddress.phoneNo = address.phoneNo || updateAddress.phoneNo;
-                updateAddress.email = address.email || updateAddress.email;
-            }
-            const newAddress = await addressData.save();
-            // console.log("saved", newAddress);
-
-            if (newAddress) {
-                return res.status(200).json({ Message: "Successfully updated address" });
-            } else {
-                return res.status(500);
-            }
-=======
         if (!updateAddress) {
             return res.status(404).json({ message: "Address doesnot exist." });
->>>>>>> 003d3dd (update ui)
         }
 
 
@@ -973,11 +741,7 @@ const editAddress = async (req, res) => {
         return res.status(200).json({ message: "Successfully updated address" });
 
     } catch (error) {
-<<<<<<< HEAD
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
         return res.status(500).json({ error, message: "Internal server error." });
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -986,19 +750,8 @@ const deleteAddress = async (req, res) => {
     try {
         const { addressId } = req.body;
         const addressData = await Address.findOne({ userId: req.session.user._id });
-<<<<<<< HEAD
-        if (addressData) {
-            const findAddress = addressData.address.find(
-                (addr) => addr._id.toString() === addressId
-            );
-            const addressIndex = addressData.address.indexOf(findAddress);
-            addressData.address.splice(addressIndex, 1);
-            addressData.save();
-            return res.status(200).json({ message: "Successfully deleted" });
-=======
         if (!addressData) {
             return res.status(404).json({ message: "Address doesnot exist." });
->>>>>>> 003d3dd (update ui)
         }
         const findAddress = addressData.address.find(
             (addr) => addr._id.toString() === addressId
@@ -1008,11 +761,7 @@ const deleteAddress = async (req, res) => {
         await addressData.save();
         return res.status(200).json({ message: "Successfully deleted" });
     } catch (error) {
-<<<<<<< HEAD
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
         return res.status(500).json({ error, message: "Internal server error." });
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -1033,14 +782,9 @@ const autoComplete = async (req, res) => {
             photoUrl: item.productImage[0]
         }));
         return res.json(suggestions);
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).json({ message: "Internal server error." });
 
->>>>>>> 003d3dd (update ui)
 
     }
 };

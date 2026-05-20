@@ -982,58 +982,6 @@
                         <path d="M5 3h14M5 21h14M8 3v4a4 4 0 008 0V3M8 21v-4a4 4 0 018 0v4" />
                     </svg>
                 </div>
-<<<<<<< HEAD
-            </div>
-        </div> -->
-        <div class="header-bottom sticky-bar sticky-white-bg">
-            <div class="container">
-                <div class="header-wrap header-space-between position-relative">
-                    <div class="logo logo-width-1">
-                        <a href="/"><img src="user/assets/imgs/theme/sandglass-high-resolution-logo-transparent.svg" alt="logo"></a>
-                    </div>
-                    <div class="main-menu main-menu-grow main-menu-padding-1 main-menu-lh-1 main-menu-mrg-1 hm3-menu-padding d-none d-lg-block hover-boder">
-                        <nav>
-                            <ul>
-                                <li><a  href="/">Home </a>
-                                    
-                                </li>
-                                <li><a href="/shop">Shop </a>
-                                    
-                                </li>
-                                
-                                
-                                <li><a href="#">About </a>
-                                    
-                                </li>
-                                <li>
-                                    <a href="page-contact.html">Contact</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                    <div class="header-action-right">
-                        
-                        <div class="header-action-2">
-                            <div class="header-action-icon-2">
-                                <a href="/wishlist">
-                                    <img class="svgInject" alt="Evara" src="user/assets/imgs/theme/icons/icon-heart.svg">
-                                </a>
-                            </div>
-                            <div class="header-action-icon-2">
-                                <a class="mini-cart-icon" href="/cart">
-                                    <img alt="Evara" src="user/assets/imgs/theme/icons/icon-cart.svg">
-                                    <!-- <span class="pro-count blue">2</span> -->
-                                </a>
-                                
-                            </div>
-                            <div class="header-action-icon d-block d-lg-none">
-                                <div class="burger-icon">
-                                    <span class="burger-icon-top"></span>
-                                    <span class="burger-icon-mid"></span>
-                                    <span class="burger-icon-bottom"></span>
-                                </div>
-                            </div>
-=======
                 <span class="sg-logo-text">Sandglass</span>
             </a>
 
@@ -1066,7 +1014,6 @@
                     <a href="#" id="userDropdownBtn" class="sg-user-btn">
                         <div class="sg-user-avatar">
                             <%= userData.username ? userData.username.charAt(0).toUpperCase() : 'U' %>
->>>>>>> 003d3dd (update ui)
                         </div>
                         <%= userData.username %>
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -1487,49 +1434,9 @@
                                             <path d="M2 10h20" />
                                         </svg>
                                     </div>
-<<<<<<< HEAD
-                                    <div class=" tab-pane fade" id="wallet" role="tabpanel" aria-labelledby="wallet-tab">
-                                        <div class="card">
-                                            <% if(walletData){ %>
-                                                <div class="card-body">
-                                                    <div class="wallet-balance mb-4">
-                                                        <h5>Wallet Balance</h5>
-                                                        <p id="wallet-amount" class="display-4 text-brand">₹<%= Math.floor(walletData.walletBalance) %></p>
-                                                    </div>
-                                                    <div class="wallet-details">
-                                                        <h5 class="mb-10">Details</h5>
-                                                        <div class="table-responsive">
-                                                          <table class="table table-striped">
-                                                            <thead>
-                                                              <tr>
-                                                                <th scope="col">Date</th>
-                                                                <th scope="col">Type of Payment</th>
-                                                                <th scope="col">Amount</th>
-                                                              </tr>
-                                                            </thead>
-                                                            <tbody id="wallet-details-list">
-                                                              
-                                                            </tbody>
-                                                          </table>
-                                                        </div>
-                                                        <div id="pagination-container" class="mt-3">
-                                                          
-                                                        </div>
-                                                      </div>
-                                                </div>
-                                            <% } else { %>
-                                                <div class="card-body">
-                                                    <div class="wallet-balance mb-4">
-                                                        <h5>Wallet Balance</h5>
-                                                        <p id="wallet-amount" class="display-4 text-brand">₹0</p>
-                                                    </div>
-                                                </div>
-                                            <% } %>
-=======
                                     <div class="sg-wallet-info">
                                         <span>Available Balance</span>
                                         <div class="sg-wallet-amount">₹<%= Math.floor(walletData.walletBalance) %>
->>>>>>> 003d3dd (update ui)
                                         </div>
                                     </div>
                                 </div>
@@ -1882,20 +1789,7 @@
         function saveName() {
             const modal = document.getElementById('editNameModal');
             const userId = modal.getAttribute('data-user-id');
-<<<<<<< HEAD
-            const url = `http://sandglass.store/edit_name/${userId}`;
-            
-            const data = {
-                name: document.getElementById('editName').value
-            };
-
-            console.log('Sending PUT request to:', url);
-            console.log('Data:', data);
-            
-            fetch(url, {
-=======
             fetch(`/edit_name/${userId}`, {
->>>>>>> 003d3dd (update ui)
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name: document.getElementById('editName').value })
@@ -1912,20 +1806,7 @@
         function savePhone() {
             const modal = document.getElementById('editPhoneModal');
             const userId = modal.getAttribute('data-user-id');
-<<<<<<< HEAD
-            const url = `http://sandglass.store/edit_phone/${userId}`;
-            
-            const data = {
-                phone: document.getElementById('editPhone').value
-            };
-
-            console.log('Sending PUT request to:', url);
-            console.log('Data:', data);
-            
-            fetch(url, {
-=======
             fetch(`/edit_phone/${userId}`, {
->>>>>>> 003d3dd (update ui)
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ phone: document.getElementById('editPhone').value })
@@ -1942,19 +1823,7 @@
         function resetPassword() {
             const modal = document.getElementById('resetPasswordModal');
             const userId = modal.getAttribute('data-user-id');
-<<<<<<< HEAD
-            const url = `http://sandglass.store/reset_password/${userId}`;
-            
-            const data = {
-                oldPassword: document.getElementById('oldPassword').value,
-                newPassword: document.getElementById('newPassword').value,
-                confirmNewPassword: document.getElementById('confirmNewPassword').value
-            };
-
-            fetch(url, {
-=======
             fetch(`/reset_password/${userId}`, {
->>>>>>> 003d3dd (update ui)
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -2158,88 +2027,6 @@
             });
         }
     </script>
-<<<<<<< HEAD
-    <script>
-        let currentPage = 1;
-
-        function loadWalletTransactions(page = 1) {
-        fetch(`/wallet-transactions?page=${page}`)
-            .then(response => response.json())
-            .then(data => {
-            const transactionsList = document.getElementById('wallet-details-list');
-            transactionsList.innerHTML = ''; // Clear existing transactions
-
-            data.transactions.forEach(transaction => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                <td>${new Date(transaction.time).toISOString().split('T')[0]}</td>
-                <td>${transaction.type}</td>
-                <td class="${transaction.type === 'Credit' ? 'text-success' : 'text-danger'}">
-                    ${transaction.type === 'Credit' ? '+' : '-'} ₹${transaction.amount}
-                </td>
-                `;
-                transactionsList.appendChild(row);
-            });
-
-            updatePaginationControls(data.currentPage, data.totalPages);
-            })
-            .catch(error => console.error('Error:', error));
-        }
-
-        function updatePaginationControls(currentPage, totalPages) {
-            const paginationContainer = document.getElementById('pagination-container');
-            paginationContainer.innerHTML = '';
-
-            if (totalPages > 1) {
-                const prevButton = document.createElement('button');
-                prevButton.textContent = 'Previous';
-                prevButton.classList.add('btn', 'btn-secondary', 'mr-2');
-                prevButton.disabled = currentPage === 1;
-                prevButton.addEventListener('click', () => loadWalletTransactions(currentPage - 1));
-                paginationContainer.appendChild(prevButton);
-
-                // Define startPage and endPage so that three pages are shown if possible
-                let startPage = Math.max(1, currentPage - 1);
-                let endPage = Math.min(totalPages, currentPage + 1);
-
-                // Adjust the range to always show 3 pages when possible
-                if (currentPage === 1) {
-                    endPage = Math.min(totalPages, currentPage + 2); // Show next two pages
-                } else if (currentPage === totalPages) {
-                    startPage = Math.max(1, totalPages - 2); // Show previous two pages
-                }
-
-                // Create page buttons
-                for (let i = startPage; i <= endPage; i++) {
-                    const pageButton = document.createElement('button');
-                    pageButton.textContent = i;
-                    pageButton.classList.add('btn', 'btn-primary', 'mx-1');
-                    if (i === currentPage) {
-                        pageButton.disabled = true;
-                    }
-                    pageButton.addEventListener('click', () => loadWalletTransactions(i));
-                    paginationContainer.appendChild(pageButton);
-                }
-
-                const nextButton = document.createElement('button');
-                nextButton.textContent = 'Next';
-                nextButton.classList.add('btn', 'btn-secondary', 'ml-2');
-                nextButton.disabled = currentPage === totalPages;
-                nextButton.addEventListener('click', () => loadWalletTransactions(currentPage + 1));
-                paginationContainer.appendChild(nextButton);
-            }
-        }
-
-
-
-        // Initial load
-        document.addEventListener('DOMContentLoaded', () => loadWalletTransactions());
-
-    </script>
-    <!-- SweetAlert2 CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-=======
->>>>>>> 003d3dd (update ui)
 
     <script>
         const userBtn = document.getElementById('userDropdownBtn');

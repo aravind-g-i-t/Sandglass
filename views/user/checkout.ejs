@@ -634,39 +634,6 @@
                     <input name="search" type="text" placeholder="Search for items…">
                 </form>
             </div>
-<<<<<<< HEAD
-        </div>
-        <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
-            <div class="container">
-                <div class="header-wrap">
-                    <div class="logo logo-width-1">
-                        <a href="/"><img src="user/assets/imgs/theme/sandglass-high-resolution-logo-transparent.svg" alt="logo"></a>
-                    </div>
-                    <div class="header-right">
-                        <div class="search-style-2">
-                            <form id="searchForm" action="/shop" method="get">
-                                <input name="search" type="text" placeholder="Search for items..." >
-                                
-                            </form>
-                        </div>
-                        <div class="header-action-right">
-                            <div class="header-action-2">
-                                <% if(userData) { %>
-                                    <div class="header-action-icon-2">
-                                        <a href="/wishlist">
-                                            <img class="svgInject" alt="Evara" src="user/assets/imgs/theme/icons/icon-heart.svg">
-                                        </a>
-                                    </div>
-                                    <div class="header-action-icon-2">
-                                        <a class="mini-cart-icon" href="/cart">
-                                            <img alt="Evara" src="user/assets/imgs/theme/icons/icon-cart.svg">
-                                        </a>
-                                        
-                                    </div>
-                                <%} %>    
-                            
-                            </div>
-=======
 
             <div class="sg-header-actions">
                 <% if(userData) { %>
@@ -692,7 +659,6 @@
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                                 Logout
                             </a>
->>>>>>> 003d3dd (update ui)
                         </div>
                     </div>
                 <% } else { %>
@@ -900,35 +866,6 @@
                                 ₹<%= (totalPrice - (cartData.coupon ? totalPrice * (couponDiscount / 100) : 0) + 300).toFixed(2) %>
                             </span>
                         </div>
-<<<<<<< HEAD
-                    </div>
-        
-                    <h4>Payment Options</h4>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="payment-method" id="cod" value="COD" <% if (!codApplicable) { %>disabled<% } %>>
-                        <label class="form-check-label <% if (!codApplicable) { %>text-muted<% } %>" for="cod">
-                            Cash on Delivery
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="payment-method" id="razorpay" value="RazorPay">
-                        <label class="form-check-label" for="razorpay">
-                            Razorpay
-                        </label>
-                    </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="payment-method" id="wallet" value="Wallet" <% if (!walletApplicable) { %>disabled<% } %>>
-                        <label class="form-check-label <% if (!walletApplicable) { %>text-muted<% } %>" for="wallet">
-                            Wallet
-                        </label>
-                    </div>
-
-                    <button class="btn btn-success my-3" onclick="placeOrder()">Place Order</button>
-
-=======
 
                         <!-- Payment options -->
                         <p style="font-size:13px;font-weight:500;color:var(--gray-600);margin:24px 0 12px">Payment method</p>
@@ -982,7 +919,6 @@
                             Secured with 256-bit SSL encryption
                         </p>
                     </div>
->>>>>>> 003d3dd (update ui)
                 </div>
             </div>
         </div>
@@ -1135,19 +1071,6 @@
                     .then(() => { window.location.href = '/cart'; });
             });
         }
-<<<<<<< HEAD
-
-        function handlePaymentFailure(response, addressId, totalPrice) {
-            
-            placeOrderCODorWallet (addressId, totalPrice,paymentMethod='Razorpay');
-                
-            
-        }
-
-
-          
-=======
->>>>>>> 003d3dd (update ui)
     </script>
     <script>
     const userBtn = document.getElementById('userDropdownBtn');

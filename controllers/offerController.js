@@ -11,13 +11,8 @@ const createOffer = async (req, res) => {
             categoryData,
             productData
         });
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).send('Internal Server Error');
->>>>>>> 003d3dd (update ui)
 
     }
 };
@@ -41,16 +36,9 @@ const saveOffer = async (req, res) => {
         const newOffer = new Offer(offerData);
         await newOffer.save();
 
-<<<<<<< HEAD
-        // Redirect to the offers list page after successful save
-        return res.redirect('/admin/offers');
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
         return res.redirect('/admin/offers');
     } catch {
         return res.status(500).send('Internal Server Error');
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -79,13 +67,8 @@ const loadOffersPage = async (req, res) => {
             totalPages,
             currentPage: Number(page)
         });
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).send('Internal Server Error');
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -104,13 +87,8 @@ const toggleOfferStatus = async (req, res) => {
         await offer.save();
 
         return res.status(200).json({ success: true, newStatus: offer.isActive });
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).send('Internal Server Error');
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -124,13 +102,8 @@ const editOffer = async (req, res) => {
         }
 
         return res.render('admin/edit_offer', { offer });
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).send('Internal Server Error');
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -151,13 +124,8 @@ const updateOffer = async (req, res) => {
 
         await offer.save();
         return res.redirect('/admin/offers');
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).send('Internal Server Error');
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -186,13 +154,8 @@ const selectItems = async (req, res) => {
             });
         }
 
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).send('Internal Server Error');
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -209,29 +172,8 @@ const addOfferProduct = async (req, res) => {
         if (offer.product.includes(productId)) {
             return res.status(400).json({ error: 'Product already in offer' });
         }
-<<<<<<< HEAD
-
-        // Find other offers that include this product
-        const otherOffers = await Offer.find({ product: productId });
-
-        // Remove the product from other offers
-        // eslint-disable-next-line prefer-const
-        for (let otherOffer of otherOffers) {
-            otherOffer.product = otherOffer.product.filter(p => p.toString() !== productId.toString());
-            await otherOffer.save();
-        }
-
-        // Add the product to the new offer
-        offer.product.push(productId);
-        await offer.save();
-
-        return res.status(200).json({ message: 'Product added to offer, and any existing offers were removed.' });
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).json({ error: 'Internal server error' });
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -253,13 +195,8 @@ const removeOfferProduct = async (req, res) => {
             await offer.save();
             return res.status(200).json({ message: 'Product removed from offer' });
         }
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).json({ error: 'Internal server error' });
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -276,29 +213,8 @@ const addOfferCategory = async (req, res) => {
         if (offer.category.includes(categoryId)) {
             return res.status(400).json({ error: 'Category already in offer' });
         }
-<<<<<<< HEAD
-
-        // Find other offers that include this category
-        const otherOffers = await Offer.find({ category: categoryId });
-
-        // Remove the category from other offers
-        // eslint-disable-next-line prefer-const
-        for (let otherOffer of otherOffers) {
-            otherOffer.category = otherOffer.category.filter(c => c.toString() !== categoryId.toString());
-            await otherOffer.save();
-        }
-
-        // Add the category to the new offer
-        offer.category.push(categoryId);
-        await offer.save();
-
-        return res.status(200).json({ message: 'Category added to offer, and any existing offers were removed.' });
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).json({ error: 'Internal server error' });
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -321,13 +237,8 @@ const removeOfferCategory = async (req, res) => {
             await offer.save();
             return res.status(200).json({ message: 'Category removed from offer' });
         }
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).json({ error: 'Internal server error' });
->>>>>>> 003d3dd (update ui)
     }
 };
 

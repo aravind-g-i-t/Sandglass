@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-/* eslint-disable no-use-before-define */
-/* eslint-disable object-shorthand */
-=======
->>>>>>> 003d3dd (update ui)
 const hashing = require('../helpers/passwordHash');
 const Admin = require('../models/adminModel');
 const Product = require('../models/productModel');
@@ -23,15 +18,7 @@ const loadLogin = async (req, res) => {
         return res.render('admin/login');
     } catch (error) {
 
-<<<<<<< HEAD
-        res.status(500).json({
-            success: false,
-            message: 'Failed to load login page',
-            error: error.message
-        });
-=======
         return res.status(500).json({ error, message: "Failed to load login page" });
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -52,11 +39,6 @@ const adminLogin = async (req, res) => {
         } else {
             return res.render('admin/login', { message: 'Incorrect credentials' });
         }
-<<<<<<< HEAD
-    } catch {
-        return res.status(500).render('admin/login', { message: 'An error occurred. Please try again.' });
-    }
-=======
 
     } catch (error) {
         return res.status(500).json({ error, message: "Failed to login to admin dashboard" });
@@ -91,7 +73,6 @@ const adminLogin = async (req, res) => {
     //   } else {
     //     console.log("username doesent match");
     //   }
->>>>>>> 003d3dd (update ui)
 };
 
 
@@ -138,11 +119,6 @@ const loadDashboard = async (req, res) => {
         const allOrders = await Order.find({
             orderDate: { $gte: graphStartDate, $lte: graphEndDate }
         });
-<<<<<<< HEAD
-
-        // Fetch paginated order data
-=======
->>>>>>> 003d3dd (update ui)
         const orderData = await Order.find({
             orderDate: { $gte: fromDate, $lte: toDate } // Use adjusted toDate
         }).skip((page - 1) * limit)
@@ -150,18 +126,11 @@ const loadDashboard = async (req, res) => {
             .populate('userId')
             .sort({ orderDate: -1 });
 
-<<<<<<< HEAD
-        // Calculate total revenue
-        const orders = await Order.find();
-        const totalRevenue = orders.reduce((acc, order) => {
-            const orderTotal = parseFloat(order.payableAmount);
-=======
         const totalRevenue = orderData.reduce((acc, order) => {
             let orderTotal = parseFloat(order.payableAmount);
             if (order.returnedAmount) {
                 orderTotal -= parseFloat(order.returnedAmount);
             }
->>>>>>> 003d3dd (update ui)
             return acc + orderTotal;
         }, 0);
 
@@ -186,20 +155,11 @@ const loadDashboard = async (req, res) => {
                 dateTo: toDate.toISOString().split('T')[0], // Use adjusted toDate
                 limit: parseInt(limit, 10),
                 graphData: JSON.stringify(graphData),
-<<<<<<< HEAD
-                interval: interval,
-                totalOrders
-            });
-        }
-    } catch {
-        res.status(500).send('An error occurred while loading the dashboard');
-=======
                 interval
             });
         }
     } catch {
         return res.status(500).send('An error occurred while loading the dashboard');
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -208,11 +168,6 @@ const loadDashboard = async (req, res) => {
 function processGraphData(orders, interval, startDate, endDate) {
     const graphData = {};
 
-<<<<<<< HEAD
-    // Initialize graphData with all 7 points
-    // eslint-disable-next-line no-plusplus
-=======
->>>>>>> 003d3dd (update ui)
     for (let i = 0; i < 7; i++) {
         const date = new Date(endDate);
         // eslint-disable-next-line default-case
@@ -237,17 +192,11 @@ function processGraphData(orders, interval, startDate, endDate) {
         const date = new Date(order.orderDate);
         const key = formatDate(date, interval);
 
-<<<<<<< HEAD
-        // eslint-disable-next-line no-prototype-builtins
-        if (graphData.hasOwnProperty(key)) {
-            const turnover = parseFloat(order.payableAmount);
-=======
         if (Object.prototype.hasOwnProperty.call(graphData, key)) {
             let turnover = parseFloat(order.payableAmount);
             if (order.returnedAmount) {
                 turnover -= parseFloat(order.returnedAmount);
             }
->>>>>>> 003d3dd (update ui)
             graphData[key] += turnover;
         }
     });
@@ -279,16 +228,6 @@ const adminLogout = async (req, res) => {
     try {
 
         req.session.admin = null;
-<<<<<<< HEAD
-        res.redirect('/admin');
-    } catch (error) {
-        res.status(500).send(`An error occurred: ${error.message}`);
-    }
-};
-
-
-const loadUsers = async(req, res) => {
-=======
         return res.redirect('/admin');
     } catch {
         return res.redirect('/admin');
@@ -296,7 +235,6 @@ const loadUsers = async(req, res) => {
 };
 
 const loadUsers = async (req, res) => {
->>>>>>> 003d3dd (update ui)
     try {
         let query = {};
         if (req.query.searchUser) {
@@ -311,16 +249,6 @@ const loadUsers = async (req, res) => {
         const totalPages = Math.ceil(totalDocuments / limit);
         return res.render('admin/users', { userData, totalPages, page });
 
-<<<<<<< HEAD
-    } catch (error) {
-        res.status(500).send(`An error occurred: ${error.message}`);
-    }
-};
-
-
-
-const userStatusUpdate = async(req, res) => {
-=======
     } catch {
         return res.status(500).send("Something went wrong");
     }
@@ -355,7 +283,6 @@ const userStatusUpdate = async(req, res) => {
 // }
 
 const userStatusUpdate = async (req, res) => {
->>>>>>> 003d3dd (update ui)
     try {
         const id = req.query.id;
 
@@ -373,13 +300,8 @@ const userStatusUpdate = async (req, res) => {
         }
         return res.redirect('/admin/users');
 
-<<<<<<< HEAD
-    } catch (error) {
-        res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.redirect('/admin/users');
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -389,11 +311,7 @@ const orderList = async (req, res) => {
         let query = {};
 
         if (req.query.searchId) {
-<<<<<<< HEAD
-            const searchQuery = req.query.searchId.trim(); // Trim the search query to remove leading/trailing whitespace and tab characters
-=======
             const searchQuery = req.query.searchId.trim();
->>>>>>> 003d3dd (update ui)
 
             if (searchQuery !== "") {
                 query = { orderId: searchQuery }; // Ensure you use the correct field name `orderId`
@@ -416,13 +334,8 @@ const orderList = async (req, res) => {
             page,
             totalPages
         });
-<<<<<<< HEAD
-    } catch (error) {
-        res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).send("Something went wrong");
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -432,16 +345,8 @@ const orderDetails = async (req, res) => {
     try {
         const orderId = req.query.orderId;
 
-<<<<<<< HEAD
-        const orderData = await Order.findOne({ orderId: orderId }).populate('userId').populate('products.productId');
-=======
         const orderData = await Order.findOne({ orderId }).populate('userId').populate('products.productId');
->>>>>>> 003d3dd (update ui)
-        let totalPrice = 0;
-        let invoice;
-        orderData.products.forEach(item => {
             totalPrice += item.productPrice * item.quantity;
-            if (item.status === 'Delivered') {
                 invoice = true;
             }
         });
@@ -463,13 +368,8 @@ const orderDetails = async (req, res) => {
             couponDiscount,
             invoice
         });
-<<<<<<< HEAD
-    } catch (error) {
-        res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).send("Something went wrong");
->>>>>>> 003d3dd (update ui)
     }
 
 };
@@ -549,13 +449,8 @@ const updateOrderStatus = async (req, res) => {
 
         return res.json({ success: true, order: updatedOrder });
 
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).json({ success: false, message: `${error.message}` });
-=======
     } catch {
         return res.status(500).json({ success: false, message: 'Server error' });
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -577,26 +472,16 @@ const coupons = async (req, res) => {
             totalPages,
             currentPage: page
         });
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).json({ success: false, message: `${error.message}` });
-=======
     } catch {
         return res.status(500).json({ success: false, message: 'Server error' });
->>>>>>> 003d3dd (update ui)
     }
 };
 
 const addCoupon = async (req, res) => {
     try {
         return res.render('admin/add_coupon');
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).json({ success: false, message: `${error.message}` });
-=======
     } catch {
         return res.status(500).json({ success: false, message: 'Server error' });
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -608,13 +493,8 @@ const editCoupon = async (req, res) => {
         }
 
         return res.render('admin/edit_coupon', { coupon });
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).json({ success: false, message: `${error.message}` });
-=======
     } catch {
         return res.status(500).json({ success: false, message: 'Server error' });
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -638,13 +518,8 @@ const updateCoupon = async (req, res) => {
         }
 
 
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).json({ success: false, message: `${error.message}` });
-=======
     } catch {
         return res.status(500).json({ success: false, message: 'Server error' });
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -672,13 +547,8 @@ const saveCoupon = async (req, res) => {
 
             return res.status(201).redirect('/admin/coupons');
         }
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).json({ success: false, message: `${error.message}` });
-=======
     } catch {
         return res.status(500).json({ success: false, message: 'Server error' });
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -691,14 +561,9 @@ const updateCouponStatus = async (req, res) => {
         } else {
             return res.json({ success: false });
         }
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).json({ success: false, message: `${error.message}` });
-=======
     } catch {
         return res.status(500).json({ success: false, message: 'Something went wrong' });
 
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -720,13 +585,6 @@ const generateReport = async (req, res) => {
         const numberOfOrders = orders.length;
 
         if (format === 'pdf') {
-<<<<<<< HEAD
-            await generatePDFReport(res, orders, { totalSales, averageOrderValue, numberOfOrders, fromDate, toDate });
-        } else if (format === 'excel') {
-            await generateExcelReport(res, orders, { totalSales, averageOrderValue, numberOfOrders, fromDate, toDate });
-        } else {
-            return res.status(400).send('Invalid format. Supported formats are "pdf" and "excel".');
-=======
             return await generatePDFReport(res, orders, {
                 totalSales,
                 averageOrderValue,
@@ -734,7 +592,6 @@ const generateReport = async (req, res) => {
                 fromDate,
                 toDate
             });
->>>>>>> 003d3dd (update ui)
         }
 
         if (format === 'excel') {
@@ -753,15 +610,11 @@ const generateReport = async (req, res) => {
         });
 
     } catch (error) {
-<<<<<<< HEAD
-        return res.status(500).json({ success: false, message: `${error.message}` });
-=======
         console.log(error);
 
         return res.status(500).send(
             'An error occurred while generating the report. Please try again later.'
         );
->>>>>>> 003d3dd (update ui)
     }
 };
 

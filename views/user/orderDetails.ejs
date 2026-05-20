@@ -3,754 +3,231 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Sandglass — Order Details</title>
+    <title>Evara - eCommerce HTML Template</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="user/assets/imgs/theme/favicon.svg">
+    <!-- Template CSS -->
     <link rel="stylesheet" href="user/assets/css/main.css?v=3.4">
     <link rel="stylesheet" href="user/assets/css/auto_complete.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Serif+Display&display=swap"
-        rel="stylesheet">
-
     <style>
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-        }
-
-        :root {
-            --purple-50: #EEEDFE;
-            --purple-100: #CECBF6;
-            --purple-200: #AFA9EC;
-            --purple-400: #7F77DD;
-            --purple-600: #534AB7;
-            --purple-800: #3C3489;
-            --purple-900: #26215C;
-            --gray-50: #F7F6F3;
-            --gray-100: #EEECE8;
-            --gray-200: #D3D1C7;
-            --gray-400: #888780;
-            --gray-600: #5F5E5A;
-            --gray-900: #1A1918;
-            --white: #FFFFFF;
-            --danger: #E24B4A;
-            --danger-bg: #FCEBEB;
-            --success: #1D9E75;
-            --success-bg: #E8F8F2;
-            --warning: #D97706;
-            --warning-bg: #FEF3C7;
-        }
-
-        .header-area {
-            display: none !important;
-        }
-
-        html,
-        body {
-            font-family: 'DM Sans', sans-serif;
-            color: var(--gray-900);
-            -webkit-font-smoothing: antialiased;
-            background: var(--gray-50);
-        }
-
-        /* ── Header ── */
-        .sg-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1050;
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border-bottom: 1px solid var(--gray-100);
-        }
-
-        .sg-header-inner {
+        .itemside {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 0 48px;
-            height: 64px;
         }
 
-        .sg-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            flex-shrink: 0;
+        .itemside .left {
+            margin-right: 10px; /* Adjust as needed */
         }
 
-        .sg-logo-icon {
-            width: 32px;
-            height: 32px;
-            background: var(--purple-800);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .sg-logo-text {
-            font-family: 'DM Serif Display', serif;
-            font-size: 20px;
-            color: var(--gray-900);
-        }
-
-        .sg-search {
-            position: relative;
-            flex: 0 0 220px;
-        }
-
-        .sg-search input {
-            width: 100%;
-            padding: 8px 12px 8px 36px;
-            font-size: 13px;
-            font-family: 'DM Sans', sans-serif;
-            border: 1px solid var(--gray-200);
-            border-radius: 8px;
-            background: var(--gray-50);
-            color: var(--gray-900);
-            outline: none;
-            transition: border-color 0.15s, box-shadow 0.15s;
-        }
-
-        .sg-search input:focus {
-            border-color: var(--purple-400);
-            box-shadow: 0 0 0 3px var(--purple-50);
-            background: var(--white);
-        }
-
-        .sg-search input::placeholder {
-            color: var(--gray-200);
-        }
-
-        .sg-search-icon {
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--gray-400);
-            pointer-events: none;
-        }
-
-        .sg-header-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .sg-icon-btn {
-            width: 38px;
-            height: 38px;
-            border-radius: 8px;
-            border: 1px solid var(--gray-100);
-            background: var(--white);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            color: var(--gray-600);
-            position: relative;
-            transition: background 0.15s;
-        }
-
-        .sg-icon-btn:hover {
-            background: var(--gray-50);
-            color: var(--gray-900);
-        }
-
-
-        .sg-user-wrap {
-            position: relative;
-        }
-
-        .sg-user-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 12px;
-            border: 1px solid var(--gray-100);
-            border-radius: 8px;
-            background: var(--white);
-            font-size: 13px;
-            font-weight: 500;
-            font-family: 'DM Sans', sans-serif;
-            color: var(--gray-900);
-            text-decoration: none;
-            transition: background 0.15s;
-        }
-
-        .sg-user-btn:hover {
-            background: var(--gray-50);
-            color: var(--gray-900);
-        }
-
-        .sg-user-avatar {
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            background: var(--purple-100);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--purple-800);
-        }
-
-        .sg-dropdown {
-    position: absolute;
-    right: 0;
-    top: calc(100% + 8px);
-    background: var(--white);
-    border: 1px solid var(--gray-100);
-    border-radius: 12px;
-    padding: 6px;
-    min-width: 180px;
-    box-shadow: 0 8px 24px rgba(60,52,137,0.10);
-    display: none;
-    z-index: 200;
-}
-
-.sg-dropdown.active {
-    display: block;
-}
-
-
-        .sg-dropdown a {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 9px 12px;
-            font-size: 13px;
-            color: var(--gray-900);
-            text-decoration: none;
-            border-radius: 8px;
-            transition: background 0.12s;
-        }
-
-        .sg-dropdown a:hover {
-            background: var(--gray-50);
-        }
-
-        .sg-dropdown a.danger {
-            color: var(--danger);
-        }
-
-        .sg-dropdown a.danger:hover {
-            background: var(--danger-bg);
-        }
-
-        .sg-dropdown-divider {
-            height: 1px;
-            background: var(--gray-100);
-            margin: 4px 0;
-        }
-
-        /* ── Navbar ── */
-        .sg-navbar {
-            position: fixed;
-            top: 64px;
-            left: 0;
-            right: 0;
-            z-index: 1040;
-            background: var(--purple-900);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 40px;
-            padding: 0 48px;
-            height: 46px;
-        }
-
-        .sg-navbar a {
-            font-size: 13px;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.75);
-            text-decoration: none;
-            transition: color 0.15s;
-        }
-
-        .sg-navbar a:hover,
-        .sg-navbar a.active {
-            color: #fff;
-        }
-
-        /* ── Page offset ── */
-        .sg-offset {
-            padding-top: 110px;
-        }
-
-        /* ── Breadcrumb ── */
-        .sg-breadcrumb {
-            background: var(--white);
-            border-bottom: 1px solid var(--gray-100);
-            padding: 14px 0;
-            font-size: 13px;
-            color: var(--gray-400);
-        }
-
-        .sg-breadcrumb .container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .sg-breadcrumb a {
-            color: var(--purple-600);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .sg-breadcrumb a:hover {
-            text-decoration: underline;
-        }
-
-        .sg-breadcrumb .bc-sep {
-            color: var(--gray-200);
-        }
-
-        .sg-breadcrumb .bc-current {
-            color: var(--gray-900);
-            font-weight: 500;
-        }
-
-        /* ── Page layout ── */
-        .sg-page {
-            padding: 40px 0 64px;
-        }
-
-        /* ── Page title row ── */
-        .sg-page-title-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 28px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .sg-page-title {
-            font-family: 'DM Serif Display', serif;
-            font-size: 28px;
-            font-weight: 400;
-            color: var(--gray-900);
-        }
-
-        .sg-order-meta {
-            font-size: 13px;
-            color: var(--gray-400);
-            margin-top: 4px;
-        }
-
-        .sg-order-id {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            background: var(--purple-50);
-            border: 1px solid var(--purple-100);
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--purple-800);
-        }
-
-        /* ── Info cards row ── */
-        .sg-info-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .sg-info-card {
-            background: var(--white);
-            border: 1px solid var(--gray-100);
-            border-radius: 16px;
-            padding: 20px 22px;
-            display: flex;
-            gap: 14px;
-            align-items: flex-start;
-        }
-
-        .sg-info-icon {
+        .itemside .left img {
             width: 40px;
             height: 40px;
-            border-radius: 10px;
-            background: var(--purple-50);
-            border: 1px solid var(--purple-100);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            color: var(--purple-600);
+            object-fit: cover; /* Ensure the image covers the box while maintaining aspect ratio */
         }
 
-        .sg-info-label {
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--gray-400);
-            margin-bottom: 6px;
-        }
-
-        .sg-info-value {
-            font-size: 13px;
-            color: var(--gray-600);
-            line-height: 1.65;
-        }
-
-        .sg-info-value strong {
-            color: var(--gray-900);
-            font-weight: 500;
-        }
-
-        .sg-info-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--purple-600);
-            text-decoration: none;
-            margin-top: 8px;
-        }
-
-        .sg-info-link:hover {
-            text-decoration: underline;
-        }
-
-        /* ── Products table card ── */
-        .sg-table-card {
-            background: var(--white);
-            border: 1px solid var(--gray-100);
-            border-radius: 16px;
-            overflow: hidden;
-            margin-bottom: 24px;
-        }
-
-        .sg-table-card-header {
-            padding: 18px 24px;
-            border-bottom: 1px solid var(--gray-100);
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--gray-900);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .sg-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-
-        .sg-table thead {
-            background: var(--gray-50);
-            border-bottom: 1px solid var(--gray-100);
-        }
-
-        .sg-table thead th {
-            padding: 12px 20px;
-            font-size: 11px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: var(--gray-400);
-            text-align: left;
-        }
-
-        .sg-table thead th.text-right {
-            text-align: right;
-        }
-
-        .sg-table tbody tr {
-            border-bottom: 1px solid var(--gray-100);
-            transition: background 0.12s;
-        }
-
-        .sg-table tbody tr:last-child {
-            border-bottom: none;
-        }
-
-        .sg-table tbody tr:hover {
-            background: var(--gray-50);
-        }
-
-        .sg-table tbody td {
-            padding: 16px 20px;
-            vertical-align: middle;
-        }
-
-        .sg-table tbody td.text-right {
-            text-align: right;
-        }
-
-        .sg-product-cell {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .sg-product-thumb {
-            width: 52px;
-            height: 52px;
-            border-radius: 10px;
-            object-fit: cover;
-            border: 1px solid var(--gray-100);
-            flex-shrink: 0;
-        }
-
-        .sg-product-cell-name {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--gray-900);
-            max-width: 220px;
+        .itemside .info {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-<<<<<<< HEAD
-        
-=======
-
-        /* Status badges */
-        .sg-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .sg-status.delivered {
-            background: var(--success-bg);
-            color: var(--success);
-            border: 1px solid #9FE1CB;
-        }
-
-        .sg-status.cancelled {
-            background: var(--danger-bg);
-            color: var(--danger);
-            border: 1px solid #F7C1C1;
-        }
-
-        .sg-status.pending {
-            background: var(--warning-bg);
-            color: var(--warning);
-            border: 1px solid #FCD34D;
-        }
-
-        .sg-status.shipped {
-            background: var(--purple-50);
-            color: var(--purple-800);
-            border: 1px solid var(--purple-100);
-        }
-
-        .sg-status.processing {
-            background: var(--purple-50);
-            color: var(--purple-800);
-            border: 1px solid var(--purple-100);
-        }
-
-        /* ── Summary card ── */
-        .sg-summary-card {
-            background: var(--white);
-            border: 1px solid var(--gray-100);
-            border-radius: 16px;
-            overflow: hidden;
-        }
-
-        .sg-summary-header {
-            padding: 18px 24px;
-            border-bottom: 1px solid var(--gray-100);
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--gray-900);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .sg-summary-body {
-            padding: 20px 24px;
-        }
-
-        .sg-summary-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 14px;
-            color: var(--gray-600);
-            padding: 8px 0;
-        }
-
-        .sg-summary-row.discount {
-            color: var(--success);
-        }
-
-        .sg-summary-divider {
-            height: 1px;
-            background: var(--gray-100);
-            margin: 8px 0;
-        }
-
-        .sg-summary-total {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0 0;
-        }
-
-        .sg-summary-total-label {
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--gray-900);
-        }
-
-        .sg-summary-total-price {
-            font-family: 'DM Serif Display', serif;
-            font-size: 26px;
-            color: var(--purple-800);
-        }
-
-        .sg-payment-status-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 0 0;
-            margin-top: 4px;
-            border-top: 1px solid var(--gray-100);
-        }
-
-        .sg-payment-status-label {
-            font-size: 13px;
-            color: var(--gray-400);
-        }
-
-        .sg-payment-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-            background: var(--success-bg);
-            color: var(--success);
-            border: 1px solid #9FE1CB;
-        }
-
-        /* ── Invoice button ── */
-        .sg-btn-invoice {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 11px 20px;
-            background: var(--purple-800);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            font-family: 'DM Sans', sans-serif;
-            text-decoration: none;
-            cursor: pointer;
-            transition: background 0.15s;
-            margin-top: 20px;
-        }
-
-        .sg-btn-invoice:hover {
-            background: var(--purple-900);
-            color: #fff;
-        }
-
-        /* ── Back link ── */
-        .sg-back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--purple-600);
-            text-decoration: none;
-            margin-bottom: 24px;
-        }
-
-        .sg-back-link:hover {
-            text-decoration: underline;
-        }
-
-        /* ── Responsive ── */
-        @media (max-width: 768px) {
-            .sg-header-inner {
-                padding: 0 20px;
-            }
-
-            .sg-search {
-                display: none;
-            }
-
-            .sg-navbar {
-                display: none;
-            }
-
-            .sg-offset {
-                padding-top: 64px;
-            }
-
-            .sg-info-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .sg-page-title-row {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-        }
->>>>>>> 003d3dd (update ui)
     </style>
 </head>
 
 <body>
-
-    <!-- ── Sandglass Header ── -->
-    <header class="sg-header">
-        <div class="sg-header-inner">
-            <a href="/" class="sg-logo">
-                <div class="sg-logo-icon">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M5 3h14M5 21h14M8 3v4a4 4 0 008 0V3M8 21v-4a4 4 0 018 0v4" />
-                    </svg>
+    <!-- Quick view -->
+    <div class="modal fade custom-modal" id="quickViewModal" tabindex="-1" aria-labelledby="quickViewModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">              
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>       
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12 col-xs-12">
+                            <div class="detail-gallery">
+                                <span class="zoom-icon"><i class="fi-rs-search"></i></span>
+                                <!-- MAIN SLIDES -->
+                                <div class="product-image-slider">
+                                    <figure class="border-radius-10">
+                                        <img src="user/assets/imgs/shop/product-16-2.jpg" alt="product image">
+                                    </figure>
+                                    <figure class="border-radius-10">
+                                        <img src="user/assets/imgs/shop/product-16-1.jpg" alt="product image">
+                                    </figure>
+                                    <figure class="border-radius-10">
+                                        <img src="user/assets/imgs/shop/product-16-3.jpg" alt="product image">
+                                    </figure>
+                                    <figure class="border-radius-10">
+                                        <img src="user/assets/imgs/shop/product-16-4.jpg" alt="product image">
+                                    </figure>
+                                    <figure class="border-radius-10">
+                                        <img src="user/assets/imgs/shop/product-16-5.jpg" alt="product image">
+                                    </figure>
+                                    <figure class="border-radius-10">
+                                        <img src="user/assets/imgs/shop/product-16-6.jpg" alt="product image">
+                                    </figure>
+                                    <figure class="border-radius-10">
+                                        <img src="user/assets/imgs/shop/product-16-7.jpg" alt="product image">
+                                    </figure>
+                                </div>
+                                <!-- THUMBNAILS -->
+                                <div class="slider-nav-thumbnails pl-15 pr-15">
+                                    <div><img src="user/assets/imgs/shop/thumbnail-3.jpg" alt="product image"></div>
+                                    <div><img src="user/assets/imgs/shop/thumbnail-4.jpg" alt="product image"></div>
+                                    <div><img src="user/assets/imgs/shop/thumbnail-5.jpg" alt="product image"></div>
+                                    <div><img src="user/assets/imgs/shop/thumbnail-6.jpg" alt="product image"></div>
+                                    <div><img src="user/assets/imgs/shop/thumbnail-7.jpg" alt="product image"></div>
+                                    <div><img src="user/assets/imgs/shop/thumbnail-8.jpg" alt="product image"></div>
+                                    <div><img src="user/assets/imgs/shop/thumbnail-9.jpg" alt="product image"></div>
+                                </div>
+                            </div>
+                            <!-- End Gallery -->
+                            <div class="social-icons single-share">
+                                <ul class="text-grey-5 d-inline-block">
+                                    <li><strong class="mr-10">Share this:</strong></li>
+                                    <li class="social-facebook"><a href="#"><img src="user/assets/imgs/theme/icons/icon-facebook.svg" alt=""></a></li>
+                                    <li class="social-twitter"> <a href="#"><img src="user/assets/imgs/theme/icons/icon-twitter.svg" alt=""></a></li>
+                                    <li class="social-instagram"><a href="#"><img src="user/assets/imgs/theme/icons/icon-instagram.svg" alt=""></a></li>
+                                    <li class="social-linkedin"><a href="#"><img src="user/assets/imgs/theme/icons/icon-pinterest.svg" alt=""></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12 col-xs-12">
+                            <div class="detail-info">
+                                <h3 class="title-detail mt-30">Colorful Pattern Shirts HD450</h3>
+                                <div class="product-detail-rating">
+                                    <div class="pro-details-brand">
+                                        <span> Brands: <a href="shop-grid-right.html">Bootstrap</a></span>
+                                    </div>
+                                    <div class="product-rate-cover text-end">
+                                        <div class="product-rate d-inline-block">
+                                            <div class="product-rating" style="width:90%">
+                                            </div>
+                                        </div>
+                                        <span class="font-small ml-5 text-muted"> (25 reviews)</span>
+                                    </div>
+                                </div>
+                                <div class="clearfix product-price-cover">
+                                    <div class="product-price primary-color float-left">
+                                        <ins><span class="text-brand">$120.00</span></ins>
+                                        <ins><span class="old-price font-md ml-15">$200.00</span></ins>
+                                        <span class="save-price  font-md color3 ml-15">25% Off</span>
+                                    </div>
+                                </div>
+                                <div class="bt-1 border-color-1 mt-15 mb-15"></div>
+                                <div class="short-desc mb-30">
+                                    <p class="font-sm">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam rem officia, corrupti reiciendis minima nisi modi,!</p>
+                                </div>
+                                
+                                <div class="attr-detail attr-color mb-15">
+                                    <strong class="mr-10">Color</strong>
+                                    <ul class="list-filter color-filter">
+                                        <li><a href="#" data-color="Red"><span class="product-color-red"></span></a></li>
+                                        <li><a href="#" data-color="Yellow"><span class="product-color-yellow"></span></a></li>
+                                        <li class="active"><a href="#" data-color="White"><span class="product-color-white"></span></a></li>
+                                        <li><a href="#" data-color="Orange"><span class="product-color-orange"></span></a></li>
+                                        <li><a href="#" data-color="Cyan"><span class="product-color-cyan"></span></a></li>
+                                        <li><a href="#" data-color="Green"><span class="product-color-green"></span></a></li>
+                                        <li><a href="#" data-color="Purple"><span class="product-color-purple"></span></a></li>
+                                    </ul>
+                                </div>
+                                <div class="attr-detail attr-size">
+                                    <strong class="mr-10">Size</strong>
+                                    <ul class="list-filter size-filter font-small">
+                                        <li><a href="#">S</a></li>
+                                        <li class="active"><a href="#">M</a></li>
+                                        <li><a href="#">L</a></li>
+                                        <li><a href="#">XL</a></li>
+                                        <li><a href="#">XXL</a></li>
+                                    </ul>
+                                </div>
+                                <div class="bt-1 border-color-1 mt-30 mb-30"></div>
+                                <div class="detail-extralink">
+                                    <div class="detail-qty border radius">
+                                        <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
+                                        <span class="qty-val">1</span>
+                                        <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
+                                    </div>
+                                    <div class="product-extra-link2">
+                                        <button type="submit" class="button button-add-to-cart">Add to cart</button>
+                                        <a aria-label="Add To Wishlist" class="action-btn hover-up" href="/wishlist"><i class="fi-rs-heart"></i></a>
+                                        <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
+                                    </div>
+                                </div>
+                                <ul class="product-meta font-xs color-grey mt-50">
+                                    <li class="mb-5">SKU: <a href="#">FWM15VKT</a></li>
+                                    <li class="mb-5">Tags: <a href="#" rel="tag">Cloth</a>, <a href="#" rel="tag">Women</a>, <a href="#" rel="tag">Dress</a> </li>
+                                    <li>Availability:<span class="in-stock text-success ml-5">8 Items In Stock</span></li>
+                                </ul>
+                            </div>
+                            <!-- Detail Info -->
+                        </div>
+                    </div>
+                </div>        
+        </div>
+        </div>
+    </div>
+    <header class="header-area header-style-1 header-height-2">
+        <div class="header-top header-top-ptb-1 d-none d-lg-block">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-xl-3 col-lg-4">
+                        <div class="header-info">
+                            <!-- <ul>
+                                <li><i class="fi-rs-smartphone"></i> <a href="#">(+01) - 2345 - 6789</a></li>
+                                <li><i class="fi-rs-marker"></i><a  href="page-contact.html">Our location</a></li>
+                            </ul> -->
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-4">
+                        <div class="text-center">
+                            <div id="news-flash" class="d-inline-block">
+                                <!-- <ul>
+                                    <li>Get great devices up to 50% off <a href="shop-grid-right.html">View details</a></li>
+                                    <li>Supper Value Deals - Save more with coupons</li>
+                                    <li>Trendy 25silver jewelry, save up 35% off today <a href="shop-grid-right.html">Shop now</a></li>
+                                </ul> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-4">
+                        <div class="header-info header-info-right">
+                            <ul>
+                                <li>
+                                    <!-- <a class="language-dropdown-active" href="#"> <i class="fi-rs-world"></i> English <i class="fi-rs-angle-small-down"></i></a>
+                                    <ul class="language-dropdown">
+                                        <li><a href="#"><img src="user/assets/imgs/theme/flag-fr.png" alt="">Français</a></li>
+                                        <li><a href="#"><img src="user/assets/imgs/theme/flag-dt.png" alt="">Deutsch</a></li>
+                                        <li><a href="#"><img src="user/assets/imgs/theme/flag-ru.png" alt="">Pусский</a></li>
+                                    </ul> -->
+                                </li>
+                                <% if(userData) { %>
+                                    <li class="dropdown nav-item">
+                                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="" id="dropdownAccount" aria-expanded="false"><%= userData.username%></a>
+                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                                            <a class="dropdown-item text-dark" href="/profile"><i class="material-icons md-perm_identity"></i>Profile</a>
+                                            <!-- <a class="dropdown-item text-dark" href="#"><i class="material-icons md-settings"></i>Account Settings</a> -->
+                                            <!-- <a class="dropdown-item text-dark" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a> -->
+                                            <!-- <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
+                                            <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a> -->
+                                            <div class="dropdown-divider">
+                                            </div>
+                                            <a class="dropdown-item text-danger" href="/logout"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                                        </div>
+                                    </li>
+                                    <% }else{ %>
+                                        <li><i class="fi-rs-user"></i><a href="/login">Log In / Sign Up</a></li>
+                                    <% } %>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <span class="sg-logo-text">Sandglass</span>
-            </a>
-
-            <div class="sg-search">
-                <span class="sg-search-icon">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8" />
-                        <path d="m21 21-4.35-4.35" />
-                    </svg>
-                </span>
-                <form action="/shop" method="get">
-                    <input name="search" type="text" placeholder="Search for items…">
-                </form>
             </div>
-<<<<<<< HEAD
         </div>
         <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
             <div class="container">
@@ -771,383 +248,512 @@
                                     <div class="header-action-icon-2">
                                         <a href="/wishlist">
                                             <img class="svgInject" alt="Evara" src="user/assets/imgs/theme/icons/icon-heart.svg">
-<<<<<<< HEAD
-=======
                                             <span class="pro-count blue">4</span>
->>>>>>> d2660ae (First commit)
                                         </a>
                                     </div>
                                     <div class="header-action-icon-2">
                                         <a class="mini-cart-icon" href="/cart">
                                             <img alt="Evara" src="user/assets/imgs/theme/icons/icon-cart.svg">
+                                            <span class="pro-count blue">2</span>
                                         </a>
                                         
                                     </div>
                                 <%} %>    
                             
-=======
-
-            <div class="sg-header-actions">
-                <% if(userData) { %>
-                    <a href="/wishlist" class="sg-icon-btn" title="Wishlist">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <path
-                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                        </svg>
-                    </a>
-                    <a href="/cart" class="sg-icon-btn" title="Cart">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-                            <line x1="3" y1="6" x2="21" y2="6" />
-                            <path d="M16 10a4 4 0 01-8 0" />
-                        </svg>
-                    </a>
-                    <div class="sg-user-wrap">
-                        <a href="#" id="userDropdownBtn" class="sg-user-btn">
-                            <div class="sg-user-avatar">
-                                <%= userData.username ? userData.username.charAt(0).toUpperCase() : 'U' %>
->>>>>>> 003d3dd (update ui)
                             </div>
-                            <%= userData.username %>
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="6 9 12 15 18 9" />
-                                </svg>
-                        </a>
-                        <div class="sg-dropdown">
-                            <a href="/profile">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-                                    <circle cx="12" cy="7" r="4" />
-                                </svg>
-                                Profile
-                            </a>
-                            <div class="sg-dropdown-divider"></div>
-                            <a href="/logout" class="danger">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
-                                    <polyline points="16 17 21 12 16 7" />
-                                    <line x1="21" y1="12" x2="9" y2="12" />
-                                </svg>
-                                Logout
-                            </a>
                         </div>
                     </div>
-                    <% } else { %>
-                        <a href="/login" class="sg-user-btn">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-                                <circle cx="12" cy="7" r="4" />
-                            </svg>
-                            Log in
-                        </a>
-                        <% } %>
+                </div>
+            </div>
+        </div>
+        
+        <div class="header-bottom header-bottom-bg-color sticky-bar">
+            <div class="container">
+                <div class="header-wrap header-space-between position-relative">
+                    <div class="logo logo-width-1 d-block d-lg-none">
+                        <a href="index.html"><img src="user/assets/imgs/theme/logo.svg" alt="logo"></a>
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                     <!-- <div class="header-nav d-none d-lg-flex">  
+                        <div class="main-categori-wrap d-none d-lg-block"> 
+                            <a class="categori-button-active" href="#">
+                                <span class="fi-rs-apps"></span> Browse Categories
+                            </a> 
+                            <div class="categori-dropdown-wrap categori-dropdown-active-large">
+                                <ul>
+                                    <li class="has-children">
+                                        <a href="shop-grid-right.html"><i class="evara-font-dress"></i>Women's Clothing</a>
+                                        <div class="dropdown-menu">
+                                            <ul class="mega-menu d-lg-flex">
+                                                <li class="mega-menu-col col-lg-7">
+                                                    <ul class="d-lg-flex">
+                                                        <li class="mega-menu-col col-lg-6">
+                                                            <ul>
+                                                                <li><span class="submenu-title">Hot & Trending</span></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Dresses</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Blouses & Shirts</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Hoodies & Sweatshirts</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Women's Sets</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Suits & Blazers</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Bodysuits</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Tanks & Camis</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Coats & Jackets</a></li>
+                                                            </ul>
+                                                        </li>
+                                                        <li class="mega-menu-col col-lg-6">
+                                                            <ul>
+                                                                <li><span class="submenu-title">Bottoms</span></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Leggings</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Skirts</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Shorts</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Jeans</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Pants & Capris</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Bikini Sets</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Cover-Ups</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Swimwear</a></li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                                <li class="mega-menu-col col-lg-5">
+                                                    <div class="header-banner2">
+                                                        <img src="user/assets/imgs/banner/menu-banner-2.jpg" alt="menu_banner1">
+                                                        <div class="banne_info">
+                                                            <h6>10% Off</h6>
+                                                            <h4>New Arrival</h4>
+                                                            <a href="#">Shop now</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="header-banner2">
+                                                        <img src="user/assets/imgs/banner/menu-banner-3.jpg" alt="menu_banner2">
+                                                        <div class="banne_info">
+                                                            <h6>15% Off</h6>
+                                                            <h4>Hot Deals</h4>
+                                                            <a href="#">Shop now</a>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li class="has-children">
+                                        <a href="shop-grid-right.html"><i class="evara-font-tshirt"></i>Men's Clothing</a>
+                                        <div class="dropdown-menu">
+                                            <ul class="mega-menu d-lg-flex">
+                                                <li class="mega-menu-col col-lg-7">
+                                                    <ul class="d-lg-flex">
+                                                        <li class="mega-menu-col col-lg-6">
+                                                            <ul>
+                                                                <li><span class="submenu-title">Jackets & Coats</span></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Down Jackets</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Jackets</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Parkas</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Faux Leather Coats</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Trench</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Wool & Blends</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Vests & Waistcoats</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Leather Coats</a></li>
+                                                            </ul>
+                                                        </li>
+                                                        <li class="mega-menu-col col-lg-6">
+                                                            <ul>
+                                                                <li><span class="submenu-title">Suits & Blazers</span></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Blazers</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Suit Jackets</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Suit Pants</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Suits</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Vests</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Tailor-made Suits</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Cover-Ups</a></li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                                <li class="mega-menu-col col-lg-5">
+                                                    <div class="header-banner2">
+                                                        <img src="user/assets/imgs/banner/menu-banner-4.jpg" alt="menu_banner1">
+                                                        <div class="banne_info">
+                                                            <h6>10% Off</h6>
+                                                            <h4>New Arrival</h4>
+                                                            <a href="#">Shop now</a>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li class="has-children">
+                                        <a href="shop-grid-right.html"><i class="evara-font-smartphone"></i> Cellphones</a>
+                                        <div class="dropdown-menu">
+                                            <ul class="mega-menu d-lg-flex">
+                                                <li class="mega-menu-col col-lg-7">
+                                                    <ul class="d-lg-flex">
+                                                        <li class="mega-menu-col col-lg-6">
+                                                            <ul>
+                                                                <li><span class="submenu-title">Hot & Trending</span></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Cellphones</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">iPhones</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Refurbished Phones</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Mobile Phone</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Mobile Phone Parts</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Phone Bags & Cases</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Communication Equipments</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Walkie Talkie</a></li>
+                                                            </ul>
+                                                        </li>
+                                                        <li class="mega-menu-col col-lg-6">
+                                                            <ul>
+                                                                <li><span class="submenu-title">Accessories</span></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Screen Protectors</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Wire Chargers</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Wireless Chargers</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Car Chargers</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Power Bank</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Armbands</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Dust Plug</a></li>
+                                                                <li><a class="dropdown-item nav-link nav_item" href="#">Signal Boosters</a></li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                                <li class="mega-menu-col col-lg-5">
+                                                    <div class="header-banner2">
+                                                        <img src="user/assets/imgs/banner/menu-banner-5.jpg" alt="menu_banner1">
+                                                        <div class="banne_info">
+                                                            <h6>10% Off</h6>
+                                                            <h4>New Arrival</h4>
+                                                            <a href="#">Shop now</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="header-banner2">
+                                                        <img src="user/assets/imgs/banner/menu-banner-6.jpg" alt="menu_banner2">
+                                                        <div class="banne_info">
+                                                            <h6>15% Off</h6>
+                                                            <h4>Hot Deals</h4>
+                                                            <a href="#">Shop now</a>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li><a href="shop-grid-right.html"><i class="evara-font-desktop"></i>Computer & Office</a></li>
+                                    <li><a href="shop-grid-right.html"><i class="evara-font-cpu"></i>Consumer Electronics</a></li>
+                                    <li><a href="shop-grid-right.html"><i class="evara-font-diamond"></i>Jewelry & Accessories</a></li>
+                                    <li><a href="shop-grid-right.html"><i class="evara-font-home"></i>Home & Garden</a></li>
+                                    <li><a href="shop-grid-right.html"><i class="evara-font-high-heels"></i>Shoes</a></li>
+                                    <li><a href="shop-grid-right.html"><i class="evara-font-teddy-bear"></i>Mother & Kids</a></li>
+                                    <li><a href="shop-grid-right.html"><i class="evara-font-kite"></i>Outdoor fun</a></li>
+                                    <li>
+                                        <ul class="more_slide_open" style="display: none;">
+                                            <li><a href="shop-grid-right.html"><i class="evara-font-desktop"></i>Beauty, Health</a></li>
+                                            <li><a href="shop-grid-right.html"><i class="evara-font-cpu"></i>Bags and Shoes</a></li>
+                                            <li><a href="shop-grid-right.html"><i class="evara-font-diamond"></i>Consumer Electronics</a></li>
+                                            <li><a href="shop-grid-right.html"><i class="evara-font-home"></i>Automobiles & Motorcycles</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <div class="more_categories">Show more...</div>
+                            </div>
+                        </div> -->
+                        
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <!-- <div class="hotline d-none d-lg-block">
+                        <p><i class="fi-rs-headset"></i><span>Hotline</span> 1900 - 888 </p>
+                    </div> -->
+                    <p class="mobile-promotion">Happy <span class="text-brand">Mother's Day</span>. Big Sale Up to 40%</p>
+                    <div class="header-action-right d-block d-lg-none">
+                        <div class="header-action-2">
+                            <div class="header-action-icon-2">
+                                <a href="/wishlist">
+                                    <img alt="Evara" src="user/assets/imgs/theme/icons/icon-heart.svg">
+                                    <span class="pro-count white">4</span>
+                                </a>
+                            </div>
+                            <div class="header-action-icon-2">
+                                <a class="mini-cart-icon" href="/cart">
+                                    <img alt="Evara" src="user/assets/imgs/theme/icons/icon-cart.svg">
+                                    <span class="pro-count white">2</span>
+                                </a>
+                                <div class="cart-dropdown-wrap cart-dropdown-hm2">
+                                    <ul>
+                                        <li>
+                                            <div class="shopping-cart-img">
+                                                <a href="shop-product-right.html"><img alt="Evara" src="user/assets/imgs/shop/thumbnail-3.jpg"></a>
+                                            </div>
+                                            <div class="shopping-cart-title">
+                                                <h4><a href="shop-product-right.html">Plain Striola Shirts</a></h4>
+                                                <h3><span>1 × </span>$800.00</h3>
+                                            </div>
+                                            <div class="shopping-cart-delete">
+                                                <a href="#"><i class="fi-rs-cross-small"></i></a>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="shopping-cart-img">
+                                                <a href="shop-product-right.html"><img alt="Evara" src="user/assets/imgs/shop/thumbnail-4.jpg"></a>
+                                            </div>
+                                            <div class="shopping-cart-title">
+                                                <h4><a href="shop-product-right.html">Macbook Pro 2022</a></h4>
+                                                <h3><span>1 × </span>$3500.00</h3>
+                                            </div>
+                                            <div class="shopping-cart-delete">
+                                                <a href="#"><i class="fi-rs-cross-small"></i></a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <div class="shopping-cart-footer">
+                                        <div class="shopping-cart-total">
+                                            <h4>Total <span>$383.00</span></h4>
+                                        </div>
+                                        <div class="shopping-cart-button">
+                                            <a href="/cart">View cart</a>
+                                            <a href="shop-checkout.html">Checkout</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="header-action-icon-2 d-block d-lg-none">
+                                <div class="burger-icon burger-icon-white">
+                                    <span class="burger-icon-top"></span>
+                                    <span class="burger-icon-mid"></span>
+                                    <span class="burger-icon-bottom"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
-
-    <!-- ── Navbar ── -->
-    <nav class="sg-navbar">
-        <a href="/">Home</a>
-        <a href="/shop">Shop</a>
-        <a href="/about">About</a>
-        <a href="/contact">Contact</a>
-    </nav>
-
-    <div class="sg-offset"></div>
-
-    <!-- ── Breadcrumb ── -->
-    <div class="sg-breadcrumb">
-        <div class="container">
-            <a href="/">Home</a>
-            <span class="bc-sep">›</span>
-            <a href="/profile">Profile</a>
-            <span class="bc-sep">›</span>
-            <span class="bc-current">Order details</span>
-        </div>
-    </div>
-
-    <main class="main">
-        <div class="sg-page">
-            <div class="container">
-
-                <!-- Back link -->
-                <a href="/profile" class="sg-back-link">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m15 18-6-6 6-6" />
-                    </svg>
-                    Back to profile
-                </a>
-
-                <!-- Page title -->
-                <div class="sg-page-title-row">
-                    <div>
-                        <h1 class="sg-page-title">Order details</h1>
-                        <p class="sg-order-meta">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                style="vertical-align:-2px;margin-right:4px">
-                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                                <line x1="16" y1="2" x2="16" y2="6" />
-                                <line x1="8" y1="2" x2="8" y2="6" />
-                                <line x1="3" y1="10" x2="21" y2="10" />
-                            </svg>
-                            Wed, Aug 13, 2022, 4:34 PM
-                        </p>
+    <div class="mobile-header-active mobile-header-wrapper-style">
+        <div class="mobile-header-wrapper-inner">
+            <div class="mobile-header-top">
+                <div class="mobile-header-logo">
+                    <a href="index.html"><img src="user/assets/imgs/theme/logo.svg" alt="logo"></a>
+                </div>
+                <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
+                    <button class="close-style search-close">
+                        <i class="icon-top"></i>
+                        <i class="icon-bottom"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="mobile-header-content-area">
+                <div class="mobile-search search-style-3 mobile-header-border">
+                    <form action="#">
+                        <input type="text" placeholder="Search for items…">
+                        <button type="submit"><i class="fi-rs-search"></i></button>
+                    </form>
+                </div>
+                <div class="mobile-menu-wrap mobile-header-border">
+                    <div class="main-categori-wrap mobile-header-border">
+                        <a class="categori-button-active-2" href="#">
+                            <span class="fi-rs-apps"></span> Browse Categories
+                        </a>
+                        <div class="categori-dropdown-wrap categori-dropdown-active-small">
+                            <ul>
+                                <li><a href="shop-grid-right.html"><i class="evara-font-dress"></i>Women's Clothing</a></li>
+                                <li><a href="shop-grid-right.html"><i class="evara-font-tshirt"></i>Men's Clothing</a></li>
+                                <li> <a href="shop-grid-right.html"><i class="evara-font-smartphone"></i> Cellphones</a></li>
+                                <li><a href="shop-grid-right.html"><i class="evara-font-desktop"></i>Computer & Office</a></li>
+                                <li><a href="shop-grid-right.html"><i class="evara-font-cpu"></i>Consumer Electronics</a></li>
+                                <li><a href="shop-grid-right.html"><i class="evara-font-home"></i>Home & Garden</a></li>
+                                <li><a href="shop-grid-right.html"><i class="evara-font-high-heels"></i>Shoes</a></li>
+                                <li><a href="shop-grid-right.html"><i class="evara-font-teddy-bear"></i>Mother & Kids</a></li>
+                                <li><a href="shop-grid-right.html"><i class="evara-font-kite"></i>Outdoor fun</a></li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="sg-order-id">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                            <polyline points="14 2 14 8 20 8" />
-                        </svg>
-                        Order #<%= orderData.orderId %>
+                    <!-- mobile menu start -->
+                    <nav>
+                        <ul class="mobile-menu">
+                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="index.html">Home</a>
+                                <ul class="dropdown">
+                                    <li><a href="index.html">Home 1</a></li>
+                                    <li><a href="index-2.html">Home 2</a></li>
+                                    <li><a href="index-3.html">Home 3</a></li>
+                                    <li><a href="index-4.html">Home 4</a></li>
+                                </ul>
+                            </li>
+                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="shop-grid-right.html">shop</a>
+                                <ul class="dropdown">
+                                    <li><a href="shop-grid-right.html">Shop Grid – Right Sidebar</a></li>
+                                    <li><a href="shop-grid-left.html">Shop Grid – Left Sidebar</a></li>
+                                    <li><a href="shop-list-right.html">Shop List – Right Sidebar</a></li>
+                                    <li><a href="shop-list-left.html">Shop List – Left Sidebar</a></li>
+                                    <li><a href="shop-fullwidth.html">Shop - Wide</a></li>
+                                    <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">Single Product</a>
+                                        <ul class="dropdown">
+                                            <li><a href="shop-product-right.html">Product – Right Sidebar</a></li>
+                                            <li><a href="shop-product-left.html">Product – Left Sidebar</a></li>
+                                            <li><a href="shop-product-full.html">Product – No sidebar</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="shop-filter.html">Shop – Filter</a></li>
+                                    <li><a href="/wishlist">Shop – Wishlist</a></li>
+                                    <li><a href="/cart">Shop – Cart</a></li>
+                                    <li><a href="shop-checkout.html">Shop – Checkout</a></li>
+                                    <li><a href="shop-compare.html">Shop – Compare</a></li>
+                                </ul>
+                            </li>
+                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">Mega menu</a>
+                                <ul class="dropdown">
+                                    <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">Women's Fashion</a>
+                                        <ul class="dropdown">
+                                            <li><a href="shop-product-right.html">Dresses</a></li>
+                                            <li><a href="shop-product-right.html">Blouses & Shirts</a></li>
+                                            <li><a href="shop-product-right.html">Hoodies & Sweatshirts</a></li>
+                                            <li><a href="shop-product-right.html">Women's Sets</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">Men's Fashion</a>
+                                        <ul class="dropdown">
+                                            <li><a href="shop-product-right.html">Jackets</a></li>
+                                            <li><a href="shop-product-right.html">Casual Faux Leather</a></li>
+                                            <li><a href="shop-product-right.html">Genuine Leather</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">Technology</a>
+                                        <ul class="dropdown">
+                                            <li><a href="shop-product-right.html">Gaming Laptops</a></li>
+                                            <li><a href="shop-product-right.html">Ultraslim Laptops</a></li>
+                                            <li><a href="shop-product-right.html">Tablets</a></li>
+                                            <li><a href="shop-product-right.html">Laptop Accessories</a></li>
+                                            <li><a href="shop-product-right.html">Tablet Accessories</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="blog-category-fullwidth.html">Blog</a>
+                                <ul class="dropdown">
+                                    <li><a href="blog-category-grid.html">Blog Category Grid</a></li>
+                                    <li><a href="blog-category-list.html">Blog Category List</a></li>
+                                    <li><a href="blog-category-big.html">Blog Category Big</a></li>
+                                    <li><a href="blog-category-fullwidth.html">Blog Category Wide</a></li>
+                                    <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">Single Product Layout</a>
+                                        <ul class="dropdown">
+                                            <li><a href="blog-post-left.html">Left Sidebar</a></li>
+                                            <li><a href="blog-post-right.html">Right Sidebar</a></li>
+                                            <li><a href="blog-post-fullwidth.html">No Sidebar</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">Pages</a>
+                                <ul class="dropdown">
+                                    <li><a href="page-about.html">About Us</a></li>
+                                    <li><a href="page-contact.html">Contact</a></li>
+                                    <li><a href="page-account.html">My Account</a></li>
+                                    <li><a href="page-login-register.html">login/register</a></li>
+                                    <li><a href="page-purchase-guide.html">Purchase Guide</a></li>
+                                    <li><a href="page-privacy-policy.html">Privacy Policy</a></li>
+                                    <li><a href="page-terms.html">Terms of Service</a></li>
+                                    <li><a href="page-404.html">404 Page</a></li>
+                                </ul>
+                            </li>
+                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">Language</a>
+                                <ul class="dropdown">
+                                    <li><a href="#">English</a></li>
+                                    <li><a href="#">French</a></li>
+                                    <li><a href="#">German</a></li>
+                                    <li><a href="#">Spanish</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                    <!-- mobile menu end -->
+                </div>
+                <div class="mobile-header-info-wrap mobile-header-border">
+                    <div class="single-mobile-header-info mt-30">
+                        <a  href="page-contact.html"> Our location </a>
+                    </div>
+                    <div class="single-mobile-header-info">
+                        <a href="page-login-register.html">Log In / Sign Up </a>
+                    </div>
+                    <div class="single-mobile-header-info">
+                        <a href="#">(+01) - 2345 - 6789 </a>
                     </div>
                 </div>
-
-                <!-- ── Info cards ── -->
-                <div class="sg-info-grid">
-
-                    <!-- Customer -->
-                    <div class="sg-info-card">
-                        <div class="sg-info-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-                                <circle cx="12" cy="7" r="4" />
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="sg-info-label">Customer</p>
-                            <div class="sg-info-value">
-                                <strong>
-                                    <%= orderData.userId.username %>
-                                </strong><br>
-                                <%= orderData.userId.email %><br>
-                                    <%= orderData.userId.phone %>
-                            </div>
-                            <a href="/profile" class="sg-info-link">
-                                View profile
-                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="m9 18 6-6-6-6" />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Order info -->
-                    <div class="sg-info-card">
-                        <div class="sg-info-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="1" y="3" width="15" height="13" />
-                                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
-                                <circle cx="5.5" cy="18.5" r="2.5" />
-                                <circle cx="18.5" cy="18.5" r="2.5" />
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="sg-info-label">Order info</p>
-                            <div class="sg-info-value">
-                                <strong>Shipping:</strong> Fargo Express<br>
-                                <strong>Payment:</strong>
-                                <%= orderData.paymentMethod %>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Deliver to -->
-                    <div class="sg-info-card">
-                        <div class="sg-info-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                                <circle cx="12" cy="10" r="3" />
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="sg-info-label">Deliver to</p>
-                            <div class="sg-info-value">
-                                <%= address.address[0].addressLine1 %>, <%= address.address[0].addressLine2 %><br>
-                                        <%= address.address[0].city %>, <%= address.address[0].state %><br>
-                                                <strong>PIN:</strong>
-                                                <%= address.address[0].pincode %> &nbsp;·&nbsp; <strong>Ph:</strong>
-                                                    <%= address.address[0].phone %>
-                            </div>
-                            <a href="/profile?tab=address" class="sg-info-link">
-                                View address
-                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="m9 18 6-6-6-6" />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-
+                <div class="mobile-social-icon">
+                    <h5 class="mb-15 text-grey-4">Follow Us</h5>
+                    <a href="#"><img src="user/assets/imgs/theme/icons/icon-facebook.svg" alt=""></a>
+                    <a href="#"><img src="user/assets/imgs/theme/icons/icon-twitter.svg" alt=""></a>
+                    <a href="#"><img src="user/assets/imgs/theme/icons/icon-instagram.svg" alt=""></a>
+                    <a href="#"><img src="user/assets/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
+                    <a href="#"><img src="user/assets/imgs/theme/icons/icon-youtube.svg" alt=""></a>
                 </div>
-
-                <!-- ── Products table ── -->
-                <div class="sg-table-card">
-                    <div class="sg-table-card-header">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--purple-600)"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-                            <line x1="3" y1="6" x2="21" y2="6" />
-                            <path d="M16 10a4 4 0 01-8 0" />
-                        </svg>
-                        Ordered items
-                    </div>
-                    <table class="sg-table">
-                        <thead>
-                            <tr>
-                                <th style="width:40%">Product</th>
-                                <th>Unit price</th>
-                                <th>Qty</th>
-                                <th class="text-right">Total</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% orderData.products.forEach(product=> { %>
-                                <tr>
-                                    <td>
-                                        <div class="sg-product-cell">
-                                            <img src="/uploads/<%= product.productId.productImage[0] %>"
-                                                alt="<%= product.productId.productName %>" class="sg-product-thumb">
-                                            <span class="sg-product-cell-name">
-                                                <%= product.productId.productName %>
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td style="color:var(--gray-600)">₹<%= product.productPrice %>
-                                    </td>
-                                    <td>
-                                        <span
-                                            style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;background:var(--gray-50);border:1px solid var(--gray-100);font-size:13px;font-weight:500">
-                                            <%= product.quantity %>
-                                        </span>
-                                    </td>
-                                    <td class="text-right" style="font-weight:500;color:var(--purple-800)">₹<%=
-                                            product.productPrice * product.quantity %>
-                                    </td>
-                                    <td>
-                                        <% const s=product.status ? product.status.toLowerCase() : 'pending' ; const
-                                            cls=['delivered','cancelled','pending','shipped','processing'].includes(s) ?
-                                            s : 'pending' ; %>
-                                            <span class="sg-status <%= cls %>">
-                                                <% if (cls==='delivered' ) { %>
-                                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
-                                                        stroke="currentColor" stroke-width="3" stroke-linecap="round"
-                                                        stroke-linejoin="round">
-                                                        <polyline points="20 6 9 17 4 12" />
-                                                    </svg>
-                                                    <% } else if (cls==='cancelled' ) { %>
-                                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
-                                                            stroke="currentColor" stroke-width="3"
-                                                            stroke-linecap="round" stroke-linejoin="round">
-                                                            <line x1="18" y1="6" x2="6" y2="18" />
-                                                            <line x1="6" y1="6" x2="18" y2="18" />
-                                                        </svg>
-                                                        <% } else { %>
-                                                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
-                                                                stroke="currentColor" stroke-width="2.5"
-                                                                stroke-linecap="round" stroke-linejoin="round">
-                                                                <circle cx="12" cy="12" r="10" />
-                                                                <polyline points="12 6 12 12 16 14" />
-                                                            </svg>
-                                                            <% } %>
-                                                                <%= product.status %>
-                                            </span>
-                                    </td>
-                                </tr>
-                                <% }) %>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- ── Summary + Invoice row ── -->
-                <div class="row justify-content-end">
-                    <div class="col-lg-5 col-md-7">
-                        <div class="sg-summary-card">
-                            <div class="sg-summary-header">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--purple-600)"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="12" y1="1" x2="12" y2="23" />
-                                    <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
-                                </svg>
-                                Price summary
-                            </div>
-                            <div class="sg-summary-body">
-                                <div class="sg-summary-row">
-                                    <span>Subtotal</span>
-                                    <span>₹<%= totalPrice.toFixed(2) %></span>
-                                </div>
-
-                                <% if (orderData.coupon) { %>
-                                    <div class="sg-summary-row discount">
-                                        <span>
-                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                                                stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                                                stroke-linejoin="round" style="margin-right:4px;vertical-align:-1px">
-                                                <polyline points="20 6 9 17 4 12" />
-                                            </svg>
-                                            Coupon (<%= orderData.coupon %>)
-                                        </span>
-                                        <span>−₹<%= (totalPrice * (couponDiscount / 100)).toFixed(2) %></span>
-                                    </div>
-                                    <% } %>
-
-                                        <div class="sg-summary-row">
-                                            <span>Shipping</span>
-                                            <span>₹300</span>
-                                        </div>
-
-                                        <div class="sg-summary-divider"></div>
-
-                                        <div class="sg-summary-total">
-                                            <span class="sg-summary-total-label">Grand total</span>
-                                            <span class="sg-summary-total-price">₹<%= orderData.payableAmount.toFixed(2)
-                                                    %></span>
-                                        </div>
-
-                                        <div class="sg-payment-status-row">
-                                            <span class="sg-payment-status-label">Payment status</span>
-                                            <span class="sg-payment-badge">
-                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="3" stroke-linecap="round"
-                                                    stroke-linejoin="round">
-                                                    <polyline points="20 6 9 17 4 12" />
-                                                </svg>
-                                                <%= orderData.paymentStatus %>
-                                            </span>
-                                        </div>
-                            </div>
-                        </div>
-
-                        <% if(invoice) { %>
-                            <a class="sg-btn-invoice" href="/invoice/<%= orderData.orderId %>">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
-                                    <polyline points="7 10 12 15 17 10" />
-                                    <line x1="12" y1="15" x2="12" y2="3" />
-                                </svg>
-                                Download Invoice
-                            </a>
-                            <% } %>
-                    </div>
-                </div>
-
             </div>
         </div>
-<<<<<<< HEAD
+    </div>
+    <main class="main">
+        
+        <div class="page-header breadcrumb-wrap1 ">
+            <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block ">
+                    <nav>
+                        <ul class="cat">
+                            <li><a  href="/">Home </a>
+                                
+                            </li>
+                            
+                            <li><a  href="/shop">Shop </a>
+                                
+                            </li>
+                            
+                            
+                            <li>
+                                <a href="/about">About</a>
+                            </li>
+                            <li>
+                                <a href="/contact">Contact</a>
+                            </li>
+                        </ul>
+                    </nav>
+            </div>
+        </div>
+        <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="index.html" rel="nofollow">Home</a>
+                    <span></span> Profile
+                    <span></span> Order details
+                </div>
+            </div>
+        </div>
         <br>
 
 
@@ -1250,8 +856,8 @@
                                         <%})%>
                                         
                                         <tr>
-                                            <td colspan="5">
-                                                <article >
+                                            <td colspan="4">
+                                                <article class="float-end">
                                                     <dl class="dlist">
                                                         <dt>Subtotal:</dt>
                                                         <dd>₹ <%=totalPrice.toFixed(2)%></dd>
@@ -1276,34 +882,6 @@
                                                             <span class="badge rounded-pill alert-success text-success"><%=orderData.paymentStatus%></span>
                                                         </dd>
                                                     </dl>
-                                                    <br>
-                                                    <%if(orderData.paymentStatus==='Pending'){%>
-                                                    <dl>
-                                                        <button type="button" class="button-pay-now" id="payNowButton" onclick="showPaymentOptions()">Pay now</button>
-                                                    </dl>
-                                                    
-                                                    <!-- Payment Options Container -->
-                                                    <div id="paymentOptions" style="display: none;">
-                                                        <h4>Payment Options</h4>
-                                                        
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="payment-method" id="razorpay" value="RazorPay">
-                                                            <label class="form-check-label" for="razorpay">
-                                                                Razorpay
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="payment-method" id="wallet" value="Wallet" <% if (!walletApplicable) { %>disabled<% } %>>
-                                                            <label class="form-check-label <% if (!walletApplicable) { %>text-muted<% } %>" for="wallet">
-                                                                Wallet
-                                                            </label>
-                                                        </div>
-                                                        <button class="btn btn-success my-3" onclick="payNow('<%=orderData.orderId%>','<%=orderData.payableAmount%>')">Proceed to pay</button>
-                                                        <button class="btn btn-secondary my-3" onclick="cancelPayment()">Cancel</button>
-                                                    </div>
-                                                    <%}%>
-                                                    
-
                                                 </article>
                                             </td>
                                         </tr>
@@ -1461,224 +1039,29 @@
             </div>
         </div>
     </div> -->
-    <script>
-        function showPaymentOptions() {
-            // Hide the "Pay now" button
-            document.getElementById('payNowButton').style.display = 'none';
-            
-            // Show the payment options
-            document.getElementById('paymentOptions').style.display = 'block';
-        }
-        
-        function cancelPayment() {
-            // Show the "Pay now" button
-            document.getElementById('payNowButton').style.display = 'block';
-        
-            // Hide the payment options
-            document.getElementById('paymentOptions').style.display = 'none';
-        }
-
-        async function payNow(id, totalPrice){
-            console.log('payNow working');
-            
-            const selectedPaymentMethod = document.querySelector('input[name="payment-method"]:checked');
-            if (!selectedPaymentMethod) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Please select a payment method.'
-                });
-                return;
-            }
-            const paymentMethod = selectedPaymentMethod.value;
-            console.log('Payment method :',paymentMethod);
-            if (paymentMethod === "Wallet") {
-                console.log('Fetch paybywallet');
-                
-                fetch('/pay-by-wallet', {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        id,
-                        totalPrice
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.message === "Success") {
-                        console.log('paybywallet success');
-                        
-                        Swal.fire({
-                            title: 'Payment Successful',
-                            text: 'Your payment has been done successfully!',
-                            icon: 'success',
-                            confirmButtonText: 'OK'
-                        }).then(result => {
-                            if (result.isConfirmed) {
-                                window.location.href = `/order_details?orderId=${id}`; // Replace '/' with your home page URL
-                            }
-                        });
-                    } else {
-                        Swal.fire({
-                            title: 'Payment failed',
-                            text: data.message,
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        }).then(result => {
-                            if (result.isConfirmed) {
-                                window.location.href = `/order_details?orderId=${id}`; // Redirect to cart page
-                            }
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    Swal.fire({
-                        title: 'Order not placed',
-                        text: 'An unexpected error occurred. Please try again later.',
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    }).then(() => {
-                        window.location.href = `/order_details?orderId=${id}`; // Redirect to cart page
-                    });
-                });
-            } else {
-                try {
-                    const orderId = await createRazorpayOrder(totalPrice);
-                    if (orderId) {
-                        console.log('orderId is there')
-                        handleRazorpayNow(orderId, totalPrice,id);
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    Swal.fire({
-                        title: 'Order not placed',
-                        text: 'An unexpected error occurred. Please try again later.',
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    }).then(() => {
-                        window.location.href = `/order_details?orderId=${id}`; // Redirect to cart page
-                    });
-                }
-            }
-        }
-
-        async function createRazorpayOrder(totalPrice) {
-            const settings = {
-                url: "/payment/razorpay",
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                data: JSON.stringify({
-                    amount: totalPrice * 100 // Convert to paisa
-                }),
-            };
-
-            const response = await $.ajax(settings);
-            return response.orderId;
-        }
-
-        function handleRazorpayNow(orderId, totalPrice, id) {
-            console.log('handleRazorpayNOw:',orderId,totalPrice,id);
-            
-            const options = {
-                key: "rzp_test_7DylGE19pXY4Lf", // Replace with your Razorpay Key ID
-                amount: totalPrice * 100, // Amount in paisa
-                currency: "INR",
-                name: "SANDGLASS",
-                description: "Buy watches",
-                image: "/user/assets/imgs/theme/sandglass-high-resolution-logo-transparent.svg",
-                order_id: orderId,
-                handler: function (response) {
-                    payByRazorpay(response, totalPrice,id);
-                },
-                theme: {
-                    color: "#000"
-                }
-            };
-
-            const rzp1 = new Razorpay(options);
-            rzp1.on('payment.failed', function (response) {
-                handlePaymentFailure(response, totalPrice);
-            });
-
-            rzp1.open();
-        }
-
-        function payByRazorpay(response, totalPrice, id) {
-            const verifySettings = {
-                url: "/pay-by-razorpay",
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                data: JSON.stringify({
-                    response,
-                    paymentMethod: 'Razorpay',
-                    totalPrice,
-                    id
-                }),
-            };
-
-            $.ajax(verifySettings)
-                .done(function (verificationResponse) {
-                    Swal.fire({
-                        title: "Success",
-                        text: "Payment successful",
-                        icon: "success"
-                    }).then(() => {
-                        window.location.href = `/order_details?orderId=${id}`;
-                    });
-                })
-                .fail(function (error) {
-                    console.error('Payment verification failed:', error);
-                    Swal.fire({
-                        title: 'Payment Verification Failed',
-                        text: 'Your payment was not verified. Please try again.',
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    }).then(() => {
-                        window.location.href = `/order_details?orderId=${id}`; // Redirect to cart page
-                    });
-                });
-        }
-    </script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-=======
-    </main>
-    <script>
-        const userBtn = document.getElementById('userDropdownBtn');
-        const dropdown = document.querySelector('.sg-dropdown');
-
-        userBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-
-            dropdown.classList.toggle('active');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (
-                !e.target.closest('.sg-user-wrap')
-            ) {
-                dropdown.classList.remove('active');
-            }
-        });
-    </script>
-
->>>>>>> 003d3dd (update ui)
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Vendor JS-->
     <script src="user/assets/js/auto_complete.js"></script>
     <script src="user/assets/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="user/assets/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="user/assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
     <script src="user/assets/js/vendor/bootstrap.bundle.min.js"></script>
     <script src="user/assets/js/plugins/slick.js"></script>
+    <script src="user/assets/js/plugins/jquery.syotimer.min.js"></script>
     <script src="user/assets/js/plugins/wow.js"></script>
+    <script src="user/assets/js/plugins/jquery-ui.js"></script>
     <script src="user/assets/js/plugins/perfect-scrollbar.js"></script>
+    <script src="user/assets/js/plugins/magnific-popup.js"></script>
+    <script src="user/assets/js/plugins/select2.min.js"></script>
+    <script src="user/assets/js/plugins/waypoints.js"></script>
+    <script src="user/assets/js/plugins/counterup.js"></script>
+    <script src="user/assets/js/plugins/jquery.countdown.min.js"></script>
+    <script src="user/assets/js/plugins/images-loaded.js"></script>
+    <script src="user/assets/js/plugins/isotope.js"></script>
     <script src="user/assets/js/plugins/scrollup.js"></script>
+    <script src="user/assets/js/plugins/jquery.vticker-min.js"></script>
+    <!-- Template  JS -->
     <script src="./user/assets/js/main.js?v=3.4"></script>
     <script src="./user/assets/js/shop.js?v=3.4"></script>
 </body>

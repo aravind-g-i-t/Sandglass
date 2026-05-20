@@ -10,13 +10,8 @@ const loadcategories = async (req, res) => {
         const totalDocuments = await Category.countDocuments();
         const totalPages = Math.ceil(totalDocuments / limit);
         return res.status(200).render('admin/categories', { categoryData, page, totalPages });
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).send("Something went wrong");
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -44,11 +39,8 @@ const insertCategory = async (req, res) => {
         const checkCategory = await Category.findOne({
             name
         });
-<<<<<<< HEAD
-=======
 
         console.log(checkCategory);
->>>>>>> 003d3dd (update ui)
 
 
         if (checkCategory) {
@@ -58,19 +50,6 @@ const insertCategory = async (req, res) => {
                 page,
                 totalPages
             });
-<<<<<<< HEAD
-        } else {
-            await Category.insertMany({
-                name,
-                description
-            });
-            return res.render('admin/categories', {
-                categoryData,
-                page,
-                totalPages
-            });
-=======
->>>>>>> 003d3dd (update ui)
         }
         const newCat = await Category.create({
             name,
@@ -79,10 +58,6 @@ const insertCategory = async (req, res) => {
         categoryData.push(newCat);
         console.log(newCat);
 
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
         return res.render('admin/categories', {
             categoryData,
             page,
@@ -93,7 +68,6 @@ const insertCategory = async (req, res) => {
     } catch (err) {
         console.log(err);
         return res.status(500).send("Something went wrong");
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -121,13 +95,8 @@ const statusUpdate = async (req, res) => {
 
         return res.redirect('/admin/categories');
 
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).send("Something went wrong");
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -139,13 +108,8 @@ const loadEdit = async (req, res) => {
         const category = await Category.findById(id);
 
         return res.render('admin/editCategory', { category });
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).send("Something went wrong");
->>>>>>> 003d3dd (update ui)
     }
 };
 
@@ -180,13 +144,8 @@ const editCategory = async (req, res) => {
         }
 
 
-<<<<<<< HEAD
-    } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
-=======
     } catch {
         return res.status(500).send("Something went wrong");
->>>>>>> 003d3dd (update ui)
     }
 };
 
