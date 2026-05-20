@@ -341,15 +341,20 @@ const orderList = async (req, res) => {
 
 
 
-const orderDetails = async (req, res) => {
+const orderDetails = async(req, res) => {
     try {
         const orderId = req.query.orderId;
 
         const orderData = await Order.findOne({ orderId }).populate('userId').populate('products.productId');
+        let totalPrice = 0;
+        let invoice;
+        orderData.products.forEach(item => {
             totalPrice += item.productPrice * item.quantity;
+            if (item.status === 'Delivered') {
                 invoice = true;
             }
         });
+        // const userData=await User.findById(orderData.userId);
         const address = await Address.findOne(
             { 'address._id': orderData.addressId },
             { 'address.$': 1 }
@@ -361,15 +366,15 @@ const orderDetails = async (req, res) => {
                 couponDiscount = coupon.discountPercentage;
             }
         }
-        return res.render('admin/orderDetails', {
+        res.render('admin/orderDetails', {
             orderData,
             totalPrice,
             address,
             couponDiscount,
             invoice
         });
-    } catch {
-        return res.status(500).send("Something went wrong");
+    } catch (error) {
+        res.status(500).send(`An error occurred: ${error.message}`);
     }
 
 };

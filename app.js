@@ -70,5 +70,5 @@ app.get(
 
 
 app.listen(PORT, () => {
-    console.log(`App running on http://sandglass.store`);
+    console.log(`App running on http://localhost:${PORT}`);
 });

@@ -24,6 +24,7 @@ const orderDetails = async (req, res) => {
         const orderId = req.query.orderId;
         const userData = await User.findById(req.session.user._id);
         const orderData = await Order.findOne({ orderId }).populate('userId').populate('products.productId');
+
         let totalPrice = 0;
         let invoice;
         orderData.products.forEach(item => {
@@ -43,6 +44,11 @@ const orderDetails = async (req, res) => {
                 couponDiscount = coupon.discountPercentage;
             }
         }
+        let walletApplicable;
+        const wallet = await Wallet.findOne({ userId: req.session.user._id });
+        if (wallet.walletBalance > orderData.payableAmount) {
+            walletApplicable = true;
+        }
         return res.render('user/orderDetails', {
             userData,
             orderData,
@@ -52,8 +58,8 @@ const orderDetails = async (req, res) => {
             invoice,
             walletApplicable
         });
-    } catch {
-        return res.status(500).send("Something went wrong");
+    } catch (error) {
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -217,10 +223,13 @@ const returnOrder = async (req, res) => {
 const razorPayment = (req, res) => {
     let amount = parseFloat(req.body.amount);
     amount = Math.round(amount); 
+    const options = {
+        amount, 
+        currency: "INR",
         receipt: "order_rcptid_11"
+    };
     RazorPayInstance.orders.create(options, (err, order) => {
         if (err) {
-            console.log(`Error in razorPayment -- ${JSON.stringify(err)}`);
             return res.status(400).json({ success: false, message: "Failed to create order", error: err });
         } else {
             return res.status(200).json({ success: true, orderId: order.id });
@@ -307,7 +316,7 @@ const verifyPayment = async (req, res) => {
 const generateInvoice = async (req, res) => {
     try {
         const order = await Order.findOne({ orderId: req.params.id })
-            .populate('userId') 
+            .populate('userId')
             .populate('products.productId');
 
         if (!order) {
@@ -356,7 +365,7 @@ function generateHeader(doc) {
 }
 
 function generateCustomerInformation(doc, order, address) {
-    const customerAddress = address.address[0]; 
+    const customerAddress = address.address[0];
 
     doc
         .text(`Invoice Number: ${order.orderId}`, 50, 160)
@@ -465,6 +474,78 @@ const loadInvoice = async (req, res) => {
         });
     } catch {
         return res.status(500).send('Server error');
+    }
+};
+
+const payByRazorpay = async (req, res) => {
+    try {
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
+            req.body.response;
+        const { paymentMethod, totalPrice, id } = req.body;
+
+        const body = `${razorpay_order_id}|${razorpay_payment_id}`;
+        const keySecret = process.env.RAZORPAY_KEY_SECRET; // Razorpay key secret from environment variables
+
+        // Generate the expected signature using HMAC SHA256
+        const expectedSignature = crypto
+            .createHmac("sha256", keySecret)
+            .update(body.toString())
+            .digest("hex");
+
+        // Compare the signatures
+        if (expectedSignature === razorpay_signature) {
+
+            if (paymentMethod && totalPrice) {
+                await Order.findOneAndUpdate({ orderId: id },
+                    {
+                        $set: {
+                            paymentMethod: 'Razorpay',
+                            paymentStatus: 'Success'
+                        }
+                    }
+                );
+            }
+
+
+            return res.status(200)
+                .send({ success: true, message: "Payment done successfully" });
+        } else {
+            return res.status(400)
+                .send({ success: false, message: "Payment failed" });
+        }
+    } catch (error) {
+        return res.status(500).send(`An error occurred: ${error.message}`);
+    }
+};
+
+const payByWallet = async (req, res) => {
+    try {
+        const { totalPrice, id } = req.body;
+        await Order.findOneAndUpdate({ orderId: id },
+            {
+                $set: {
+                    paymentMethod: 'Wallet',
+                    paymentStatus: 'Success'
+                }
+            }
+        );
+        await Wallet.findOneAndUpdate(
+            { userId: req.session.user._id },
+            {
+                $inc: { walletBalance: -totalPrice },
+                $push: {
+                    transactions: {
+                        type: 'Debit',
+                        amount: totalPrice,
+                        time: new Date()
+                    }
+                }
+            },
+            { new: true }
+        );
+        return res.status(200).json({ message: "Success" });
+    } catch (error) {
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 

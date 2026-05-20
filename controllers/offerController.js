@@ -169,11 +169,28 @@ const addOfferProduct = async (req, res) => {
             return res.status(404).json({ error: 'Offer not found' });
         }
 
+        // Check if the product is already in the offer
         if (offer.product.includes(productId)) {
             return res.status(400).json({ error: 'Product already in offer' });
         }
-    } catch {
-        return res.status(500).json({ error: 'Internal server error' });
+
+        // Find other offers that include this product
+        const otherOffers = await Offer.find({ product: productId });
+
+        // Remove the product from other offers
+        // eslint-disable-next-line prefer-const
+        for (let otherOffer of otherOffers) {
+            otherOffer.product = otherOffer.product.filter(p => p.toString() !== productId.toString());
+            await otherOffer.save();
+        }
+
+        // Add the product to the new offer
+        offer.product.push(productId);
+        await offer.save();
+
+        return res.status(200).json({ message: 'Product added to offer, and any existing offers were removed.' });
+    } catch (error) {
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -210,11 +227,28 @@ const addOfferCategory = async (req, res) => {
             return res.status(404).json({ error: 'Offer not found' });
         }
 
+        // Check if the category is already in the offer
         if (offer.category.includes(categoryId)) {
             return res.status(400).json({ error: 'Category already in offer' });
         }
-    } catch {
-        return res.status(500).json({ error: 'Internal server error' });
+
+        // Find other offers that include this category
+        const otherOffers = await Offer.find({ category: categoryId });
+
+        // Remove the category from other offers
+        // eslint-disable-next-line prefer-const
+        for (let otherOffer of otherOffers) {
+            otherOffer.category = otherOffer.category.filter(c => c.toString() !== categoryId.toString());
+            await otherOffer.save();
+        }
+
+        // Add the category to the new offer
+        offer.category.push(categoryId);
+        await offer.save();
+
+        return res.status(200).json({ message: 'Category added to offer, and any existing offers were removed.' });
+    } catch (error) {
+        return res.status(500).send(`An error occurred: ${error.message}`);
     }
 };
 

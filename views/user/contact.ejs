@@ -3,680 +3,580 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Evara - eCommerce HTML Template</title>
+    <title>Sandglass — Contact</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta property="og:title" content="">
-    <meta property="og:type" content="">
-    <meta property="og:url" content="">
-    <meta property="og:image" content="">
-    <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="user/assets/imgs/theme/favicon.svg">
-    <!-- Template CSS -->
     <link rel="stylesheet" href="user/assets/css/main.css?v=3.4">
     <link rel="stylesheet" href="user/assets/css/auto_complete.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+
+        :root {
+            --purple-50: #EEEDFE;
+            --purple-100: #CECBF6;
+            --purple-200: #AFA9EC;
+            --purple-400: #7F77DD;
+            --purple-600: #534AB7;
+            --purple-800: #3C3489;
+            --purple-900: #26215C;
+            --gray-50: #F7F6F3;
+            --gray-100: #EEECE8;
+            --gray-200: #D3D1C7;
+            --gray-400: #888780;
+            --gray-600: #5F5E5A;
+            --gray-900: #1A1918;
+            --white: #FFFFFF;
+        }
+
+        body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--gray-900); margin: 0; }
+
+        .header-area { display: none !important; }
+
+        /* ── Header ── */
+        .sg-header {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1050;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--gray-100);
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .sg-header-inner {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 48px; height: 64px;
+        }
+
+        .sg-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+        .sg-logo-icon { width: 32px; height: 32px; background: var(--purple-800); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+        .sg-logo-text { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--gray-900); letter-spacing: -0.2px; }
+
+        .sg-nav { display: flex; align-items: center; gap: 32px; list-style: none; margin: 0; padding: 0; }
+        .sg-nav a { font-size: 14px; font-weight: 500; color: var(--gray-600); text-decoration: none; transition: color 0.15s; }
+        .sg-nav a:hover, .sg-nav a.active { color: var(--purple-800); }
+
+        .sg-search { position: relative; flex: 0 0 240px; }
+        .sg-search input { width: 100%; padding: 8px 12px 8px 36px; font-size: 13px; font-family: 'DM Sans', sans-serif; border: 1px solid var(--gray-200); border-radius: 8px; background: var(--gray-50); color: var(--gray-900); outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
+        .sg-search input:focus { border-color: var(--purple-400); box-shadow: 0 0 0 3px var(--purple-50); background: var(--white); }
+        .sg-search input::placeholder { color: var(--gray-200); }
+        .sg-search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--gray-400); pointer-events: none; }
+
+        .sg-header-actions { display: flex; align-items: center; gap: 8px; }
+
+        .sg-icon-btn { width: 38px; height: 38px; border-radius: 8px; border: 1px solid var(--gray-100); background: var(--white); display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none; color: var(--gray-600); transition: background 0.15s, border-color 0.15s; }
+        .sg-icon-btn:hover { background: var(--gray-50); border-color: var(--gray-200); color: var(--gray-900); }
+
+        .sg-user-wrap { position: relative; }
+        .sg-user-btn { display: flex; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--gray-100); border-radius: 8px; background: var(--white); font-size: 13px; font-weight: 500; font-family: 'DM Sans', sans-serif; color: var(--gray-900); cursor: pointer; text-decoration: none; transition: background 0.15s; }
+        .sg-user-btn:hover { background: var(--gray-50); color: var(--gray-900); }
+        .sg-user-avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--purple-100); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--purple-800); }
+
+        .sg-dropdown { position: absolute; right: 0; top: calc(100% + 8px); background: var(--white); border: 1px solid var(--gray-100); border-radius: 12px; padding: 6px; min-width: 180px; box-shadow: 0 8px 24px rgba(60,52,137,0.10); display: none; z-index: 200; }
+        .sg-dropdown.active { display: block; }
+        .sg-dropdown a { display: flex; align-items: center; gap: 8px; padding: 9px 12px; font-size: 13px; color: var(--gray-900); text-decoration: none; border-radius: 8px; transition: background 0.12s; }
+        .sg-dropdown a:hover { background: var(--gray-50); }
+        .sg-dropdown a.danger { color: #E24B4A; }
+        .sg-dropdown a.danger:hover { background: #FCEBEB; }
+        .sg-dropdown-divider { height: 1px; background: var(--gray-100); margin: 4px 0; }
+
+        .sg-navbar { position: fixed; top: 64px; left: 0; right: 0; z-index: 1040; background: var(--purple-900); display: flex; align-items: center; justify-content: center; gap: 40px; padding: 0 48px; height: 46px; }
+        .sg-navbar a { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.15s; letter-spacing: 0.01em; }
+        .sg-navbar a:hover, .sg-navbar a.active { color: #fff; }
+
+        .sg-page-offset { padding-top: 110px; }
+
+        /* ── Contact Hero ── */
+        .contact-hero {
+            background:
+                radial-gradient(ellipse 50% 60% at 100% 0%, var(--purple-50) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 40% at 0% 100%, var(--purple-100) 0%, transparent 55%),
+                var(--purple-900);
+            padding: 80px 0 72px;
+            text-align: center;
+        }
+
+        .contact-hero-inner { max-width: 680px; margin: 0 auto; padding: 0 48px; }
+
+        .contact-eyebrow {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-size: 12px; font-weight: 500; letter-spacing: 0.1em;
+            text-transform: uppercase; color: var(--purple-200);
+            background: rgba(175,169,236,0.15); border: 1px solid rgba(175,169,236,0.3);
+            padding: 5px 14px; border-radius: 20px; margin-bottom: 24px;
+        }
+
+        .contact-hero h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 48px; font-weight: 400; color: #fff;
+            line-height: 1.15; margin: 0 0 20px;
+        }
+
+        .contact-hero h1 em { font-style: italic; color: var(--purple-200); }
+
+        .contact-hero p { font-size: 16px; color: rgba(255,255,255,0.65); line-height: 1.75; margin: 0 0 36px; }
+
+        .contact-hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+        .btn-white {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 24px; border-radius: 10px;
+            font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif;
+            background: #fff; color: var(--purple-900);
+            text-decoration: none; border: none; cursor: pointer;
+            transition: background 0.15s;
+        }
+        .btn-white:hover { background: var(--purple-50); color: var(--purple-900); }
+
+        .btn-ghost {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 24px; border-radius: 10px;
+            font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif;
+            background: rgba(255,255,255,0.1); color: #fff;
+            border: 1px solid rgba(255,255,255,0.2); text-decoration: none;
+            transition: background 0.15s;
+        }
+        .btn-ghost:hover { background: rgba(255,255,255,0.18); color: #fff; }
+
+        /* ── Contact info cards ── */
+        .contact-info-section {
+            padding: 72px 0 0;
+            background: var(--gray-50);
+        }
+
+        .contact-info-inner {
+            max-width: 1200px; margin: 0 auto; padding: 0 48px;
+        }
+
+        .section-eyebrow {
+            font-size: 12px; font-weight: 500; letter-spacing: 0.1em;
+            text-transform: uppercase; color: var(--purple-600);
+            display: block; margin-bottom: 12px;
+        }
+
+        .section-heading {
+            font-family: 'DM Serif Display', serif;
+            font-size: 36px; font-weight: 400; color: var(--gray-900);
+            margin: 0 0 16px; line-height: 1.2;
+        }
+
+        .section-lead {
+            font-size: 15px; color: var(--gray-600); line-height: 1.75;
+            margin: 0 0 48px; max-width: 520px;
+        }
+
+        .locations-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+            padding-bottom: 72px;
+        }
+
+        .location-card {
+            background: var(--white); border: 1px solid var(--gray-100);
+            border-radius: 16px; padding: 28px 24px;
+            transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+        }
+        .location-card:hover {
+            box-shadow: 0 8px 28px rgba(60,52,137,0.10);
+            transform: translateY(-3px);
+            border-color: var(--purple-200);
+        }
+
+        .location-icon {
+            width: 44px; height: 44px; border-radius: 12px;
+            background: var(--purple-50); border: 1px solid var(--purple-100);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .location-icon svg { color: var(--purple-800); }
+
+        .location-title { font-size: 15px; font-weight: 600; color: var(--gray-900); margin: 0 0 10px; }
+
+        .location-detail {
+            font-size: 13.5px; color: var(--gray-600); line-height: 1.7;
+            margin: 0 0 16px;
+        }
+
+        .location-detail a { color: var(--purple-600); text-decoration: none; }
+        .location-detail a:hover { text-decoration: underline; }
+
+        .map-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 12.5px; font-weight: 500; color: var(--purple-600);
+            text-decoration: none; padding: 6px 14px;
+            border: 1px solid var(--purple-200); border-radius: 8px;
+            background: var(--purple-50); transition: all 0.15s;
+        }
+        .map-link:hover { background: var(--purple-100); color: var(--purple-800); }
+
+        /* ── Contact channels strip ── */
+        .channels-strip {
+            background: var(--white);
+            border-top: 1px solid var(--gray-100);
+            border-bottom: 1px solid var(--gray-100);
+            padding: 40px 0;
+        }
+
+        .channels-inner {
+            max-width: 1200px; margin: 0 auto; padding: 0 48px;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+        }
+
+        .channel-item {
+            display: flex; align-items: center; gap: 14px;
+            padding: 0 24px;
+            border-right: 1px solid var(--gray-100);
+        }
+        .channel-item:last-child { border-right: none; }
+
+        .channel-icon {
+            width: 42px; height: 42px; border-radius: 12px;
+            background: var(--purple-50); flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .channel-icon svg { color: var(--purple-800); }
+
+        .channel-label { font-size: 11px; color: var(--gray-400); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; }
+        .channel-value { font-size: 13.5px; font-weight: 500; color: var(--gray-900); }
+
+        /* ── Contact Form ── */
+        .contact-form-section { padding: 80px 0; background: var(--gray-50); }
+
+        .contact-form-inner {
+            max-width: 760px; margin: 0 auto; padding: 0 48px;
+        }
+
+        .form-card {
+            background: var(--white); border: 1px solid var(--gray-100);
+            border-radius: 20px; padding: 48px;
+            box-shadow: 0 4px 32px rgba(60,52,137,0.06);
+        }
+
+        .form-card-header { text-align: center; margin-bottom: 36px; }
+        .form-card-header h2 { font-family: 'DM Serif Display', serif; font-size: 30px; font-weight: 400; color: var(--gray-900); margin: 0 0 10px; }
+        .form-card-header p { font-size: 14px; color: var(--gray-600); margin: 0; line-height: 1.65; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group.full { grid-column: 1 / -1; }
+
+        .form-group label { font-size: 12.5px; font-weight: 500; color: var(--gray-600); }
+
+        .form-control {
+            width: 100%; padding: 10px 14px;
+            border: 1px solid var(--gray-200); border-radius: 10px;
+            background: var(--gray-50); color: var(--gray-900);
+            font-size: 13.5px; font-family: 'DM Sans', sans-serif;
+            outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .form-control:focus {
+            border-color: var(--purple-400);
+            box-shadow: 0 0 0 3px var(--purple-50);
+            background: var(--white);
+        }
+        .form-control::placeholder { color: var(--gray-200); }
+
+        textarea.form-control { resize: vertical; min-height: 130px; }
+
+        .form-submit-row { margin-top: 8px; }
+
+        .btn-submit {
+            width: 100%; padding: 13px;
+            background: var(--purple-800); color: #fff;
+            border: none; border-radius: 10px;
+            font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif;
+            cursor: pointer; transition: background 0.15s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-submit:hover { background: var(--purple-900); }
+
+        /* Footer */
+        footer.main { font-family: 'DM Sans', sans-serif; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .locations-grid { grid-template-columns: repeat(2, 1fr); }
+            .channels-inner { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+            .channel-item { border-right: none; border-bottom: 1px solid var(--gray-100); padding-bottom: 20px; }
+            .channel-item:nth-child(2n) { border-bottom: none; }
+        }
+
+        @media (max-width: 768px) {
+            .sg-header-inner { padding: 0 20px; }
+            .sg-search, .sg-nav { display: none; }
+            .sg-navbar { display: none; }
+            .sg-page-offset { padding-top: 64px; }
+            .contact-hero h1 { font-size: 32px; }
+            .contact-hero-inner, .contact-info-inner, .contact-form-inner, .channels-inner { padding: 0 20px; }
+            .locations-grid { grid-template-columns: 1fr; }
+            .channels-inner { grid-template-columns: 1fr; }
+            .form-grid { grid-template-columns: 1fr; }
+            .form-card { padding: 28px 20px; }
+        }
+    </style>
 </head>
 
 <body>
-    <!-- Quick view -->
-    <div class="modal fade custom-modal" id="quickViewModal" tabindex="-1" aria-labelledby="quickViewModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-        <div class="modal-content">              
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>       
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12 col-xs-12">
-                            <div class="detail-gallery">
-                                <span class="zoom-icon"><i class="fi-rs-search"></i></span>
-                                <!-- MAIN SLIDES -->
-                                <div class="product-image-slider">
-                                    <figure class="border-radius-10">
-                                        <img src="user/assets/imgs/shop/product-16-2.jpg" alt="product image">
-                                    </figure>
-                                    <figure class="border-radius-10">
-                                        <img src="user/assets/imgs/shop/product-16-1.jpg" alt="product image">
-                                    </figure>
-                                    <figure class="border-radius-10">
-                                        <img src="user/assets/imgs/shop/product-16-3.jpg" alt="product image">
-                                    </figure>
-                                    <figure class="border-radius-10">
-                                        <img src="user/assets/imgs/shop/product-16-4.jpg" alt="product image">
-                                    </figure>
-                                    <figure class="border-radius-10">
-                                        <img src="user/assets/imgs/shop/product-16-5.jpg" alt="product image">
-                                    </figure>
-                                    <figure class="border-radius-10">
-                                        <img src="user/assets/imgs/shop/product-16-6.jpg" alt="product image">
-                                    </figure>
-                                    <figure class="border-radius-10">
-                                        <img src="user/assets/imgs/shop/product-16-7.jpg" alt="product image">
-                                    </figure>
-                                </div>
-                                <!-- THUMBNAILS -->
-                                <div class="slider-nav-thumbnails pl-15 pr-15">
-                                    <div><img src="user/assets/imgs/shop/thumbnail-3.jpg" alt="product image"></div>
-                                    <div><img src="user/assets/imgs/shop/thumbnail-4.jpg" alt="product image"></div>
-                                    <div><img src="user/assets/imgs/shop/thumbnail-5.jpg" alt="product image"></div>
-                                    <div><img src="user/assets/imgs/shop/thumbnail-6.jpg" alt="product image"></div>
-                                    <div><img src="user/assets/imgs/shop/thumbnail-7.jpg" alt="product image"></div>
-                                    <div><img src="user/assets/imgs/shop/thumbnail-8.jpg" alt="product image"></div>
-                                    <div><img src="user/assets/imgs/shop/thumbnail-9.jpg" alt="product image"></div>
-                                </div>
-                            </div>
-                            <!-- End Gallery -->
-                            <div class="social-icons single-share">
-                                <ul class="text-grey-5 d-inline-block">
-                                    <li><strong class="mr-10">Share this:</strong></li>
-                                    <li class="social-facebook"><a href="#"><img src="user/assets/imgs/theme/icons/icon-facebook.svg" alt=""></a></li>
-                                    <li class="social-twitter"> <a href="#"><img src="user/assets/imgs/theme/icons/icon-twitter.svg" alt=""></a></li>
-                                    <li class="social-instagram"><a href="#"><img src="user/assets/imgs/theme/icons/icon-instagram.svg" alt=""></a></li>
-                                    <li class="social-linkedin"><a href="#"><img src="user/assets/imgs/theme/icons/icon-pinterest.svg" alt=""></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-12 col-xs-12">
-                            <div class="detail-info">
-                                <h3 class="title-detail mt-30">Colorful Pattern Shirts HD450</h3>
-                                <div class="product-detail-rating">
-                                    <div class="pro-details-brand">
-                                        <span> Brands: <a href="shop-grid-right.html">Bootstrap</a></span>
-                                    </div>
-                                    <div class="product-rate-cover text-end">
-                                        <div class="product-rate d-inline-block">
-                                            <div class="product-rating" style="width:90%">
-                                            </div>
-                                        </div>
-                                        <span class="font-small ml-5 text-muted"> (25 reviews)</span>
-                                    </div>
-                                </div>
-                                <div class="clearfix product-price-cover">
-                                    <div class="product-price primary-color float-left">
-                                        <ins><span class="text-brand">$120.00</span></ins>
-                                        <ins><span class="old-price font-md ml-15">$200.00</span></ins>
-                                        <span class="save-price  font-md color3 ml-15">25% Off</span>
-                                    </div>
-                                </div>
-                                <div class="bt-1 border-color-1 mt-15 mb-15"></div>
-                                <div class="short-desc mb-30">
-                                    <p class="font-sm">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam rem officia, corrupti reiciendis minima nisi modi,!</p>
-                                </div>
-                                
-                                <div class="attr-detail attr-color mb-15">
-                                    <strong class="mr-10">Color</strong>
-                                    <ul class="list-filter color-filter">
-                                        <li><a href="#" data-color="Red"><span class="product-color-red"></span></a></li>
-                                        <li><a href="#" data-color="Yellow"><span class="product-color-yellow"></span></a></li>
-                                        <li class="active"><a href="#" data-color="White"><span class="product-color-white"></span></a></li>
-                                        <li><a href="#" data-color="Orange"><span class="product-color-orange"></span></a></li>
-                                        <li><a href="#" data-color="Cyan"><span class="product-color-cyan"></span></a></li>
-                                        <li><a href="#" data-color="Green"><span class="product-color-green"></span></a></li>
-                                        <li><a href="#" data-color="Purple"><span class="product-color-purple"></span></a></li>
-                                    </ul>
-                                </div>
-                                <div class="attr-detail attr-size">
-                                    <strong class="mr-10">Size</strong>
-                                    <ul class="list-filter size-filter font-small">
-                                        <li><a href="#">S</a></li>
-                                        <li class="active"><a href="#">M</a></li>
-                                        <li><a href="#">L</a></li>
-                                        <li><a href="#">XL</a></li>
-                                        <li><a href="#">XXL</a></li>
-                                    </ul>
-                                </div>
-                                <div class="bt-1 border-color-1 mt-30 mb-30"></div>
-                                <div class="detail-extralink">
-                                    <div class="detail-qty border radius">
-                                        <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
-                                        <span class="qty-val">1</span>
-                                        <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
-                                    </div>
-                                    <div class="product-extra-link2">
-                                        <button type="submit" class="button button-add-to-cart">Add to cart</button>
-                                        <a aria-label="Add To Wishlist" class="action-btn hover-up" href="/wishlist"><i class="fi-rs-heart"></i></a>
-                                        <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
-                                    </div>
-                                </div>
-                                <ul class="product-meta font-xs color-grey mt-50">
-                                    <li class="mb-5">SKU: <a href="#">FWM15VKT</a></li>
-                                    <li class="mb-5">Tags: <a href="#" rel="tag">Cloth</a>, <a href="#" rel="tag">Women</a>, <a href="#" rel="tag">Dress</a> </li>
-                                    <li>Availability:<span class="in-stock text-success ml-5">8 Items In Stock</span></li>
-                                </ul>
-                            </div>
-                            <!-- Detail Info -->
-                        </div>
-                    </div>
-                </div>        
-        </div>
-        </div>
-    </div>
-    <header class="header-area header-style-1 header-height-2">
-        <div class="header-top header-top-ptb-1 d-none d-lg-block">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-xl-3 col-lg-4">
-                        <div class="header-info">
-                            <!-- <ul>
-                                <li><i class="fi-rs-smartphone"></i> <a href="#">(+01) - 2345 - 6789</a></li>
-                                <li><i class="fi-rs-marker"></i><a  href="page-contact.html">Our location</a></li>
-                            </ul> -->
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-lg-4">
-                        <div class="text-center">
-                            <div id="news-flash" class="d-inline-block">
-                                <!-- <ul>
-                                    <li>Get great devices up to 50% off <a href="shop-grid-right.html">View details</a></li>
-                                    <li>Supper Value Deals - Save more with coupons</li>
-                                    <li>Trendy 25silver jewelry, save up 35% off today <a href="shop-grid-right.html">Shop now</a></li>
-                                </ul> -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4">
-                        <div class="header-info header-info-right">
-                            <ul>
-                                <li>
-                                    <!-- <a class="language-dropdown-active" href="#"> <i class="fi-rs-world"></i> English <i class="fi-rs-angle-small-down"></i></a>
-                                    <ul class="language-dropdown">
-                                        <li><a href="#"><img src="user/assets/imgs/theme/flag-fr.png" alt="">Français</a></li>
-                                        <li><a href="#"><img src="user/assets/imgs/theme/flag-dt.png" alt="">Deutsch</a></li>
-                                        <li><a href="#"><img src="user/assets/imgs/theme/flag-ru.png" alt="">Pусский</a></li>
-                                    </ul> -->
-                                </li>
-                                <% if(userData) { %>
-                                    <li class="dropdown nav-item">
-                                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="" id="dropdownAccount" aria-expanded="false"><%= userData.username%></a>
-                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                                            <a class="dropdown-item text-dark" href="/profile"><i class="material-icons md-perm_identity"></i>Profile</a>
-                                            <!-- <a class="dropdown-item text-dark" href="#"><i class="material-icons md-settings"></i>Account Settings</a> -->
-                                            <!-- <a class="dropdown-item text-dark" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a> -->
-                                            <!-- <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
-                                            <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a> -->
-                                            <div class="dropdown-divider">
-                                            </div>
-                                            <a class="dropdown-item text-danger" href="/logout"><i class="material-icons md-exit_to_app"></i>Logout</a>
-                                        </div>
-                                    </li>
-                                    <% }else{ %>
-                                        <li><i class="fi-rs-user"></i><a href="/login">Log In / Sign Up</a></li>
-                                    <% } %>
-                            </ul>
-                        </div>
-                    </div>
+
+    <!-- ── Header ── -->
+    <header class="sg-header">
+        <div class="sg-header-inner">
+            <a href="/" class="sg-logo">
+                <div class="sg-logo-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 3h14M5 21h14M8 3v4a4 4 0 008 0V3M8 21v-4a4 4 0 018 0v4"/>
+                    </svg>
                 </div>
+                <span class="sg-logo-text">Sandglass</span>
+            </a>
+
+            <div class="sg-search">
+                <span class="sg-search-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                    </svg>
+                </span>
+                <form action="/shop" method="get">
+                    <input name="search" type="text" placeholder="Search for items…">
+                </form>
             </div>
-        </div>
-        <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
-            <div class="container">
-                <div class="header-wrap">
-                    <div class="logo logo-width-1">
-                        <a href="/"><img src="user/assets/imgs/theme/sandglass-high-resolution-logo-transparent.svg" alt="logo"></a>
-                    </div>
-                    <div class="header-right">
-                        <div class="search-style-2">
-                            <form id="searchForm" action="/shop" method="get">
-                                <input name="search" type="text" placeholder="Search for items..." >
-                                
-                            </form>
-                        </div>
-                        <div class="header-action-right">
-                            <div class="header-action-2">
-                                <% if(userData) { %>
-                                    <div class="header-action-icon-2">
-                                        <a href="/wishlist">
-                                            <img class="svgInject" alt="Evara" src="user/assets/imgs/theme/icons/icon-heart.svg">
-                                        </a>
-                                    </div>
-                                    <div class="header-action-icon-2">
-                                        <a class="mini-cart-icon" href="/cart">
-                                            <img alt="Evara" src="user/assets/imgs/theme/icons/icon-cart.svg">
-                                        </a>
-                                        
-                                    </div>
-                                <%} %>    
-                            
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="header-bottom header-bottom-bg-color sticky-bar">
-            <div class="container">
-                <div class="header-wrap header-space-between position-relative">
-                    <div class="logo logo-width-1 d-block d-lg-none">
-                        <a href="index.html"><img src="user/assets/imgs/theme/logo.svg" alt="logo"></a>
-                    </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    <!-- <div class="hotline d-none d-lg-block">
-                        <p><i class="fi-rs-headset"></i><span>Hotline</span> 1900 - 888 </p>
-                    </div> -->
-                    <p class="mobile-promotion">Happy <span class="text-brand">Mother's Day</span>. Big Sale Up to 40%</p>
-                    <div class="header-action-right d-block d-lg-none">
-                        <div class="header-action-2">
-                            <div class="header-action-icon-2">
-                                <a href="/wishlist">
-                                    <img alt="Evara" src="user/assets/imgs/theme/icons/icon-heart.svg">
-                                    <span class="pro-count white">4</span>
-                                </a>
-                            </div>
-                            <div class="header-action-icon-2">
-                                <a class="mini-cart-icon" href="/cart">
-                                    <img alt="Evara" src="user/assets/imgs/theme/icons/icon-cart.svg">
-                                    <span class="pro-count white">2</span>
-                                </a>
-                                <div class="cart-dropdown-wrap cart-dropdown-hm2">
-                                    <ul>
-                                        <li>
-                                            <div class="shopping-cart-img">
-                                                <a href="shop-product-right.html"><img alt="Evara" src="user/assets/imgs/shop/thumbnail-3.jpg"></a>
-                                            </div>
-                                            <div class="shopping-cart-title">
-                                                <h4><a href="shop-product-right.html">Plain Striola Shirts</a></h4>
-                                                <h3><span>1 × </span>$800.00</h3>
-                                            </div>
-                                            <div class="shopping-cart-delete">
-                                                <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="shopping-cart-img">
-                                                <a href="shop-product-right.html"><img alt="Evara" src="user/assets/imgs/shop/thumbnail-4.jpg"></a>
-                                            </div>
-                                            <div class="shopping-cart-title">
-                                                <h4><a href="shop-product-right.html">Macbook Pro 2022</a></h4>
-                                                <h3><span>1 × </span>$3500.00</h3>
-                                            </div>
-                                            <div class="shopping-cart-delete">
-                                                <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                    <div class="shopping-cart-footer">
-                                        <div class="shopping-cart-total">
-                                            <h4>Total <span>$383.00</span></h4>
-                                        </div>
-                                        <div class="shopping-cart-button">
-                                            <a href="/cart">View cart</a>
-                                            <a href="shop-checkout.html">Checkout</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="header-action-icon-2 d-block d-lg-none">
-                                <div class="burger-icon burger-icon-white">
-                                    <span class="burger-icon-top"></span>
-                                    <span class="burger-icon-mid"></span>
-                                    <span class="burger-icon-bottom"></span>
-                                </div>
-                            </div>
+            <div class="sg-header-actions">
+                <% if(userData) { %>
+                    <a href="/wishlist" class="sg-icon-btn" title="Wishlist">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                    </a>
+                    <a href="/cart" class="sg-icon-btn" title="Cart">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <path d="M16 10a4 4 0 01-8 0"/>
+                        </svg>
+                    </a>
+                    <div class="sg-user-wrap">
+                        <a id="userDropdownBtn" class="sg-user-btn">
+                            <div class="sg-user-avatar"><%= userData.username ? userData.username.charAt(0).toUpperCase() : 'U' %></div>
+                            <%= userData.username %>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                        </a>
+                        <div class="sg-dropdown">
+                            <a href="/profile">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                Profile
+                            </a>
+                            <div class="sg-dropdown-divider"></div>
+                            <a href="/logout" class="danger">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                                Logout
+                            </a>
                         </div>
                     </div>
-                </div>
+                <% } else { %>
+                    <a href="/login" class="sg-user-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        Log in
+                    </a>
+                    <a href="/signup" style="padding:7px 14px;background:var(--purple-800);color:#fff;border-radius:8px;font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='var(--purple-900)'" onmouseout="this.style.background='var(--purple-800)'">Sign up</a>
+                <% } %>
             </div>
         </div>
     </header>
-    <div class="mobile-header-active mobile-header-wrapper-style">
-        <div class="mobile-header-wrapper-inner">
-            <div class="mobile-header-top">
-                <div class="mobile-header-logo">
-                    <a href="index.html"><img src="user/assets/imgs/theme/sandglass-high-resolution-logo-transparent.svg" alt="logo"></a>
+
+    <!-- ── Navbar ── -->
+    <nav class="sg-navbar">
+        <a href="/">Home</a>
+        <a href="/shop">Shop</a>
+        <a href="/about">About</a>
+        <a href="/contact" class="active">Contact</a>
+    </nav>
+
+    <div class="sg-page-offset"></div>
+
+    <!-- ── Hero ── -->
+    <section class="contact-hero">
+        <div class="contact-hero-inner">
+            <div class="contact-eyebrow">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.7A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+                Get in Touch
+            </div>
+            <h1>Let's Talk About<br><em>Your Perfect Timepiece</em></h1>
+            <p>Whether you have questions about our products, need help finding the right watch, or just want to say hello — we're here and happy to hear from you.</p>
+            <div class="contact-hero-actions">
+                <a href="#contact-form" class="btn-white">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    Send a Message
+                </a>
+                <a href="/about" class="btn-ghost">About Us</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Contact channels strip ── -->
+    <div class="channels-strip">
+        <div class="channels-inner">
+            <div class="channel-item">
+                <div class="channel-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.7A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
                 </div>
-                <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
-                    <button class="close-style search-close">
-                        <i class="icon-top"></i>
-                        <i class="icon-bottom"></i>
-                    </button>
+                <div>
+                    <div class="channel-label">Phone</div>
+                    <div class="channel-value">+91 97511 25454</div>
                 </div>
             </div>
-            <div class="mobile-header-content-area">
-                <div class="mobile-search search-style-3 mobile-header-border">
-                    <form action="#">
-                        <input type="text" placeholder="Search for items…">
-                        <button type="submit"><i class="fi-rs-search"></i></button>
-                    </form>
+            <div class="channel-item">
+                <div class="channel-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                 </div>
-                <div class="mobile-menu-wrap mobile-header-border">
-                    <div class="main-categori-wrap mobile-header-border">
-                        <a class="categori-button-active-2" href="#">
-                            <span class="fi-rs-apps"></span> Browse Categories
-                        </a>
-                        <div class="categori-dropdown-wrap categori-dropdown-active-small">
-                            <ul>
-                                <li><a href="shop-grid-right.html"><i class="evara-font-dress"></i>Women's Clothing</a></li>
-                                <li><a href="shop-grid-right.html"><i class="evara-font-tshirt"></i>Men's Clothing</a></li>
-                                <li> <a href="shop-grid-right.html"><i class="evara-font-smartphone"></i> Cellphones</a></li>
-                                <li><a href="shop-grid-right.html"><i class="evara-font-desktop"></i>Computer & Office</a></li>
-                                <li><a href="shop-grid-right.html"><i class="evara-font-cpu"></i>Consumer Electronics</a></li>
-                                <li><a href="shop-grid-right.html"><i class="evara-font-home"></i>Home & Garden</a></li>
-                                <li><a href="shop-grid-right.html"><i class="evara-font-high-heels"></i>Shoes</a></li>
-                                <li><a href="shop-grid-right.html"><i class="evara-font-teddy-bear"></i>Mother & Kids</a></li>
-                                <li><a href="shop-grid-right.html"><i class="evara-font-kite"></i>Outdoor fun</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!-- mobile menu start -->
-                    <nav>
-                        <ul class="mobile-menu">
-                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="index.html">Home</a>
-                                <ul class="dropdown">
-                                    <li><a href="index.html">Home 1</a></li>
-                                    <li><a href="index-2.html">Home 2</a></li>
-                                    <li><a href="index-3.html">Home 3</a></li>
-                                    <li><a href="index-4.html">Home 4</a></li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="shop-grid-right.html">shop</a>
-                                <ul class="dropdown">
-                                    <li><a href="shop-grid-right.html">Shop Grid – Right Sidebar</a></li>
-                                    <li><a href="shop-grid-left.html">Shop Grid – Left Sidebar</a></li>
-                                    <li><a href="shop-list-right.html">Shop List – Right Sidebar</a></li>
-                                    <li><a href="shop-list-left.html">Shop List – Left Sidebar</a></li>
-                                    <li><a href="shop-fullwidth.html">Shop - Wide</a></li>
-                                    <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">Single Product</a>
-                                        <ul class="dropdown">
-                                            <li><a href="shop-product-right.html">Product – Right Sidebar</a></li>
-                                            <li><a href="shop-product-left.html">Product – Left Sidebar</a></li>
-                                            <li><a href="shop-product-full.html">Product – No sidebar</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="shop-filter.html">Shop – Filter</a></li>
-                                    <li><a href="/wishlist">Shop – Wishlist</a></li>
-                                    <li><a href="/cart">Shop – Cart</a></li>
-                                    <li><a href="shop-checkout.html">Shop – Checkout</a></li>
-                                    <li><a href="shop-compare.html">Shop – Compare</a></li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">Mega menu</a>
-                                <ul class="dropdown">
-                                    <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">Women's Fashion</a>
-                                        <ul class="dropdown">
-                                            <li><a href="shop-product-right.html">Dresses</a></li>
-                                            <li><a href="shop-product-right.html">Blouses & Shirts</a></li>
-                                            <li><a href="shop-product-right.html">Hoodies & Sweatshirts</a></li>
-                                            <li><a href="shop-product-right.html">Women's Sets</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">Men's Fashion</a>
-                                        <ul class="dropdown">
-                                            <li><a href="shop-product-right.html">Jackets</a></li>
-                                            <li><a href="shop-product-right.html">Casual Faux Leather</a></li>
-                                            <li><a href="shop-product-right.html">Genuine Leather</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">Technology</a>
-                                        <ul class="dropdown">
-                                            <li><a href="shop-product-right.html">Gaming Laptops</a></li>
-                                            <li><a href="shop-product-right.html">Ultraslim Laptops</a></li>
-                                            <li><a href="shop-product-right.html">Tablets</a></li>
-                                            <li><a href="shop-product-right.html">Laptop Accessories</a></li>
-                                            <li><a href="shop-product-right.html">Tablet Accessories</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="blog-category-fullwidth.html">Blog</a>
-                                <ul class="dropdown">
-                                    <li><a href="blog-category-grid.html">Blog Category Grid</a></li>
-                                    <li><a href="blog-category-list.html">Blog Category List</a></li>
-                                    <li><a href="blog-category-big.html">Blog Category Big</a></li>
-                                    <li><a href="blog-category-fullwidth.html">Blog Category Wide</a></li>
-                                    <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">Single Product Layout</a>
-                                        <ul class="dropdown">
-                                            <li><a href="blog-post-left.html">Left Sidebar</a></li>
-                                            <li><a href="blog-post-right.html">Right Sidebar</a></li>
-                                            <li><a href="blog-post-fullwidth.html">No Sidebar</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">Pages</a>
-                                <ul class="dropdown">
-                                    <li><a href="page-about.html">About Us</a></li>
-                                    <li><a href="page-contact.html">Contact</a></li>
-                                    <li><a href="page-account.html">My Account</a></li>
-                                    <li><a href="page-login-register.html">login/register</a></li>
-                                    <li><a href="page-purchase-guide.html">Purchase Guide</a></li>
-                                    <li><a href="page-privacy-policy.html">Privacy Policy</a></li>
-                                    <li><a href="page-terms.html">Terms of Service</a></li>
-                                    <li><a href="page-404.html">404 Page</a></li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="#">Language</a>
-                                <ul class="dropdown">
-                                    <li><a href="#">English</a></li>
-                                    <li><a href="#">French</a></li>
-                                    <li><a href="#">German</a></li>
-                                    <li><a href="#">Spanish</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </nav>
-                    <!-- mobile menu end -->
+                <div>
+                    <div class="channel-label">Email</div>
+                    <div class="channel-value">contact@sandglass.com</div>
                 </div>
-                <div class="mobile-header-info-wrap mobile-header-border">
-                    <div class="single-mobile-header-info mt-30">
-                        <a  href="page-contact.html"> Our location </a>
-                    </div>
-                    <div class="single-mobile-header-info">
-                        <a href="page-login-register.html">Log In / Sign Up </a>
-                    </div>
-                    <div class="single-mobile-header-info">
-                        <a href="#">(+01) - 2345 - 6789 </a>
-                    </div>
+            </div>
+            <div class="channel-item">
+                <div class="channel-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                 </div>
-                <div class="mobile-social-icon">
-                    <h5 class="mb-15 text-grey-4">Follow Us</h5>
-                    <a href="#"><img src="user/assets/imgs/theme/icons/icon-facebook.svg" alt=""></a>
-                    <a href="#"><img src="user/assets/imgs/theme/icons/icon-twitter.svg" alt=""></a>
-                    <a href="#"><img src="user/assets/imgs/theme/icons/icon-instagram.svg" alt=""></a>
-                    <a href="#"><img src="user/assets/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
-                    <a href="#"><img src="user/assets/imgs/theme/icons/icon-youtube.svg" alt=""></a>
+                <div>
+                    <div class="channel-label">Working Hours</div>
+                    <div class="channel-value">Mon – Sat, 10:00 – 18:00</div>
+                </div>
+            </div>
+            <div class="channel-item">
+                <div class="channel-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </div>
+                <div>
+                    <div class="channel-label">Address</div>
+                    <div class="channel-value">205 NM Street, Kochi</div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="page-header breadcrumb-wrap1 ">
-        <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block ">
-                <nav>
-                    <ul class="cat">
-                        <li><a  href="/">Home </a>
-                            
-                        </li>
-                        
-                        <li><a  href="/shop">Shop </a>
-                            
-                        </li>
-                        
-                        
-                        <li>
-                            <a  href="/about">About</a>
-                        </li>
-                        <li>
-                            <a class="active" href="/contact">Contact</a>
-                        </li>
-                    </ul>
-                </nav>
+
+    <!-- ── Locations ── -->
+    <section class="contact-info-section">
+        <div class="contact-info-inner">
+            <span class="section-eyebrow">Find Us</span>
+            <h2 class="section-heading">Our Locations</h2>
+            <p class="section-lead">Visit us at any of our locations across Kochi. Our team is ready to help you find the perfect watch in person.</p>
+
+            <div class="locations-grid">
+                <div class="location-card">
+                    <div class="location-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+                    </div>
+                    <h3 class="location-title">Office</h3>
+                    <div class="location-detail">
+                        205 NM Street, Suite 810<br>
+                        Kochi, 688527, Kerala<br>
+                        <a href="tel:+919751125454">+91 97511 25454</a><br>
+                        <a href="mailto:contact@sandglass.com">contact@sandglass.com</a>
+                    </div>
+                    <a href="#" class="map-link">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        View on Map
+                    </a>
+                </div>
+                <div class="location-card">
+                    <div class="location-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    </div>
+                    <h3 class="location-title">Studio</h3>
+                    <div class="location-detail">
+                        205 NM Street, Suite 810<br>
+                        Kochi, 688527, Kerala<br>
+                        <a href="tel:+919751125454">+91 97511 25454</a><br>
+                        <a href="mailto:contact@sandglass.com">contact@sandglass.com</a>
+                    </div>
+                    <a href="#" class="map-link">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        View on Map
+                    </a>
+                </div>
+                <div class="location-card">
+                    <div class="location-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                    </div>
+                    <h3 class="location-title">Shop</h3>
+                    <div class="location-detail">
+                        205 NM Street, Suite 810<br>
+                        Kochi, 688527, Kerala<br>
+                        <a href="tel:+919751125454">+91 97511 25454</a><br>
+                        <a href="mailto:contact@sandglass.com">contact@sandglass.com</a>
+                    </div>
+                    <a href="#" class="map-link">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        View on Map
+                    </a>
+                </div>
+            </div>
         </div>
-    </div>
-    <main class="main">
-        
-        <section class="hero-2 bg-green">
-            <div class="hero-content">
-                <div class="container">
-                    <div class="text-center">
-                        <h4 class="text-brand mb-20">Get in touch</h4>
-                        <h1 class="mb-20 wow fadeIn animated font-xxl fw-900">
-                            Let's Talk About <br>Your <span class="text-style-1">Perfect Timepiece</span>
-                        </h1>
-                        <p class="w-50 m-auto mb-50 wow fadeIn animated">We'd love to hear from you! Whether you have questions about our products, need help finding the perfect watch, or want to share feedback, we're here to assist. Reach out to us, and let's make your watch shopping experience exceptional.
-                        </p>
-                        <p class="wow fadeIn animated">
-                            <a class="btn btn-brand btn-lg font-weight-bold text-white border-radius-5 btn-shadow-brand hover-up" href="/about">About Us</a>
-                            <a class="btn btn-outline btn-lg btn-brand-outline font-weight-bold text-brand bg-white text-hover-white ml-15 border-radius-5 btn-shadow-brand hover-up">Support Center</a>
-                        </p>
-                    </div>
+    </section>
+
+    <!-- ── Contact Form ── -->
+    <section class="contact-form-section" id="contact-form">
+        <div class="contact-form-inner">
+            <div class="form-card">
+                <div class="form-card-header">
+                    <h2>Drop Us a Line</h2>
+                    <p>Have a question or need assistance? Fill in the form below and we'll get back to you as soon as possible.</p>
                 </div>
-            </div>
-        </section>
-        <section class="section-border pt-50 pb-50">
-            <div class="container">
-                <div id='map-panes' class="leaflet-map mb-50"></div>
-                <div class="row">
-                    <div class="col-md-4 mb-4 mb-md-0">
-                        <h4 class="mb-15 text-brand">Office</h4>
-                        205 NM Street, Suite 810<br>
-                        Kochi, 688527, Kerala<br>
-                        <abbr title="Phone">Phone:</abbr> 97511254
-                        54<br>
-                        <abbr title="Email">Email: </abbr>contact@sandglass.com<br>
-                        <a class="btn btn-outline btn-sm btn-brand-outline font-weight-bold text-brand bg-white text-hover-white mt-20 border-radius-5 btn-shadow-brand hover-up"><i class="fi-rs-marker mr-10"></i>View map</a>
-                    </div>
-                    <div class="col-md-4 mb-4 mb-md-0">
-                        <h4 class="mb-15 text-brand">Studio</h4>
-                        205 NM Street, Suite 810<br>
-                        Kochi, 688527, Kerala<br>
-                        <abbr title="Phone">Phone:</abbr> 97511254
-                        54<br>
-                        <abbr title="Email">Email: </abbr>contact@sandglass.com<br>
-                        <a class="btn btn-outline btn-sm btn-brand-outline font-weight-bold text-brand bg-white text-hover-white mt-20 border-radius-5 btn-shadow-brand hover-up"><i class="fi-rs-marker mr-10"></i>View map</a>
-                    </div>
-                    <div class="col-md-4">
-                        <h4 class="mb-15 text-brand">Shop</h4>
-                        205 NM Street, Suite 810<br>
-                        Kochi, 688527, Kerala<br>
-                        <abbr title="Phone">Phone:</abbr> 97511254
-                        54<br>
-                        <abbr title="Email">Email: </abbr>contact@sandglass.com<br>
-                        <a class="btn btn-outline btn-sm btn-brand-outline font-weight-bold text-brand bg-white text-hover-white mt-20 border-radius-5 btn-shadow-brand hover-up"><i class="fi-rs-marker mr-10"></i>View map</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <section class="pt-50 pb-50">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-8 col-lg-10 m-auto">
-                        <div class="contact-from-area padding-20-row-col wow FadeInUp">
-                            <h3 class="mb-10 text-center">Drop Us a Line</h3>
-                            <p class="text-muted mb-30 text-center font-sm">Have a question or need assistance? We're here to help. Reach out to us with any inquiries, and we'll get back to you as soon as possible.
-                            </p>
-                            <form class="contact-form-style text-center" id="contact-form"  >
-                                <div class="row">
-                                    <div class="col-lg-6 col-md-6">
-                                        <div class="input-style mb-20">
-                                            <input name="name" placeholder="First Name" type="text">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6">
-                                        <div class="input-style mb-20">
-                                            <input name="email" placeholder="Your Email" type="email">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6">
-                                        <div class="input-style mb-20">
-                                            <input name="telephone" placeholder="Your Phone" type="tel">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6">
-                                        <div class="input-style mb-20">
-                                            <input name="subject" placeholder="Subject" type="text">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-12 col-md-12">
-                                        <div class="textarea-style mb-30">
-                                            <textarea name="message" placeholder="Message"></textarea>
-                                        </div>
-                                        <button class="submit submit-auto-width" >Send message</button>
-                                    </div>
-                                </div>
-                            </form>
-                            <p class="form-messege"></p>
+
+                <form id="contactForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="fname">First Name</label>
+                            <input class="form-control" id="fname" name="name" type="text" placeholder="John">
+                        </div>
+                        <div class="form-group">
+                            <label for="femail">Email Address</label>
+                            <input class="form-control" id="femail" name="email" type="email" placeholder="john@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="fphone">Phone Number</label>
+                            <input class="form-control" id="fphone" name="telephone" type="tel" placeholder="+91 00000 00000">
+                        </div>
+                        <div class="form-group">
+                            <label for="fsubject">Subject</label>
+                            <input class="form-control" id="fsubject" name="subject" type="text" placeholder="How can we help?">
+                        </div>
+                        <div class="form-group full">
+                            <label for="fmessage">Message</label>
+                            <textarea class="form-control" id="fmessage" name="message" placeholder="Tell us more about your enquiry…"></textarea>
+                        </div>
+                        <div class="form-group full form-submit-row">
+                            <button type="submit" class="btn-submit">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                                Send Message
+                            </button>
                         </div>
                     </div>
-                </div>
+                </form>
+
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
+
+    <!-- ── Footer ── -->
     <footer class="main">
-        <!-- <section class="newsletter p-30 text-white wow fadeIn animated">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-7 mb-md-3 mb-lg-0">
-                        <div class="row align-items-center">
-                            <div class="col flex-horizontal-center">
-                                <img class="icon-email" src="user/assets/imgs/theme/icons/icon-email.svg" alt="">
-                                <h4 class="font-size-20 mb-0 ml-3">Sign up to Newsletter</h4>
-                            </div>
-                            <div class="col my-4 my-md-0 des">
-                                <h5 class="font-size-15 ml-4 mb-0">...and receive <strong>$25 coupon for first shopping.</strong></h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-5">
-                        <form class="form-subcriber d-flex wow fadeIn animated">
-                            <input type="email" class="form-control bg-white font-small" placeholder="Enter your email">
-                            <button class="btn bg-dark text-white" type="submit">Subscribe</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section> -->
         <section class="section-padding footer-mid">
             <div class="container pt-15 pb-20">
                 <div class="row">
                     <div class="col-lg-4 col-md-6">
                         <div class="widget-about font-md mb-md-5 mb-lg-0">
                             <div class="logo logo-width-1 wow fadeIn animated">
-                                <a href="index.html"><img src="user/assets/imgs/theme/sandglass-high-resolution-logo-transparent.svg" alt="logo"></a>
+                                <a href="/"><img src="user/assets/imgs/theme/sandglass-high-resolution-logo-transparent.svg" alt="logo"></a>
                             </div>
                             <h5 class="mt-20 mb-10 fw-600 text-grey-4 wow fadeIn animated">Contact</h5>
-                            <p class="wow fadeIn animated">
-                                <strong>Address: </strong>205 NM Street, Suite 810, Kochi
-                            </p>
-                            <p class="wow fadeIn animated">
-                                <strong>Phone: </strong>+91 9751125454
-                            </p>
-                            <p class="wow fadeIn animated">
-                                <strong>Hours: </strong>10:00 - 18:00, Mon - Sat
-                            </p>
+                            <p class="wow fadeIn animated"><strong>Address: </strong>205 NM Street, Suite 810, Kochi</p>
+                            <p class="wow fadeIn animated"><strong>Phone: </strong>+91 9751125454</p>
+                            <p class="wow fadeIn animated"><strong>Hours: </strong>10:00 - 18:00, Mon - Sat</p>
                             <h5 class="mb-10 mt-30 fw-600 text-grey-4 wow fadeIn animated">Follow Us</h5>
                             <div class="mobile-social-icon wow fadeIn animated mb-sm-5 mb-md-0">
                                 <a href="#"><img src="user/assets/imgs/theme/icons/icon-facebook.svg" alt=""></a>
@@ -691,21 +591,21 @@
                         <h5 class="widget-title wow fadeIn animated">About</h5>
                         <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
                             <li><a href="/about">About Us</a></li>
-                            <li><a >Delivery Information</a></li>
-                            <li><a >Privacy Policy</a></li>
-                            <li><a >Terms &amp; Conditions</a></li>
+                            <li><a>Delivery Information</a></li>
+                            <li><a>Privacy Policy</a></li>
+                            <li><a>Terms &amp; Conditions</a></li>
                             <li><a href="/contact">Contact Us</a></li>
-                            <li><a >Support Center</a></li>
+                            <li><a>Support Center</a></li>
                         </ul>
                     </div>
-                    <div class="col-lg-2  col-md-3">
+                    <div class="col-lg-2 col-md-3">
                         <h5 class="widget-title wow fadeIn animated">My Account</h5>
                         <ul class="footer-list wow fadeIn animated">
                             <li><a href="/login">Sign In</a></li>
                             <li><a href="/cart">View Cart</a></li>
                             <li><a href="/wishlist">My Wishlist</a></li>
                             <li><a href="/profile">Track My Order</a></li>
-                            <li><a >Help</a></li>
+                            <li><a>Help</a></li>
                             <li><a href="/profile">Order</a></li>
                         </ul>
                     </div>
@@ -719,42 +619,43 @@
                                     <a href="#" class="hover-up"><img src="user/assets/imgs/theme/google-play.jpg" alt=""></a>
                                 </div>
                             </div>
-                            <!-- <div class="col-md-4 col-lg-12 mt-md-3 mt-lg-0">
-                                <p class="mb-20 wow fadeIn animated">Secured Payment Gateways</p>
-                                <img class="wow fadeIn animated" src="user/assets/imgs/theme/payment-method.png" alt="">
-                            </div> -->
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        
+        <div class="container pb-20 wow fadeIn animated">
+            <div class="row">
+                <div class="col-12 mb-20"><div class="footer-bottom"></div></div>
+                <div class="col-lg-6">
+                    <p class="float-md-left font-sm text-muted mb-0">&copy; 2026 <strong style="color:var(--purple-800)">Sandglass</strong>. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
     </footer>
-    
-    <!-- Vendor JS-->
-    <script src="user/assets/js/auto_complete.js"></script>
-    <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
-    <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
-    <script src="assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
-    <script src="assets/js/vendor/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/plugins/slick.js"></script>
-    <script src="assets/js/plugins/jquery.syotimer.min.js"></script>
-    <script src="assets/js/plugins/wow.js"></script>
-    <script src="assets/js/plugins/jquery-ui.js"></script>
-    <script src="assets/js/plugins/perfect-scrollbar.js"></script>
-    <script src="assets/js/plugins/magnific-popup.js"></script>
-    <script src="assets/js/plugins/select2.min.js"></script>
-    <script src="assets/js/plugins/waypoints.js"></script>
-    <script src="assets/js/plugins/counterup.js"></script>
-    <script src="assets/js/plugins/jquery.countdown.min.js"></script>
-    <script src="assets/js/plugins/images-loaded.js"></script>
-    <script src="assets/js/plugins/isotope.js"></script>
-    <script src="assets/js/plugins/scrollup.js"></script>
-    <script src="assets/js/plugins/jquery.vticker-min.js"></script>
-    <script src="assets/js/plugins/jquery.theia.sticky.js"></script>
-    <script src="assets/js/plugins/leaflet.js"></script>
-    <!-- Template  JS -->
-    <script src="./assets/js/main.js?v=3.4"></script>
-</body>
 
+    <script src="user/assets/js/vendor/modernizr-3.6.0.min.js"></script>
+    <script src="user/assets/js/vendor/jquery-3.6.0.min.js"></script>
+    <script src="user/assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+    <script src="user/assets/js/vendor/bootstrap.bundle.min.js"></script>
+    <script src="user/assets/js/plugins/wow.js"></script>
+    <script src="./user/assets/js/main.js?v=3.4"></script>
+
+    <script>
+        // User dropdown
+        const userBtn = document.getElementById('userDropdownBtn');
+        if (userBtn) {
+            const dropdown = document.querySelector('.sg-dropdown');
+            userBtn.addEventListener('click', (e) => { e.preventDefault(); dropdown.classList.toggle('active'); });
+            document.addEventListener('click', (e) => { if (!e.target.closest('.sg-user-wrap')) dropdown.classList.remove('active'); });
+        }
+
+        // Smooth scroll for hero CTA
+        document.querySelector('a[href="#contact-form"]').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('contact-form').scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+
+</body>
 </html>

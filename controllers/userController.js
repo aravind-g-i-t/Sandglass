@@ -806,6 +806,35 @@ const loadContact = async (req, res) => {
     }
 };
 
+const getWalletTransactions = async (req, res) => {
+    try {
+        const ITEMS_PER_PAGE = 5;
+        const userId = req.session.user._id;
+        const page = parseInt(req.query.page, 10) || 1;
+
+        const wallet = await Wallet.findOne({ userId });
+
+        if (!wallet) {
+            return res.status(404).json({ message: 'Wallet not found' });
+        }
+
+        const totalTransactions = wallet.transactions.length;
+        const totalPages = Math.ceil(totalTransactions / ITEMS_PER_PAGE);
+
+        const paginatedTransactions = wallet.transactions
+            .sort((a, b) => b.time - a.time)
+            .slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+
+        return res.json({
+            transactions: paginatedTransactions,
+            currentPage: page,
+            totalPages
+        });
+    } catch (error) {
+        return res.status(500).json({ message: 'Error fetching wallet transactions', error: error.message });
+    }
+};
+
 module.exports = {
     loadLogin,
     loadSignup,

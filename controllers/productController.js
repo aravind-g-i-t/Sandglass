@@ -162,10 +162,43 @@ const productStatusUpdate = async (req, res) => {
 };
 
 const loadEditProduct = async (req, res) => {
-    const categories = await Categories.find({ isActive: true });
-    const id = req.query.id;
-    const product = await Product.findOne({ _id: id });
+    try {
+        const categories = await Categories.find({ isActive: true });
+        const id = req.query.id;
+        const product = await Product.findOne({ _id: id });
 
+        // Check if the product was found
+        if (!product) {
+            return res.status(404).render('admin/editProduct', {
+                success: false,
+                message: 'Product not found',
+                error: {
+                    description: 'The product with the given ID does not exist'
+                },
+                categories
+            });
+        }
+
+        // Success Response
+        return res.status(200).render('admin/editProduct', {
+            success: true,
+            message: 'Product and categories loaded successfully',
+            data: {
+                product,
+                categories
+            }
+        });
+    } catch (error) {
+        // Error Response
+        return res.status(500).render('admin/editProduct', {
+            success: false,
+            message: 'Failed to load product or categories',
+            error: {
+                description: error.message
+            },
+            categories: [] 
+        });
+    }
 };
 
 const removeImage = async (req, res) => {
