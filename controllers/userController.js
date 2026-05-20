@@ -711,7 +711,6 @@ const addAddress = async (req, res) => {
             phone,
             email
         } = req.body;
-
         let addressData = await Address.findOne({ userId: req.session.user._id });
         // const userData = await User.findById(req.session.user._id);
         // const orderData = await Order.find({ userId: req.session.user._id });
