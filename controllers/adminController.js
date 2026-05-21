@@ -45,34 +45,6 @@ const adminLogin = async (req, res) => {
 
     }
 
-    // const admin = {
-    //     username: "Admin",
-    //     password: "Admin@123",
-    //   };
-    //   let { adminId, adminPassword } = req.body;
-    //   console.log(adminId + " -- " + adminPassword);
-    //   if (admin.username === adminId) {
-    //     console.log("usernamatch match");
-    //     if (admin.password === adminPassword) {
-    //       console.log("password match");
-    //       const hash = await hashing.hashPassword(adminPassword);
-    //       const adminData = await Admin.create({
-    //         adminId: adminId,
-    //         adminPassword: hash,
-    //       });
-    //       const adminsave = await adminData.save();
-    //       if (adminsave) {
-    //         console.log("saved");
-    //         return res.redirect("/admin/dashboard");
-    //       } else {
-    //         console.log("not savedd");
-    //       }
-    //     } else {
-    //       console.log("password dosend match");
-    //     }
-    //   } else {
-    //     console.log("username doesent match");
-    //   }
 };
 
 
@@ -84,14 +56,13 @@ const loadDashboard = async (req, res) => {
 
         const fromDate = dateFrom ? new Date(dateFrom) : new Date(new Date().setFullYear(new Date().getFullYear() - 1));
 
-        // Set the end of the day for `toDate` to include orders created later in the day
         let toDate;
         if (dateTo) {
             toDate = new Date(dateTo);
-            toDate.setHours(23, 59, 59, 999); // Ensure `toDate` is at 23:59:59 for the selected day
+            toDate.setHours(23, 59, 59, 999); 
         } else {
             toDate = new Date();
-            toDate.setHours(23, 59, 59, 999); // Ensure today's `toDate` is at 23:59:59
+            toDate.setHours(23, 59, 59, 999); 
         }
 
         const graphEndDate = new Date(Math.max(toDate, new Date()));
@@ -113,14 +84,14 @@ const loadDashboard = async (req, res) => {
         }
 
         const totalOrders = await Order.countDocuments({
-            orderDate: { $gte: fromDate, $lte: toDate } // Use adjusted toDate
+            orderDate: { $gte: fromDate, $lte: toDate } 
         });
 
         const allOrders = await Order.find({
             orderDate: { $gte: graphStartDate, $lte: graphEndDate }
         });
         const orderData = await Order.find({
-            orderDate: { $gte: fromDate, $lte: toDate } // Use adjusted toDate
+            orderDate: { $gte: fromDate, $lte: toDate } 
         }).skip((page - 1) * limit)
             .limit(parseInt(limit, 10))
             .populate('userId')
@@ -152,7 +123,7 @@ const loadDashboard = async (req, res) => {
                 currentPage: parseInt(page, 10),
                 totalPages: Math.ceil(totalOrders / limit),
                 dateFrom: fromDate.toISOString().split('T')[0],
-                dateTo: toDate.toISOString().split('T')[0], // Use adjusted toDate
+                dateTo: toDate.toISOString().split('T')[0], 
                 limit: parseInt(limit, 10),
                 graphData: JSON.stringify(graphData),
                 interval
@@ -164,13 +135,11 @@ const loadDashboard = async (req, res) => {
 };
 
 
-// eslint-disable-next-line max-params
 function processGraphData(orders, interval, startDate, endDate) {
     const graphData = {};
 
     for (let i = 0; i < 7; i++) {
         const date = new Date(endDate);
-        // eslint-disable-next-line default-case
         switch (interval) {
             case 'day':
                 date.setDate(date.getDate() - i);
@@ -206,9 +175,7 @@ function processGraphData(orders, interval, startDate, endDate) {
         .map(([date, turnover]) => ({ date, turnover }));
 }
 
-// eslint-disable-next-line consistent-return
 function formatDate(date, interval) {
-    // eslint-disable-next-line default-case
     switch (interval) {
         case 'day':
             return date.toISOString().split('T')[0];
@@ -254,33 +221,7 @@ const loadUsers = async (req, res) => {
     }
 };
 
-// const blockUser=async(req,res)=>{
-//     try {
-//         const id=req.query.id;
-//         req.session.temp=req.session.user;
-//         req.session.user.destroy=false;
-//         await User.findByIdAndUpdate(id,{
-//             $set:{isActive:false}
-//         });
-//         return res.redirect('/admin/users')
-//     } catch (error) {
-//         console.log(error.message);
-//     }
-// }
 
-
-// const unblockUser=async(req,res)=>{
-//     try {
-//         const id=req.query.id;
-//         req.session.temp=req.session.user;
-//         const userData=await User.findByIdAndUpdate(id,{
-//             $set:{isActive:false}
-//         });
-//         return res.redirect('/admin/users')
-//     } catch (error) {
-//         console.log(error.message);
-//     }
-// }
 
 const userStatusUpdate = async (req, res) => {
     try {
@@ -314,7 +255,7 @@ const orderList = async (req, res) => {
             const searchQuery = req.query.searchId.trim();
 
             if (searchQuery !== "") {
-                query = { orderId: searchQuery }; // Ensure you use the correct field name `orderId`
+                query = { orderId: searchQuery };
             }
         }
 
@@ -354,7 +295,6 @@ const orderDetails = async(req, res) => {
                 invoice = true;
             }
         });
-        // const userData=await User.findById(orderData.userId);
         const address = await Address.findOne(
             { 'address._id': orderData.addressId },
             { 'address.$': 1 }
@@ -416,7 +356,6 @@ const updateOrderStatus = async (req, res) => {
                 let refundAmount = product.productPrice * product.quantity;
                 if (updatedOrder.coupon) {
                     const coupon = await Coupon.findOne({ code: updatedOrder.coupon });
-                    // eslint-disable-next-line max-depth
                     if (coupon) {
                         refundAmount = refundAmount / 100 * (100 - coupon.discountPercentage);
                     }
@@ -573,7 +512,6 @@ const updateCouponStatus = async (req, res) => {
 };
 
 
-// eslint-disable-next-line consistent-return
 const generateReport = async (req, res) => {
     try {
         const { dateFrom, dateTo, format } = req.query;
@@ -614,8 +552,7 @@ const generateReport = async (req, res) => {
             message: 'Invalid format. Supported formats are "pdf" and "excel".'
         });
 
-    } catch (error) {
-        console.log(error);
+    } catch {
 
         return res.status(500).send(
             'An error occurred while generating the report. Please try again later.'
@@ -669,7 +606,6 @@ async function generatePDFReport(res, orders, summary) {
     doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
     doc.moveDown(0.5);
 
-    // Table rows
     doc.font('DejaVuSans').fontSize(10);
     orders.forEach((order, index) => {
         xPos = 50;
@@ -695,7 +631,6 @@ async function generatePDFReport(res, orders, summary) {
     });
 
     const pageCount = doc.bufferedPageRange().count;
-    // eslint-disable-next-line no-plusplus
     for (let i = 0; i < pageCount; i++) {
         doc.switchToPage(i);
         doc.fontSize(10).text(
@@ -742,7 +677,7 @@ async function generateExcelReport(res, orders, summary) {
 
     worksheet.columns.forEach((column, index) => {
         column.width = 15;
-        if (index === 3) { // Assuming the 'Total' column is at index 3
+        if (index === 3) {
             column.numFmt = '₹#,##0.00';
         }
     });

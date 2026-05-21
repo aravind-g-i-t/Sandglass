@@ -30,7 +30,6 @@ passport.use(new GoogleStrategy({
         const newGenPassword = await hashing.hashPassword(
             Math.random().toString()
         );
-        console.log(user);
         if (!user) {
             user = await User.create({
                 googleId: profile.id,
@@ -43,7 +42,6 @@ passport.use(new GoogleStrategy({
                 walletBalance: 0
             });
             await newWallet.save();
-            console.log('user :', user);
         } if (!user.isActive) {
              done(null, false, { message: 'User is blocked' });
              return;

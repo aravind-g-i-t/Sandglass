@@ -3,12 +3,15 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 const generate = () => {
-    return generateOtp.generate(4, {
+    const otp= generateOtp.generate(4, {
         digits: true,
         lowerCaseAlphabets: false,
         upperCaseAlphabets: false,
         specialChars: false
     });
+    console.log(otp);
+    return otp;
+    
 };
 
 const sendOtp = async (email, otp) => {

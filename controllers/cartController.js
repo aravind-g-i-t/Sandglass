@@ -67,7 +67,7 @@ const addToCart = async (req, res) => {
             } else {
                 cart.product.push({
                     productId: productData._id,
-                    productPrice: finalPrice, // Use the final calculated price
+                    productPrice: finalPrice,
                     quantity: 1
                 });
             }
@@ -77,7 +77,7 @@ const addToCart = async (req, res) => {
                 product: [
                     {
                         productId: productData._id,
-                        productPrice: finalPrice, // Use the final calculated price
+                        productPrice: finalPrice,
                         quantity: 1
                     }
                 ]

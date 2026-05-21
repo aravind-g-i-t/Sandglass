@@ -20,27 +20,22 @@ const insertCategory = async (req, res) => {
         const page = parseInt(req.query.page, 10) || 1;
         const limit = 5;
         const startIndex = (page - 1) * limit;
-        console.log(page, limit, startIndex);
 
         const categoryData = await Category.find().skip(startIndex).limit(limit);
-        console.log(categoryData);
 
         const totalDocuments = await Category.countDocuments();
-        console.log(totalDocuments);
 
         const totalPages = Math.ceil(totalDocuments / limit);
 
 
         let { name, description } = req.body;
         name = name.toUpperCase();
-        console.log(name, description);
 
 
         const checkCategory = await Category.findOne({
             name
         });
 
-        console.log(checkCategory);
 
 
         if (checkCategory) {
@@ -56,7 +51,6 @@ const insertCategory = async (req, res) => {
             description
         });
         categoryData.push(newCat);
-        console.log(newCat);
 
         return res.render('admin/categories', {
             categoryData,
@@ -65,8 +59,7 @@ const insertCategory = async (req, res) => {
         });
 
 
-    } catch (err) {
-        console.log(err);
+    } catch  {
         return res.status(500).send("Something went wrong");
     }
 };

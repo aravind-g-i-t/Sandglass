@@ -104,7 +104,6 @@ export default [
       "computed-property-spacing": ["error", "never"],
       "consistent-this": ["error", "self"],
       // "linebreak-style": ["error", "unix"],
-      "max-depth": ["error", 4],
       // "max-len": ["error", 100],
       "max-nested-callbacks": ["error", 3],
       "new-cap": ["error", { "newIsCap": true, "capIsNew": false }],

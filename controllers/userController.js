@@ -62,7 +62,6 @@ const insertUser = async (req, res) => {
 
 
         const otpCode = otp.generate();
-        console.log(otpCode);
         
         req.session.email = email;
         req.session.otp = otpCode;
@@ -87,12 +86,10 @@ const loadVerify = async (req, res) => {
     }
 };
 
-// resend OTP
 
 const resendOtp = async (req, res) => {
     try {
         const otpCode = otp.generate();
-        console.log(otpCode);
         
         req.session.otp = otpCode;
         req.session.otpExpire = Date.now() + (5 * 60 * 1000);
@@ -113,7 +110,6 @@ const resendOtp = async (req, res) => {
 
 
 
-// verify OTP
 
 const verifyOtp = async (req, res) => {
     try {
@@ -282,7 +278,6 @@ const loadForgotPassword = async (req, res) => {
     }
 };
 
-// eslint-disable-next-line consistent-return
 const forgotPassword = async (req, res) => {
     try {
 
@@ -291,7 +286,6 @@ const forgotPassword = async (req, res) => {
         if (userExists) {
             req.session.email = mail;
             req.session.otp = otp.generate();
-            console.log(req.session.otp);
             
             req.session.otpExpire = Date.now() + (5 * 60 * 1000);
             await otp.sendOtp(mail, req.session.otp);
@@ -313,11 +307,7 @@ const forgotPassword = async (req, res) => {
 
 const verifyForgotOtp = async (req, res) => {
     try {
-        const otp = req.body.otp.trim();
-        console.log(otp);
-        console.log(req.session);
-        
-        
+        const otp = req.body.otp.trim();        
         
         if (otp === req.session.otp && Date.now() < req.session.otpExpire) {
 
@@ -664,8 +654,6 @@ const addAddress = async (req, res) => {
         } = req.body;
         
         let addressData = await Address.findOne({ userId: req.session.user._id });
-        // const userData = await User.findById(req.session.user._id);
-        // const orderData = await Order.find({ userId: req.session.user._id });
 
         if (addressData) {
             addressData.address.push({
@@ -706,7 +694,6 @@ const addAddress = async (req, res) => {
     }
 };
 
-// eslint-disable-next-line consistent-return
 const editAddress = async (req, res) => {
     try {
         const { address, addressId } = req.body;
@@ -745,7 +732,6 @@ const editAddress = async (req, res) => {
     }
 };
 
-// eslint-disable-next-line consistent-return
 const deleteAddress = async (req, res) => {
     try {
         const { addressId } = req.body;

@@ -183,10 +183,8 @@ const loadEditProduct = async (req, res) => {
         return res.status(200).render('admin/editProduct', {
             success: true,
             message: 'Product and categories loaded successfully',
-            data: {
-                product,
-                categories
-            }
+            product,
+            categories
         });
     } catch (error) {
         // Error Response
@@ -196,7 +194,7 @@ const loadEditProduct = async (req, res) => {
             error: {
                 description: error.message
             },
-            categories: [] 
+            categories: []
         });
     }
 };
