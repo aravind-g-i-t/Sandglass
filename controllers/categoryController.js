@@ -6,7 +6,7 @@ const loadcategories = async (req, res) => {
         const page = parseInt(req.query.page, 10) || 1;
         const limit = 5;
         const startIndex = (page - 1) * limit;
-        const categoryData = await Category.find().skip(startIndex).limit(limit);
+        const categoryData = await Category.find().sort({ createdAt: -1 }).skip(startIndex).limit(limit);
         const totalDocuments = await Category.countDocuments();
         const totalPages = Math.ceil(totalDocuments / limit);
         return res.status(200).render('admin/categories', { categoryData, page, totalPages });
@@ -21,7 +21,7 @@ const insertCategory = async (req, res) => {
         const limit = 5;
         const startIndex = (page - 1) * limit;
 
-        const categoryData = await Category.find().skip(startIndex).limit(limit);
+        const categoryData = await Category.find().sort({ createdAt: -1 }).skip(startIndex).limit(limit);
 
         const totalDocuments = await Category.countDocuments();
 
@@ -50,16 +50,15 @@ const insertCategory = async (req, res) => {
             name,
             description
         });
-        categoryData.push(newCat);
 
         return res.render('admin/categories', {
-            categoryData,
+            categoryData: [newCat, ...categoryData],
             page,
             totalPages
         });
 
 
-    } catch  {
+    } catch {
         return res.status(500).send("Something went wrong");
     }
 };
