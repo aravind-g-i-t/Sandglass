@@ -20,7 +20,7 @@ passport.deserializeUser((user, done) => {
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://sandglass.store/oauth2/redirect/google",
+    callbackURL: "http://sandglass.render.com/oauth2/redirect/google",
     passReqToCallback: true
 },
 (async (request, accessToken, refreshToken, profile, done) => {
