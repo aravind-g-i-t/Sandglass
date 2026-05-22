@@ -4,6 +4,9 @@ const Cart = require('../models/cartModel');
 const fs = require('fs/promises');
 const path = require('path');
 const Wishlist = require('../models/wishlistModel');
+const MESSAGES = require("../constants/messages.constant");
+const STATUS_CODES = require('../enum/statusCode.enum');
+
 
 
 
@@ -37,7 +40,7 @@ const loadProducts = async (req, res) => {
         return res.render('admin/products', { products: productsWithFinalPrice, page, totalPages });
 
     } catch {
-        return res.status(500).send('Internal Server Error');
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send('Internal Server Error');
     }
 };
 
@@ -49,7 +52,7 @@ const loadAddProduct = async (req, res) => {
         const categories = await Categories.find({ isActive: true });
         return res.render('admin/addProduct', { categories });
     } catch {
-        return res.status(500).send("Something went wrong");
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -92,7 +95,7 @@ const addProduct = async (req, res) => {
         }
 
     } catch {
-        return res.status(500).send("Internal Server Error");
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -126,7 +129,7 @@ const editProduct = async (req, res) => {
 
         return res.redirect('/admin/products');
     } catch {
-        return res.status(500).send("Something went wrong");
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -157,7 +160,7 @@ const productStatusUpdate = async (req, res) => {
         return res.redirect('/admin/products');
 
     } catch {
-        return res.status(500).send("Something went wrong");
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -169,7 +172,7 @@ const loadEditProduct = async (req, res) => {
 
         // Check if the product was found
         if (!product) {
-            return res.status(404).render('admin/editProduct', {
+            return res.status(STATUS_CODES.NOT_FOUND).render('admin/editProduct', {
                 success: false,
                 message: 'Product not found',
                 error: {
@@ -180,7 +183,7 @@ const loadEditProduct = async (req, res) => {
         }
 
         // Success Response
-        return res.status(200).render('admin/editProduct', {
+        return res.status(STATUS_CODES.SUCCESS).render('admin/editProduct', {
             success: true,
             message: 'Product and categories loaded successfully',
             product,
@@ -188,7 +191,7 @@ const loadEditProduct = async (req, res) => {
         });
     } catch (error) {
         // Error Response
-        return res.status(500).render('admin/editProduct', {
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).render('admin/editProduct', {
             success: false,
             message: 'Failed to load product or categories',
             error: {
@@ -206,7 +209,7 @@ const removeImage = async (req, res) => {
         const product = await Product.findById(productId);
 
         if (!product) {
-            return res.status(404).json({
+            return res.status(STATUS_CODES.NOT_FOUND).json({
                 error: 'Product not found'
             });
         }
@@ -214,7 +217,7 @@ const removeImage = async (req, res) => {
         const imageIndex = product.productImage.indexOf(image);
 
         if (imageIndex === -1) {
-            return res.status(404).json({
+            return res.status(STATUS_CODES.NOT_FOUND).json({
                 error: 'Image not found in product'
             });
         }
@@ -231,7 +234,7 @@ const removeImage = async (req, res) => {
 
         await product.save();
 
-        return res.status(200).json({
+        return res.status(STATUS_CODES.SUCCESS).json({
             success: true,
             message: 'Image removed successfully'
         });
@@ -239,7 +242,7 @@ const removeImage = async (req, res) => {
     } catch {
 
 
-        return res.status(500).json({
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
             error: 'An error occurred while removing the image'
         });
     }

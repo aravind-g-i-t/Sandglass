@@ -1,5 +1,8 @@
 const Category = require('../models/categoryModel');
 const Cart = require('../models/cartModel');
+const MESSAGES = require("../constants/messages.constant");
+const STATUS_CODES = require('../enum/statusCode.enum');
+
 
 const loadcategories = async (req, res) => {
     try {
@@ -9,9 +12,9 @@ const loadcategories = async (req, res) => {
         const categoryData = await Category.find().sort({ createdAt: -1 }).skip(startIndex).limit(limit);
         const totalDocuments = await Category.countDocuments();
         const totalPages = Math.ceil(totalDocuments / limit);
-        return res.status(200).render('admin/categories', { categoryData, page, totalPages });
+        return res.status(STATUS_CODES.SUCCESS).render('admin/categories', { categoryData, page, totalPages });
     } catch {
-        return res.status(500).send("Something went wrong");
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -39,7 +42,7 @@ const insertCategory = async (req, res) => {
 
 
         if (checkCategory) {
-            return res.status(200).render('admin/categories', {
+            return res.status(STATUS_CODES.SUCCESS).render('admin/categories', {
                 message: 'Category already exists',
                 categoryData,
                 page,
@@ -59,7 +62,7 @@ const insertCategory = async (req, res) => {
 
 
     } catch {
-        return res.status(500).send("Something went wrong");
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -88,7 +91,7 @@ const statusUpdate = async (req, res) => {
         return res.redirect('/admin/categories');
 
     } catch {
-        return res.status(500).send("Something went wrong");
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -101,7 +104,7 @@ const loadEdit = async (req, res) => {
 
         return res.render('admin/editCategory', { category });
     } catch {
-        return res.status(500).send("Something went wrong");
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -137,7 +140,7 @@ const editCategory = async (req, res) => {
 
 
     } catch {
-        return res.status(500).send("Something went wrong");
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
     }
 };
 

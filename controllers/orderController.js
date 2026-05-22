@@ -1,5 +1,4 @@
-/* eslint-disable camelcase */
-/* eslint-disable max-depth */
+
 const Order = require('../models/orderModel');
 const Product = require('../models/productModel');
 const User = require('../models/userModel');
@@ -7,6 +6,9 @@ const Address = require('../models/addressModel');
 const Cart = require('../models/cartModel');
 const Wallet = require('../models/walletModel');
 const Coupon = require('../models/couponModel');
+const MESSAGES = require("../constants/messages.constant");
+const STATUS_CODES = require('../enum/statusCode.enum');
+
 const PDFDocument = require('pdfkit');
 
 const Razorpay = require('razorpay');
@@ -59,7 +61,7 @@ const orderDetails = async (req, res) => {
             walletApplicable
         });
     } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -75,13 +77,13 @@ const placeOrder = async (req, res) => {
             const product = await Product.findById(productId);
 
             if (!product) {
-                return res.status(404).json({ message: `Product not found: ${productId}` });
+                return res.status(STATUS_CODES.NOT_FOUND).json({ message: `Product not found: ${productId}` });
             }
             if (product.stock === '0') {
-                return res.status(400).json({ message: `${product.productName} is out of stock` });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ message: `${product.productName} is out of stock` });
             }
             if (product.stock < quantity) {
-                return res.status(400).json({ message: `Not enough stock for product ${product.productName}` });
+                return res.status(STATUS_CODES.BAD_REQUEST).json({ message: `Not enough stock for product ${product.productName}` });
             }
         }
         for (const item of cartData.product) {
@@ -125,10 +127,10 @@ const placeOrder = async (req, res) => {
         cartData.product = [];
         cartData.coupon = null;
         await cartData.save();
-        return res.status(200).json({ message: "Success" });
+        return res.status(STATUS_CODES.SUCCESS).json({ message: "Success" });
 
     } catch {
-        return res.status(500).json({ message: "Internal Server Error" });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -138,12 +140,12 @@ const cancelOrder = async (req, res) => {
 
         const orderData = await Order.findById(orderId);
         if (!orderData) {
-            return res.status(404).json({ message: "Order not found" });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ message: "Order not found" });
         }
 
         const product = orderData.products.find(product => product._id.toString() === productId);
         if (!product) {
-            return res.status(404).json({ message: "Product not found in order" });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ message: "Product not found in order" });
         }
 
         let refundAmount = product.productPrice * product.quantity;
@@ -187,15 +189,15 @@ const cancelOrder = async (req, res) => {
             orderData.payableAmount -= refundAmount;
 
             if (!walletData) {
-                return res.status(404).json({ message: "Wallet not found" });
+                return res.status(STATUS_CODES.NOT_FOUND).json({ message: "Wallet not found" });
             }
         }
         product.status = "Cancelled";
         await orderData.save();
 
-        return res.status(200).json({ message: "Successfully Cancelled" });
+        return res.status(STATUS_CODES.SUCCESS).json({ message: "Successfully Cancelled" });
     } catch {
-        return res.status(500).json({ message: "Internal Server Error" });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -208,7 +210,7 @@ const returnOrder = async (req, res) => {
         const orderData = await Order.findById(orderId);
         const orderedProduct = orderData.products.find(product => product._id.toString() === productId);
         if (!orderedProduct) {
-            return res.status(404).json({ message: "Product not found in order" });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ message: "Product not found in order" });
         }
         orderedProduct.reason = reason;
         orderedProduct.status = 'Return Requested';
@@ -216,7 +218,7 @@ const returnOrder = async (req, res) => {
         return res.redirect('/profile');
 
     } catch {
-        return res.status(500).json({ message: "Internal Server Error" });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -230,9 +232,9 @@ const razorPayment = (req, res) => {
     };
     RazorPayInstance.orders.create(options, (err, order) => {
         if (err) {
-            return res.status(400).json({ success: false, message: "Failed to create order", error: err });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: "Failed to create order", error: err });
         } else {
-            return res.status(200).json({ success: true, orderId: order.id });
+            return res.status(STATUS_CODES.SUCCESS).json({ success: true, orderId: order.id });
         }
     });
 };
@@ -263,13 +265,13 @@ const verifyPayment = async (req, res) => {
                     const product = await Product.findById(productId);
 
                     if (!product) {
-                        return res.status(404).json({ message: `Product not found: ${productId}` });
+                        return res.status(STATUS_CODES.NOT_FOUND).json({ message: `Product not found: ${productId}` });
                     }
                     if (product.stock === '0') {
-                        return res.status(400).json({ message: `${product.productName} is out of stock` });
+                        return res.status(STATUS_CODES.BAD_REQUEST).json({ message: `${product.productName} is out of stock` });
                     }
                     if (product.stock < quantity) {
-                        return res.status(400).json({ message: `Not enough stock for product ${product.productName}` });
+                        return res.status(STATUS_CODES.BAD_REQUEST).json({ message: `Not enough stock for product ${product.productName}` });
                     }
                 }
                 for (const item of cartData.product) {
@@ -301,14 +303,14 @@ const verifyPayment = async (req, res) => {
             }
 
 
-            return res.status(200)
+            return res.status(STATUS_CODES.SUCCESS)
                 .send({ success: true, message: "Payment verified successfully" });
         } else {
-            return res.status(400)
+            return res.status(STATUS_CODES.BAD_REQUEST)
                 .send({ success: false, message: "Payment verification failed" });
         }
     } catch {
-        return res.status(500).send({ success: false, message: "Internal Server Error" });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send({ success: false, message: MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -320,7 +322,7 @@ const generateInvoice = async (req, res) => {
             .populate('products.productId');
 
         if (!order) {
-            res.status(404).send('Order not found');
+            res.status(STATUS_CODES.NOT_FOUND).send('Order not found');
             return;
         }
 
@@ -330,7 +332,7 @@ const generateInvoice = async (req, res) => {
         );
 
         if (!address) {
-            res.status(404).send('Address not found');
+            res.status(STATUS_CODES.NOT_FOUND).send('Address not found');
             return;
         }
 
@@ -348,7 +350,7 @@ const generateInvoice = async (req, res) => {
         doc.end();
 
     } catch {
-        res.status(500).send('Error generating invoice');
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send('Error generating invoice');
         return;
     }
 };
@@ -445,7 +447,7 @@ const loadInvoice = async (req, res) => {
             .populate('products.productId');
         const coupon = await Coupon.findOne({ code: order.coupon });
         if (!order) {
-            return res.status(404).send('Order not found');
+            return res.status(STATUS_CODES.NOT_FOUND).send('Order not found');
         }
         const address = await Address.findOne(
             { 'address._id': order.addressId },
@@ -473,7 +475,7 @@ const loadInvoice = async (req, res) => {
             shippingPrice: shippingPrice.toFixed(2)
         });
     } catch {
-        return res.status(500).send('Server error');
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send('Server error');
     }
 };
 
@@ -507,14 +509,14 @@ const payByRazorpay = async (req, res) => {
             }
 
 
-            return res.status(200)
+            return res.status(STATUS_CODES.SUCCESS)
                 .send({ success: true, message: "Payment done successfully" });
         } else {
-            return res.status(400)
+            return res.status(STATUS_CODES.BAD_REQUEST)
                 .send({ success: false, message: "Payment failed" });
         }
     } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -543,9 +545,9 @@ const payByWallet = async (req, res) => {
             },
             { new: true }
         );
-        return res.status(200).json({ message: "Success" });
+        return res.status(STATUS_CODES.SUCCESS).json({ message: "Success" });
     } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(`An error occurred: ${error.message}`);
     }
 };
 

@@ -1,6 +1,8 @@
 
 const User = require('../models/userModel');
 const Wishlist = require('../models/wishlistModel');
+const MESSAGES = require("../constants/messages.constant");
+const STATUS_CODES = require('../enum/statusCode.enum');
 
 
 
@@ -18,7 +20,7 @@ const wishlist = async (req, res) => {
             wishlistData
         });
     } catch {
-        return res.status(500).send("Something went wrong");
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
 
     }
 };
@@ -33,7 +35,7 @@ const addToWishlist = async (req, res) => {
             if (wishlistData) {
                 const productCheck = wishlistData.products.find(p => p.productId.toString() === productId);
                 if (productCheck) {
-                    return res.status(200).json({ message: 'Already added to wishlist' });
+                    return res.status(STATUS_CODES.SUCCESS).json({ message: 'Already added to wishlist' });
                 } else {
                     wishlistData.products.unshift({ productId });
                     await wishlistData.save();
@@ -45,12 +47,12 @@ const addToWishlist = async (req, res) => {
                 });
                 await wishlistData.save();
             }
-            return res.status(200).json({ message: "Success" });
+            return res.status(STATUS_CODES.SUCCESS).json({ message: "Success" });
         } else {
-            return res.status(500).json({ message: "Log in to add products to wishlist" });
+            return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ message: "Log in to add products to wishlist" });
         }
     } catch {
-        return res.status(500).json({ message: "An error occurred" });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ message: "An error occurred" });
     }
 };
 
@@ -61,13 +63,13 @@ const removeFromWishlist = async (req, res) => {
 
         const wishlistData = await Wishlist.findOneAndUpdate({ userId: req.session.user._id }, { $pull: { products: { productId } } });
         if (wishlistData) {
-            return res.status(200).json({ message: 'Successfully removed from wishlist' });
+            return res.status(STATUS_CODES.SUCCESS).json({ message: 'Successfully removed from wishlist' });
         } else {
-            return res.status(500).json({ message: 'Product not found' });
+            return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ message: 'Product not found' });
         }
 
     } catch {
-        return res.status(500).send("Something went wrong");
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
     }
 };
 

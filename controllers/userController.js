@@ -8,6 +8,9 @@ const Wishlist = require('../models/wishlistModel');
 const Order = require('../models/orderModel');
 const Wallet = require('../models/walletModel');
 const Cart = require("../models/cartModel");
+const MESSAGES = require("../constants/messages.constant");
+const STATUS_CODES = require('../enum/statusCode.enum');
+
 const validate = require('../helpers/validatePassword');
 
 
@@ -15,7 +18,7 @@ const loadSignup = (req, res) => {
     try {
         return res.render('user/signup');
     } catch {
-        return res.status(500).send('Internal Server Error');
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
 
     }
 };
@@ -81,7 +84,7 @@ const loadVerify = async (req, res) => {
     try {
         return res.render('user/verify');
     } catch {
-        return res.status(500).send('Internal Server Error');
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
 
     }
 };
@@ -101,7 +104,7 @@ const resendOtp = async (req, res) => {
         }
 
     } catch {
-        return res.status(500).render('user/verifyForgot', {
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).render('user/verifyForgot', {
             message: "Something went wrong."
         });
 
@@ -155,7 +158,7 @@ const verifyOtp = async (req, res) => {
         }
     } catch {
 
-        return res.status(500).render('user/verify', {
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).render('user/verify', {
             message: 'Something went wrong'
         });
     }
@@ -167,7 +170,7 @@ const loadLogin = (req, res) => {
     try {
         return res.render('user/login');
     } catch {
-        return res.status(500).send('Internal Server Error');
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
 
     }
 };
@@ -204,7 +207,7 @@ const verifyLogin = async (req, res) => {
             });
         }
     } catch {
-        return res.status(500).render('user/login', {
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).render('user/login', {
             message: 'Something went wrong'
         });
     }
@@ -251,7 +254,7 @@ const loadHome = async (req, res) => {
         });
 
     } catch {
-        return res.status(500).send('Internal Server Error');
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -273,7 +276,7 @@ const loadForgotPassword = async (req, res) => {
     try {
         return res.render('user/forgotPassword');
     } catch {
-        return res.status(500).send('Internal Server Error');
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
 
     }
 };
@@ -298,8 +301,8 @@ const forgotPassword = async (req, res) => {
 
 
     } catch {
-        return res.status(500).render('user/forgotPassword', {
-            message: "Something went wrong"
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).render('user/forgotPassword', {
+            message: MESSAGES.INTERNAL_SERVER_ERROR
         });
 
     }
@@ -343,7 +346,7 @@ const setPassword = async (req, res) => {
             );
         }
     } catch {
-        return res.status(500).render('user/setPassword',
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).render('user/setPassword',
             { message: 'Something went wrong.' }
         );
     }
@@ -423,7 +426,7 @@ const shop = async (req, res) => {
             sortBy
         });
     } catch {
-        return res.status(500).send('Server Error');
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send('Server Error');
     }
 };
 
@@ -442,12 +445,12 @@ const productDetails = async (req, res) => {
         const product = await Product.findById(productId).exec();
 
         if (!product) {
-            return res.status(404).render('error', { message: 'Product not found' });
+            return res.status(STATUS_CODES.NOT_FOUND).render('error', { message: 'Product not found' });
         }
 
         const category = await Category.findById(product.category).exec();
         if (!category || !category.isActive) {
-            return res.status(404).render('error', { message: 'Product not found' });
+            return res.status(STATUS_CODES.NOT_FOUND).render('error', { message: 'Product not found' });
         }
 
         let wishlisted = false;
@@ -486,7 +489,7 @@ const productDetails = async (req, res) => {
         });
 
     } catch {
-        return res.status(500).render('error', { message: 'Internal Server Error' });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).render('error', { message: MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -499,21 +502,21 @@ const googleSuccess = async (req, res) => {
 
         if (req.user) {
             req.session.user = await User.findById(req.user._id);
-            return res.status(200).redirect('/');
+            return res.status(STATUS_CODES.SUCCESS).redirect('/');
         } else {
-            return res.status(404).render('user/login', { message: 'googleSuccess failure' });
+            return res.status(STATUS_CODES.NOT_FOUND).render('user/login', { message: 'googleSuccess failure' });
         }
     } catch {
-        return res.status(500).render('user/login', { message: 'Something went wrong' });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).render('user/login', { message: 'Something went wrong' });
     }
 };
 
 const googleFailure = async (req, res) => {
     try {
-        return res.status(404).render('user/login', { message: 'You have been blocked by SANDGLASS' });
+        return res.status(STATUS_CODES.NOT_FOUND).render('user/login', { message: 'You have been blocked by SANDGLASS' });
     } catch {
 
-        return res.status(500).render('user/login', { message: 'Something went wrong' });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).render('user/login', { message: 'Something went wrong' });
     }
 };
 
@@ -533,7 +536,7 @@ const profile = async (req, res) => {
 
         });
     } catch {
-        return res.status(500).send('Internal Server Error');
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -546,17 +549,17 @@ const editName = async (req, res) => {
         const newName = req.body.name;
         const nameUpdated = await User.findByIdAndUpdate(userId, { $set: { username: newName } }, { new: true });
         if (nameUpdated) {
-            return res.status(200).json({
+            return res.status(STATUS_CODES.SUCCESS).json({
                 message: 'Name updated successfully',
                 user: nameUpdated
             });
         } else {
-            return res.status(404).json({
+            return res.status(STATUS_CODES.NOT_FOUND).json({
                 message: 'User not found'
             });
         }
     } catch (error) {
-        return res.status(500).json({
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
             message: 'An error occurred while updating the name',
             error: error.message
         });
@@ -575,17 +578,17 @@ const editPhone = async (req, res) => {
         );
 
         if (phoneUpdated) {
-            return res.status(200).json({
+            return res.status(STATUS_CODES.SUCCESS).json({
                 message: 'Phone number updated successfully',
                 user: phoneUpdated
             });
         } else {
-            return res.status(404).json({
+            return res.status(STATUS_CODES.NOT_FOUND).json({
                 message: 'User not found'
             });
         }
     } catch (error) {
-        return res.status(500).json({
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
             message: 'An error occurred while updating the phone number',
             error: error.message
         });
@@ -598,7 +601,7 @@ const resetPassword = async (req, res) => {
         const { oldPassword, newPassword, confirmNewPassword } = req.body;
 
         if (newPassword !== confirmNewPassword) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: 'New password and confirm new password do not match'
             });
@@ -607,7 +610,7 @@ const resetPassword = async (req, res) => {
         const user = await User.findById(userId);
 
         if (!user) {
-            return res.status(404).json({
+            return res.status(STATUS_CODES.NOT_FOUND).json({
                 success: false,
                 message: 'User not found'
             });
@@ -616,7 +619,7 @@ const resetPassword = async (req, res) => {
         const isMatch = await hashing.comparePassword(oldPassword, user.password);
 
         if (!isMatch) {
-            return res.status(400).json({
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
                 success: false,
                 message: 'Old password is incorrect'
             });
@@ -626,12 +629,12 @@ const resetPassword = async (req, res) => {
         user.password = await hashing.hashPassword(newPassword);
         await user.save();
 
-        return res.status(200).json({
+        return res.status(STATUS_CODES.SUCCESS).json({
             success: true,
             message: 'Password reset successfully'
         });
     } catch (error) {
-        return res.status(500).json({
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
             success: false,
             message: 'An error occurred while resetting the password',
             error: error.message
@@ -700,14 +703,14 @@ const editAddress = async (req, res) => {
 
         const addressData = await Address.findOne({ userId: req.session.user._id });
         if (!addressData) {
-            return res.status(404).json({ message: "Address doesnot exist." });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ message: "Address doesnot exist." });
         }
         const updateAddress = addressData.address.find(
             (addr) => addr._id.toString() === addressId
         );
 
         if (!updateAddress) {
-            return res.status(404).json({ message: "Address doesnot exist." });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ message: "Address doesnot exist." });
         }
 
 
@@ -723,12 +726,12 @@ const editAddress = async (req, res) => {
         const newAddress = await addressData.save();
 
         if (!newAddress) {
-            return res.status(500).json({ message: "Failed to update address." });
+            return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ message: "Failed to update address." });
         }
-        return res.status(200).json({ message: "Successfully updated address" });
+        return res.status(STATUS_CODES.SUCCESS).json({ message: "Successfully updated address" });
 
     } catch (error) {
-        return res.status(500).json({ error, message: "Internal server error." });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error, message: "Internal server error." });
     }
 };
 
@@ -737,7 +740,7 @@ const deleteAddress = async (req, res) => {
         const { addressId } = req.body;
         const addressData = await Address.findOne({ userId: req.session.user._id });
         if (!addressData) {
-            return res.status(404).json({ message: "Address doesnot exist." });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ message: "Address doesnot exist." });
         }
         const findAddress = addressData.address.find(
             (addr) => addr._id.toString() === addressId
@@ -745,9 +748,9 @@ const deleteAddress = async (req, res) => {
         const addressIndex = addressData.address.indexOf(findAddress);
         addressData.address.splice(addressIndex, 1);
         await addressData.save();
-        return res.status(200).json({ message: "Successfully deleted" });
+        return res.status(STATUS_CODES.SUCCESS).json({ message: "Successfully deleted" });
     } catch (error) {
-        return res.status(500).json({ error, message: "Internal server error." });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error, message: "Internal server error." });
     }
 };
 
@@ -769,7 +772,7 @@ const autoComplete = async (req, res) => {
         }));
         return res.json(suggestions);
     } catch {
-        return res.status(500).json({ message: "Internal server error." });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ message: "Internal server error." });
 
 
     }
@@ -780,7 +783,7 @@ const loadAbout = async (req, res) => {
         const userData = await User.findById(req.session.user);
         return res.render('user/about', { userData });
     } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(`An error occurred: ${error.message}`);
     }
 };
 const loadContact = async (req, res) => {
@@ -788,7 +791,7 @@ const loadContact = async (req, res) => {
         const userData = await User.findById(req.session.user);
         return res.render('user/contact', { userData });
     } catch (error) {
-        return res.status(500).send(`An error occurred: ${error.message}`);
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(`An error occurred: ${error.message}`);
     }
 };
 
@@ -801,7 +804,7 @@ const getWalletTransactions = async (req, res) => {
         const wallet = await Wallet.findOne({ userId });
 
         if (!wallet) {
-            return res.status(404).json({ message: 'Wallet not found' });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ message: 'Wallet not found' });
         }
 
         const totalTransactions = wallet.transactions.length;
@@ -817,7 +820,7 @@ const getWalletTransactions = async (req, res) => {
             totalPages
         });
     } catch (error) {
-        return res.status(500).json({ message: 'Error fetching wallet transactions', error: error.message });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ message: 'Error fetching wallet transactions', error: error.message });
     }
 };
 

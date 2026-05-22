@@ -6,9 +6,12 @@ const Order = require('../models/orderModel');
 const Address = require('../models/addressModel');
 const Wallet = require('../models/walletModel');
 const Coupon = require('../models/couponModel');
+const MESSAGES = require("../constants/messages.constant");
+const STATUS_CODES = require('../enum/statusCode.enum');
 const PDFDocument = require('pdfkit');
 const ExcelJS = require('exceljs');
 const moment = require('moment');
+
 
 
 
@@ -18,7 +21,7 @@ const loadLogin = async (req, res) => {
         return res.render('admin/login');
     } catch (error) {
 
-        return res.status(500).json({ error, message: "Failed to load login page" });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error, message: MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -34,14 +37,14 @@ const adminLogin = async (req, res) => {
                 req.session.admin = adminData;
                 return res.redirect('/admin/dashboard');
             } else {
-                return res.render('admin/login', { message: 'Incorrect credentials' });
+                return res.render('admin/login', { message: MESSAGES.INCORRECT_CREDENTIALS });
             }
         } else {
-            return res.render('admin/login', { message: 'Incorrect credentials' });
+            return res.render('admin/login', { message: MESSAGES.INCORRECT_CREDENTIALS });
         }
 
     } catch (error) {
-        return res.status(500).json({ error, message: "Failed to login to admin dashboard" });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error, message: MESSAGES.INTERNAL_SERVER_ERROR });
 
     }
 
@@ -130,7 +133,7 @@ const loadDashboard = async (req, res) => {
             });
         }
     } catch {
-        return res.status(500).send('An error occurred while loading the dashboard');
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -217,7 +220,7 @@ const loadUsers = async (req, res) => {
         return res.render('admin/users', { userData, totalPages, page });
 
     } catch {
-        return res.status(500).send("Something went wrong");
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_ERROR);
     }
 };
 
@@ -276,7 +279,7 @@ const orderList = async (req, res) => {
             totalPages
         });
     } catch {
-        return res.status(500).send("Something went wrong");
+        return res.status(500).send(MESSAGES.INTERNAL_SERVER_ERROR);
     }
 };
 
