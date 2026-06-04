@@ -205,22 +205,22 @@
         }
 
         .sg-dropdown {
-    position: absolute;
-    right: 0;
-    top: calc(100% + 8px);
-    background: var(--white);
-    border: 1px solid var(--gray-100);
-    border-radius: 12px;
-    padding: 6px;
-    min-width: 180px;
-    box-shadow: 0 8px 24px rgba(60,52,137,0.10);
-    display: none;
-    z-index: 200;
-}
+            position: absolute;
+            right: 0;
+            top: calc(100% + 8px);
+            background: var(--white);
+            border: 1px solid var(--gray-100);
+            border-radius: 12px;
+            padding: 6px;
+            min-width: 180px;
+            box-shadow: 0 8px 24px rgba(60, 52, 137, 0.10);
+            display: none;
+            z-index: 200;
+        }
 
-.sg-dropdown.active {
-    display: block;
-}
+        .sg-dropdown.active {
+            display: block;
+        }
 
 
         .sg-dropdown a {
@@ -1031,15 +1031,15 @@
                             Profile
                         </a>
                         <div class="sg-dropdown-divider"></div>
-                        <a href="/logout" class="danger">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
-                                <polyline points="16 17 21 12 16 7" />
-                                <line x1="21" y1="12" x2="9" y2="12" />
-                            </svg>
-                            Logout
-                        </a>
+                        <a href="#" id="logoutBtn" class="danger">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+                                    <polyline points="16 17 21 12 16 7" />
+                                    <line x1="21" y1="12" x2="9" y2="12" />
+                                </svg>
+                                Logout
+                            </a>
                     </div>
                 </div>
             </div>
@@ -1668,7 +1668,7 @@
                     <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                 </div>
                 <div class="modal-body" style="padding:24px;">
-                    <form action="/add_address" method="post" onsubmit="return validateFormAdd()">
+                    <form action="/address" method="post" onsubmit="return validateFormAdd()">
                         <div class="sg-form-group">
                             <label>Full Name</label>
                             <input type="text" name="fullName" id="fullName" class="sg-input" placeholder="Full name *"
@@ -1785,46 +1785,56 @@
             btn.classList.toggle('open');
         }
 
-        // ── Save name ──
+
         function saveName() {
             const modal = document.getElementById('editNameModal');
             const userId = modal.getAttribute('data-user-id');
             fetch(`/edit_name/${userId}`, {
-                method: 'PUT',
+                method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name: document.getElementById('editName').value })
             })
                 .then(r => r.json())
                 .then(data => {
-                    if (data && data.user) { alert('Name updated successfully'); window.location.href = '/profile'; }
-                    else { alert('Failed to update name'); }
+                    if (data && data.user) {
+                        Swal.fire({ title: 'Name updated', icon: 'success', confirmButtonColor: '#3C3489', timer: 1500, showConfirmButton: false })
+                            .then(() => window.location.href = '/profile');
+                    } else {
+                        Swal.fire({ title: 'Update failed', text: 'Could not update name. Please try again.', icon: 'error', confirmButtonColor: '#3C3489' });
+                    }
                 })
-                .catch(() => alert('Failed to update name'));
+                .catch(() => Swal.fire({ title: 'Update failed', text: 'A network error occurred.', icon: 'error', confirmButtonColor: '#3C3489' }));
         }
 
-        // ── Save phone ──
+
+
         function savePhone() {
             const modal = document.getElementById('editPhoneModal');
             const userId = modal.getAttribute('data-user-id');
             fetch(`/edit_phone/${userId}`, {
-                method: 'PUT',
+                method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ phone: document.getElementById('editPhone').value })
             })
                 .then(r => r.json())
                 .then(data => {
-                    if (data && data.user) { alert('Phone updated successfully'); window.location.href = '/profile'; }
-                    else { alert('Failed to update phone'); }
+                    if (data && data.user) {
+                        Swal.fire({ title: 'Phone updated', icon: 'success', confirmButtonColor: '#3C3489', timer: 1500, showConfirmButton: false })
+                            .then(() => window.location.href = '/profile');
+                    } else {
+                        Swal.fire({ title: 'Update failed', text: 'Could not update phone. Please try again.', icon: 'error', confirmButtonColor: '#3C3489' });
+                    }
                 })
-                .catch(() => alert('Failed to update phone'));
+                .catch(() => Swal.fire({ title: 'Update failed', text: 'A network error occurred.', icon: 'error', confirmButtonColor: '#3C3489' }));
         }
 
-        // ── Reset password ──
+
+
         function resetPassword() {
             const modal = document.getElementById('resetPasswordModal');
             const userId = modal.getAttribute('data-user-id');
             fetch(`/reset_password/${userId}`, {
-                method: 'PUT',
+                method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     oldPassword: document.getElementById('oldPassword').value,
@@ -1834,13 +1844,18 @@
             })
                 .then(r => r.json())
                 .then(data => {
-                    if (data.success) { alert('Password reset successfully'); window.location.href = '/profile'; }
-                    else { alert('Password reset failed: ' + data.message); }
+                    if (data.success) {
+                        Swal.fire({ title: 'Password reset', icon: 'success', confirmButtonColor: '#3C3489', timer: 1500, showConfirmButton: false })
+                            .then(() => window.location.href = '/profile');
+                    } else {
+                        Swal.fire({ title: 'Reset failed', text: data.message || 'Please check your current password and try again.', icon: 'error', confirmButtonColor: '#3C3489' });
+                    }
                 })
-                .catch(() => alert('Failed to reset password'));
+                .catch(() => Swal.fire({ title: 'Reset failed', text: 'A network error occurred.', icon: 'error', confirmButtonColor: '#3C3489' }));
         }
 
-        // ── Address validation ──
+
+
         function validateFullName() {
             const v = document.getElementById('fullName').value;
             document.getElementById('errorFullname').textContent = (!v || !v.trim()) ? 'Enter name' : '';
@@ -1922,17 +1937,18 @@
                 })
             }).then(async (result) => {
                 if (result.isConfirmed) {
-                    const res = await fetch('/edit_address', {
-                        method: 'PUT',
+                    const res = await fetch(`/addresses/${addressId}`, {
+                        method: 'PATCH',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ address: result.value, addressId })
+                        body: JSON.stringify({ address: result.value })
                     });
                     if (res.ok) window.location.href = '/profile?tab=address';
                 }
             });
         }
 
-        // ── Delete address ──
+
+
         function deleteAddress(addressId) {
             Swal.fire({
                 title: 'Delete Address?',
@@ -1944,17 +1960,16 @@
                 confirmButtonText: 'Delete'
             }).then(async (result) => {
                 if (result.isConfirmed) {
-                    await fetch('/delete_address', {
+                    await fetch(`/addresses/${addressId}`, {
                         method: 'DELETE',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ addressId })
-                    });
+                        headers: { 'Content-Type': 'application/json' }                    });
                     window.location.href = '/profile?tab=address';
                 }
             });
         }
 
-        // ── Logout ──
+
+
         function showLogoutConfirmation() {
             Swal.fire({
                 title: 'Log out?',
@@ -1969,7 +1984,8 @@
             });
         }
 
-        // ── Cancel order ──
+
+
         function cancelOrder(orderId, productId) {
             Swal.fire({
                 title: 'Cancel this item?',
@@ -1990,7 +2006,8 @@
             });
         }
 
-        // ── Return order ──
+
+
         function returnOrder(orderId, productId) {
             Swal.fire({
                 title: 'Return this item?',
@@ -2026,6 +2043,18 @@
                 }
             });
         }
+    </script>
+
+    <script>
+        document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            await fetch('/logout', {
+                method: 'POST'
+            });
+
+            window.location.href = '/login';
+        });
     </script>
 
     <script>

@@ -127,7 +127,7 @@ const placeOrder = async (req, res) => {
         cartData.product = [];
         cartData.coupon = null;
         await cartData.save();
-        return res.status(STATUS_CODES.SUCCESS).json({ message: "Success" });
+        return res.status(STATUS_CODES.OK).json({ message: "Success" });
 
     } catch {
         return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.INTERNAL_SERVER_ERROR });
@@ -195,7 +195,7 @@ const cancelOrder = async (req, res) => {
         product.status = "Cancelled";
         await orderData.save();
 
-        return res.status(STATUS_CODES.SUCCESS).json({ message: "Successfully Cancelled" });
+        return res.status(STATUS_CODES.OK).json({ message: "Successfully Cancelled" });
     } catch {
         return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.INTERNAL_SERVER_ERROR });
     }
@@ -234,7 +234,7 @@ const razorPayment = (req, res) => {
         if (err) {
             return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: "Failed to create order", error: err });
         } else {
-            return res.status(STATUS_CODES.SUCCESS).json({ success: true, orderId: order.id });
+            return res.status(STATUS_CODES.OK).json({ success: true, orderId: order.id });
         }
     });
 };
@@ -303,7 +303,7 @@ const verifyPayment = async (req, res) => {
             }
 
 
-            return res.status(STATUS_CODES.SUCCESS)
+            return res.status(STATUS_CODES.OK)
                 .send({ success: true, message: "Payment verified successfully" });
         } else {
             return res.status(STATUS_CODES.BAD_REQUEST)
@@ -509,7 +509,7 @@ const payByRazorpay = async (req, res) => {
             }
 
 
-            return res.status(STATUS_CODES.SUCCESS)
+            return res.status(STATUS_CODES.OK)
                 .send({ success: true, message: "Payment done successfully" });
         } else {
             return res.status(STATUS_CODES.BAD_REQUEST)
@@ -545,7 +545,7 @@ const payByWallet = async (req, res) => {
             },
             { new: true }
         );
-        return res.status(STATUS_CODES.SUCCESS).json({ message: "Success" });
+        return res.status(STATUS_CODES.OK).json({ message: "Success" });
     } catch (error) {
         return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(`An error occurred: ${error.message}`);
     }

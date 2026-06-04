@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <title>Sandglass Dashboard</title>
@@ -7,7 +8,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
     <link rel="shortcut icon" type="image/x-icon" href="/admin/assets/imgs/theme/favicon.svg">
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         :root {
             --purple-50: #EEEDFE;
@@ -31,8 +38,8 @@
             --text-primary: #1a1825;
             --text-secondary: #6b6880;
             --text-tertiary: #9b98ab;
-            --border: rgba(83,74,183,0.12);
-            --border-md: rgba(83,74,183,0.2);
+            --border: rgba(83, 74, 183, 0.12);
+            --border-md: rgba(83, 74, 183, 0.2);
             --radius-md: 8px;
             --radius-lg: 12px;
         }
@@ -79,10 +86,22 @@
             justify-content: center;
         }
 
-        .brand-name { font-size: 15px; font-weight: 600; color: var(--text-primary); }
-        .brand-sub { font-size: 11px; color: var(--text-tertiary); }
+        .brand-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
 
-        nav { padding: 1rem 0.75rem; flex: 1; overflow-y: auto; }
+        .brand-sub {
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+
+        nav {
+            padding: 1rem 0.75rem;
+            flex: 1;
+            overflow-y: auto;
+        }
 
         .nav-label {
             font-size: 10px;
@@ -108,10 +127,24 @@
             text-decoration: none;
         }
 
-        .nav-item:hover { background: var(--bg-secondary); color: var(--text-primary); }
-        .nav-item.active { background: var(--purple-50); color: var(--purple-600); font-weight: 500; }
-        .nav-item i { font-size: 17px; }
-        .nav-item.active i { color: var(--purple-600); }
+        .nav-item:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--purple-50);
+            color: var(--purple-600);
+            font-weight: 500;
+        }
+
+        .nav-item i {
+            font-size: 17px;
+        }
+
+        .nav-item.active i {
+            color: var(--purple-600);
+        }
 
         .sidebar-footer {
             padding: 1rem 1.25rem;
@@ -139,8 +172,15 @@
             flex-shrink: 0;
         }
 
-        .user-name { font-size: 13px; font-weight: 500; }
-        .user-role { font-size: 11px; color: var(--text-tertiary); }
+        .user-name {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
 
         .logout-btn {
             display: flex;
@@ -155,9 +195,14 @@
             text-decoration: none;
         }
 
-        .logout-btn:hover { background: var(--bg-secondary); }
+        .logout-btn:hover {
+            background: var(--bg-secondary);
+        }
 
-        .main { display: flex; flex-direction: column; }
+        .main {
+            display: flex;
+            flex-direction: column;
+        }
 
         .topbar {
             background: var(--bg-primary);
@@ -191,10 +236,20 @@
             width: 100%;
         }
 
-        .search input::placeholder { color: var(--text-tertiary); }
-        .search i { font-size: 16px; color: var(--text-tertiary); }
+        .search input::placeholder {
+            color: var(--text-tertiary);
+        }
 
-        .topbar-right { display: flex; align-items: center; gap: 8px; }
+        .search i {
+            font-size: 16px;
+            color: var(--text-tertiary);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
         .icon-btn {
             width: 34px;
@@ -210,14 +265,34 @@
             text-decoration: none;
         }
 
-        .icon-btn:hover { background: var(--bg-secondary); }
-        .icon-btn i { font-size: 17px; color: var(--text-secondary); }
+        .icon-btn:hover {
+            background: var(--bg-secondary);
+        }
 
-        .content { padding: 1.5rem; flex: 1; }
+        .icon-btn i {
+            font-size: 17px;
+            color: var(--text-secondary);
+        }
 
-        .page-header { margin-bottom: 1.5rem; }
-        .page-title { font-size: 20px; font-weight: 600; }
-        .page-sub { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+        .content {
+            padding: 1.5rem;
+            flex: 1;
+        }
+
+        .page-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .page-sub {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
 
         .stats-grid {
             display: grid;
@@ -246,16 +321,44 @@
             flex-shrink: 0;
         }
 
-        .stat-icon.purple { background: var(--purple-50); }
-        .stat-icon.purple i { color: var(--purple-600); }
-        .stat-icon.teal { background: var(--teal-50); }
-        .stat-icon.teal i { color: var(--teal-600); }
-        .stat-icon.amber { background: var(--amber-50); }
-        .stat-icon.amber i { color: var(--amber-600); }
-        .stat-icon i { font-size: 22px; }
+        .stat-icon.purple {
+            background: var(--purple-50);
+        }
 
-        .stat-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
-        .stat-value { font-size: 22px; font-weight: 600; }
+        .stat-icon.purple i {
+            color: var(--purple-600);
+        }
+
+        .stat-icon.teal {
+            background: var(--teal-50);
+        }
+
+        .stat-icon.teal i {
+            color: var(--teal-600);
+        }
+
+        .stat-icon.amber {
+            background: var(--amber-50);
+        }
+
+        .stat-icon.amber i {
+            color: var(--amber-600);
+        }
+
+        .stat-icon i {
+            font-size: 22px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: 600;
+        }
 
         .chart-section {
             background: var(--bg-primary);
@@ -272,9 +375,15 @@
             margin-bottom: 1rem;
         }
 
-        .section-title { font-size: 14px; font-weight: 600; }
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
 
-        .pill-group { display: flex; gap: 4px; }
+        .pill-group {
+            display: flex;
+            gap: 4px;
+        }
 
         .pill-btn {
             padding: 4px 12px;
@@ -287,10 +396,21 @@
             transition: all .15s;
         }
 
-        .pill-btn:hover { background: var(--bg-secondary); }
-        .pill-btn.active { background: var(--purple-50); color: var(--purple-600); border-color: var(--purple-200); font-weight: 500; }
+        .pill-btn:hover {
+            background: var(--bg-secondary);
+        }
 
-        .chart-wrap { height: 220px; position: relative; }
+        .pill-btn.active {
+            background: var(--purple-50);
+            color: var(--purple-600);
+            border-color: var(--purple-200);
+            font-weight: 500;
+        }
+
+        .chart-wrap {
+            height: 220px;
+            position: relative;
+        }
 
         .orders-section {
             background: var(--bg-primary);
@@ -315,9 +435,14 @@
             flex-wrap: wrap;
         }
 
-        .date-label { font-size: 12px; color: var(--text-secondary); white-space: nowrap; }
+        .date-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
 
-        .date-input, .fmt-select {
+        .date-input,
+        .fmt-select {
             padding: 5px 10px;
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
@@ -327,7 +452,10 @@
             outline: none;
         }
 
-        .date-input:focus, .fmt-select:focus { border-color: var(--purple-400); }
+        .date-input:focus,
+        .fmt-select:focus {
+            border-color: var(--purple-400);
+        }
 
         .primary-btn {
             padding: 5px 14px;
@@ -343,9 +471,15 @@
             display: inline-block;
         }
 
-        .primary-btn:hover { background: var(--purple-800); color: #fff; }
+        .primary-btn:hover {
+            background: var(--purple-800);
+            color: #fff;
+        }
 
-        .orders-filter { display: flex; gap: 4px; }
+        .orders-filter {
+            display: flex;
+            gap: 4px;
+        }
 
         .filter-pill {
             padding: 4px 12px;
@@ -358,12 +492,26 @@
             transition: all .15s;
         }
 
-        .filter-pill:hover { background: var(--bg-secondary); }
-        .filter-pill.active { background: var(--purple-50); color: var(--purple-600); border-color: var(--purple-200); font-weight: 500; }
+        .filter-pill:hover {
+            background: var(--bg-secondary);
+        }
 
-        .table-wrap { overflow-x: auto; }
+        .filter-pill.active {
+            background: var(--purple-50);
+            color: var(--purple-600);
+            border-color: var(--purple-200);
+            font-weight: 500;
+        }
 
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
 
         th {
             text-align: left;
@@ -384,9 +532,14 @@
             white-space: nowrap;
         }
 
-        tr:hover td { background: var(--bg-secondary); }
+        tr:hover td {
+            background: var(--bg-secondary);
+        }
 
-        .order-id { color: var(--purple-600); font-weight: 600; }
+        .order-id {
+            color: var(--purple-600);
+            font-weight: 600;
+        }
 
         .badge {
             display: inline-block;
@@ -396,9 +549,20 @@
             font-weight: 500;
         }
 
-        .badge.success { background: var(--green-50); color: var(--green-800); }
-        .badge.warning { background: var(--amber-50); color: var(--amber-600); }
-        .badge.info    { background: var(--blue-50);  color: var(--blue-600);  }
+        .badge.success {
+            background: var(--green-50);
+            color: var(--green-800);
+        }
+
+        .badge.warning {
+            background: var(--amber-50);
+            color: var(--amber-600);
+        }
+
+        .badge.info {
+            background: var(--blue-50);
+            color: var(--blue-600);
+        }
 
         .view-btn {
             padding: 4px 12px;
@@ -413,7 +577,11 @@
             display: inline-block;
         }
 
-        .view-btn:hover { background: var(--purple-50); color: var(--purple-600); border-color: var(--purple-200); }
+        .view-btn:hover {
+            background: var(--purple-50);
+            color: var(--purple-600);
+            border-color: var(--purple-200);
+        }
 
         .pager {
             display: flex;
@@ -439,8 +607,16 @@
             text-decoration: none;
         }
 
-        .page-btn:hover { background: var(--bg-secondary); }
-        .page-btn.active { background: var(--purple-50); color: var(--purple-600); border-color: var(--purple-200); font-weight: 600; }
+        .page-btn:hover {
+            background: var(--bg-secondary);
+        }
+
+        .page-btn.active {
+            background: var(--purple-50);
+            color: var(--purple-600);
+            border-color: var(--purple-200);
+            font-weight: 600;
+        }
 
         footer {
             padding: 1rem 1.5rem;
@@ -451,276 +627,372 @@
         }
     </style>
 </head>
+
 <body>
 
-<div class="shell">
+    <div class="shell">
 
-    <aside class="sidebar">
-        <div class="brand">
-            <div class="brand-icon">
-                <img src="/admin/assets/imgs/theme/sandglass-high-resolution-logo-transparent.svg"
-                     style="width:22px;height:22px;object-fit:contain;filter:brightness(0) invert(1)" alt="Sandglass">
-            </div>
-            <div>
-                <div class="brand-name">Sandglass</div>
-                <div class="brand-sub">Admin panel</div>
-            </div>
-        </div>
-
-        <nav>
-            <div class="nav-label">Main</div>
-            <a href="/admin/dashboard" class="nav-item active"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
-            <a href="/admin/products"  class="nav-item"><i class="ti ti-shopping-bag"></i> Products</a>
-            <a href="/admin/orders"    class="nav-item"><i class="ti ti-shopping-cart"></i> Orders</a>
-            <a href="/admin/users"     class="nav-item"><i class="ti ti-users"></i> Users</a>
-
-            <div class="nav-label">Catalog</div>
-            <a href="/admin/add_product" class="nav-item"><i class="ti ti-circle-plus"></i> Add product</a>
-            <a href="/admin/categories"  class="nav-item"><i class="ti ti-apps"></i> Categories</a>
-            <a href="/admin/coupons"     class="nav-item"><i class="ti ti-ticket"></i> Coupons</a>
-
-            <div class="nav-label">Analytics</div>
-            <a href="/admin/offers"     class="nav-item"><i class="ti ti-tag"></i> Offers</a>
-            <a href="/admin/statistics" class="nav-item"><i class="ti ti-chart-pie"></i> Statistics</a>
-        </nav>
-
-        <div class="sidebar-footer">
-            <div class="user-row">
-                <div class="avatar">AD</div>
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">
+                    <img src="/admin/assets/imgs/theme/sandglass-high-resolution-logo-transparent.svg"
+                        style="width:22px;height:22px;object-fit:contain;filter:brightness(0) invert(1)"
+                        alt="Sandglass">
+                </div>
                 <div>
-                    <div class="user-name">Admin</div>
-                    <div class="user-role">Store manager</div>
+                    <div class="brand-name">Sandglass</div>
+                    <div class="brand-sub">Admin panel</div>
                 </div>
             </div>
-            <a href="/admin/logout" class="logout-btn"><i class="ti ti-logout"></i> Sign out</a>
-        </div>
-    </aside>
 
-    <div class="main">
+            <nav>
+                <div class="nav-label">Main</div>
+                <a href="/admin/dashboard" class="nav-item active"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+                <a href="/admin/products" class="nav-item"><i class="ti ti-shopping-bag"></i> Products</a>
+                <a href="/admin/orders" class="nav-item"><i class="ti ti-shopping-cart"></i> Orders</a>
+                <a href="/admin/users" class="nav-item"><i class="ti ti-users"></i> Users</a>
 
-        <header class="topbar">
-            <div class="search">
-                <i class="ti ti-search"></i>
-                <input type="text" placeholder="Search products, orders…">
-            </div>
-            <div class="topbar-right">
-                <a href="#" class="icon-btn darkmode" title="Dark mode"><i class="ti ti-moon"></i></a>
-                <a href="#" class="icon-btn requestfullscreen" title="Fullscreen"><i class="ti ti-maximize"></i></a>
-                <a href="/admin/logout" class="icon-btn" title="Logout"><i class="ti ti-logout"></i></a>
-            </div>
-        </header>
+                <div class="nav-label">Catalog</div>
+                <a href="/admin/add_product" class="nav-item"><i class="ti ti-circle-plus"></i> Add product</a>
+                <a href="/admin/categories" class="nav-item"><i class="ti ti-apps"></i> Categories</a>
+                <a href="/admin/coupons" class="nav-item"><i class="ti ti-ticket"></i> Coupons</a>
 
-        <div class="content">
+                <div class="nav-label">Analytics</div>
+                <a href="/admin/offers" class="nav-item"><i class="ti ti-tag"></i> Offers</a>
+                <a href="/admin/statistics" class="nav-item"><i class="ti ti-chart-pie"></i> Statistics</a>
+            </nav>
 
-            <div class="page-header">
-                <div class="page-title">Dashboard</div>
-                <div class="page-sub">Whole data about your business here</div>
-            </div>
-
-            <!-- Stat cards -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon purple"><i class="ti ti-currency-rupee"></i></div>
+            <div class="sidebar-footer">
+                <div class="user-row">
+                    <div class="avatar">AD</div>
                     <div>
-                        <div class="stat-label">Revenue</div>
-                        <div class="stat-value">₹<%=totalRevenue%></div>
+                        <div class="user-name">Admin</div>
+                        <div class="user-role">Store manager</div>
                     </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon teal"><i class="ti ti-truck-delivery"></i></div>
-                    <div>
-                        <div class="stat-label">Orders</div>
-                        <div class="stat-value"><%=orderData.length%></div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon amber"><i class="ti ti-package"></i></div>
-                    <div>
-                        <div class="stat-label">Products</div>
-                        <div class="stat-value"><%=productData.length%></div>
-                    </div>
-                </div>
+                <a href="#" id="logoutBtn" class="logout-btn"><i class="ti ti-logout"></i> Sign out</a>
             </div>
+        </aside>
 
-            <!-- Sales chart -->
-            <div class="chart-section">
-                <div class="section-header">
-                    <div class="section-title">Sale statistics</div>
-                    <div class="pill-group">
-                        <button class="pill-btn <%= interval === 'day'   ? 'active' : '' %>" onclick="changeInterval('day',   this)">Day</button>
-                        <button class="pill-btn <%= interval === 'month' ? 'active' : '' %>" onclick="changeInterval('month', this)">Month</button>
-                        <button class="pill-btn <%= interval === 'year'  ? 'active' : '' %>" onclick="changeInterval('year',  this)">Year</button>
-                    </div>
-                </div>
-                <div class="chart-wrap">
-                    <canvas id="turnoverChart"></canvas>
-                </div>
-            </div>
+        <div class="main">
 
-            <!-- Orders table -->
-            <div class="orders-section">
-                <div class="section-header">
-                    <div class="section-title">Recent orders</div>
-                    <div class="orders-filter">
-                        <div class="filter-pill active" id="allOrders">All Orders</div>
-                        <div class="filter-pill" id="todayOption">Today</div>
-                        <div class="filter-pill" id="thisWeekOption">This Week</div>
-                        <div class="filter-pill" id="thisMonthOption">This Month</div>
-                    </div>
+            <header class="topbar">
+                <div class="search">
+                    <i class="ti ti-search"></i>
+                    <input type="text" placeholder="Search products, orders…">
+                </div>
+                <div class="topbar-right">
+                    <a href="#" class="icon-btn darkmode" title="Dark mode"><i class="ti ti-moon"></i></a>
+                    <a href="#" class="icon-btn requestfullscreen" title="Fullscreen"><i class="ti ti-maximize"></i></a>
+                </div>
+            </header>
+
+            <div class="content">
+
+                <div class="page-header">
+                    <div class="page-title">Dashboard</div>
+                    <div class="page-sub">Whole data about your business here</div>
                 </div>
 
-                <form id="filterForm" action="/admin/dashboard" method="GET">
-                    <div class="filter-bar">
-                        <div class="date-row">
-                            <span class="date-label">From</span>
-                            <input type="date" id="dateFrom" name="dateFrom" class="date-input">
-                            <span class="date-label">To</span>
-                            <input type="date" id="dateTo" name="dateTo" class="date-input">
-                            <button type="submit" class="primary-btn">Filter</button>
-                        </div>
-                        <div class="date-row">
-                            <select id="reportFormat" class="fmt-select">
-                                <option value="pdf">PDF</option>
-                                <option value="excel">Excel</option>
-                            </select>
-                            <a href="#" id="createReportBtn" class="primary-btn">Create report</a>
+                <!-- Stat cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon purple"><i class="ti ti-currency-rupee"></i></div>
+                        <div>
+                            <div class="stat-label">Revenue</div>
+                            <div class="stat-value">₹<%=totalRevenue%>
+                            </div>
                         </div>
                     </div>
-                </form>
-
-                <div class="table-wrap">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Billing Name</th>
-                                <th>Date</th>
-                                <th>Total</th>
-                                <th>Payment Status</th>
-                                <th>Payment Method</th>
-                                <th>View Details</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% orderData.forEach(order => { %>
-                            <tr>
-                                <td class="order-id"><%= order.orderId %></td>
-                                <td><%= order.userId.username %></td>
-                                <td><%= new Date(order.orderDate).toDateString() %></td>
-                                <td>₹<%= order.payableAmount %></td>
-                                <td><span class="badge <%= (order.paymentStatus=='Success') ? 'success' : 'warning' %>"><%= order.paymentStatus %></span></td>
-                                <td><i class="ti ti-credit-card" style="font-size:15px;vertical-align:-2px;margin-right:4px"></i><%= order.paymentMethod %></td>
-                                <td><a href="/admin/order_details?orderId=<%= order.orderId %>" class="view-btn">View details</a></td>
-                            </tr>
-                            <% }) %>
-                        </tbody>
-                    </table>
+                    <div class="stat-card">
+                        <div class="stat-icon teal"><i class="ti ti-truck-delivery"></i></div>
+                        <div>
+                            <div class="stat-label">Orders</div>
+                            <div class="stat-value">
+                                <%=orderData.length%>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon amber"><i class="ti ti-package"></i></div>
+                        <div>
+                            <div class="stat-label">Products</div>
+                            <div class="stat-value">
+                                <%=productData.length%>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Pagination -->
-                <nav class="pager" aria-label="Page navigation">
-                    <% if(currentPage > 1) { %>
-                    <a class="page-btn" href="?page=<%= currentPage - 1 %>"><i class="ti ti-chevron-left" style="font-size:14px"></i></a>
-                    <% } %>
-                    <% for(let i = 1; i <= totalPages; i++) { %>
-                    <a class="page-btn <%= (currentPage === i) ? 'active' : '' %>" href="?page=<%= i %>"><%= i %></a>
-                    <% } %>
-                    <% if(currentPage < totalPages) { %>
-                    <a class="page-btn" href="?page=<%= currentPage + 1 %>"><i class="ti ti-chevron-right" style="font-size:14px"></i></a>
-                    <% } %>
-                </nav>
+                <!-- Sales chart -->
+                <div class="chart-section">
+                    <div class="section-header">
+                        <div class="section-title">Sale statistics</div>
+                        <div class="pill-group">
+                            <button class="pill-btn <%= interval === 'day'   ? 'active' : '' %>"
+                                onclick="changeInterval('day',   this)">Day</button>
+                            <button class="pill-btn <%= interval === 'month' ? 'active' : '' %>"
+                                onclick="changeInterval('month', this)">Month</button>
+                            <button class="pill-btn <%= interval === 'year'  ? 'active' : '' %>"
+                                onclick="changeInterval('year',  this)">Year</button>
+                        </div>
+                    </div>
+                    <div class="chart-wrap">
+                        <canvas id="turnoverChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Orders table -->
+                <div class="orders-section">
+                    <div class="section-header">
+                        <div class="section-title">Recent orders</div>
+                        <div class="orders-filter">
+                            <div class="filter-pill active" id="allOrders">All Orders</div>
+                            <div class="filter-pill" id="todayOption">Today</div>
+                            <div class="filter-pill" id="thisWeekOption">This Week</div>
+                            <div class="filter-pill" id="thisMonthOption">This Month</div>
+                        </div>
+                    </div>
+
+                    <form id="filterForm" action="/admin/dashboard" method="GET">
+                        <div class="filter-bar">
+                            <div class="date-row">
+                                <span class="date-label">From</span>
+                                <input type="date" id="dateFrom" name="dateFrom" class="date-input">
+                                <span class="date-label">To</span>
+                                <input type="date" id="dateTo" name="dateTo" class="date-input">
+                                <button type="submit" class="primary-btn">Filter</button>
+                            </div>
+                            <div class="date-row">
+                                <select id="reportFormat" class="fmt-select">
+                                    <option value="pdf">PDF</option>
+                                    <option value="excel">Excel</option>
+                                </select>
+                                <a href="#" id="createReportBtn" class="primary-btn">Create report</a>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Billing Name</th>
+                                    <th>Date</th>
+                                    <th>Total</th>
+                                    <th>Payment Status</th>
+                                    <th>Payment Method</th>
+                                    <th>View Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% orderData.forEach(order=> { %>
+                                    <tr>
+                                        <td class="order-id">
+                                            <%= order.orderId %>
+                                        </td>
+                                        <td>
+                                            <%= order.userId.username %>
+                                        </td>
+                                        <td>
+                                            <%= new Date(order.orderDate).toDateString() %>
+                                        </td>
+                                        <td>₹<%= order.payableAmount %>
+                                        </td>
+                                        <td><span
+                                                class="badge <%= (order.paymentStatus=='Success') ? 'success' : 'warning' %>">
+                                                <%= order.paymentStatus %>
+                                            </span></td>
+                                        <td><i class="ti ti-credit-card"
+                                                style="font-size:15px;vertical-align:-2px;margin-right:4px"></i>
+                                            <%= order.paymentMethod %>
+                                        </td>
+                                        <td><a href="/admin/order_details?orderId=<%= order.orderId %>"
+                                                class="view-btn">View details</a></td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <nav class="pager" aria-label="Page navigation">
+                        <% if(currentPage> 1) { %>
+                            <a class="page-btn" href="?page=<%= currentPage - 1 %>"><i class="ti ti-chevron-left"
+                                    style="font-size:14px"></i></a>
+                            <% } %>
+                                <% for(let i=1; i <=totalPages; i++) { %>
+                                    <a class="page-btn <%= (currentPage === i) ? 'active' : '' %>"
+                                        href="?page=<%= i %>">
+                                        <%= i %>
+                                    </a>
+                                    <% } %>
+                                        <% if(currentPage < totalPages) { %>
+                                            <a class="page-btn" href="?page=<%= currentPage + 1 %>"><i
+                                                    class="ti ti-chevron-right" style="font-size:14px"></i></a>
+                                            <% } %>
+                    </nav>
+                </div>
+
             </div>
 
+            <footer>
+                <script>document.write(new Date().getFullYear())</script> &copy; Sandglass &mdash; All rights reserved
+            </footer>
+
         </div>
-
-        <footer>
-            <script>document.write(new Date().getFullYear())</script> &copy; Sandglass &mdash; All rights reserved
-        </footer>
-
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Modal markup — place just before the first <script> tag -->
+    <div id="status-modal" style="
+  display:none; position:fixed; inset:0; z-index:1000;
+  background:rgba(0,0,0,.35);
+  align-items:center; justify-content:center;
+">
+        <div style="
+    background:var(--bg-primary); border-radius:var(--radius-lg);
+    border:1px solid var(--border); padding:1.5rem;
+    width:320px; box-shadow:0 8px 32px rgba(0,0,0,.12);
+  ">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+                <div id="modal-icon-wrap" style="
+        width:38px; height:38px; border-radius:50%;
+        display:flex; align-items:center; justify-content:center; flex-shrink:0;
+      ">
+                    <i id="modal-icon" style="font-size:19px;"></i>
+                </div>
+                <p id="modal-title" style="font-size:15px; font-weight:600; margin:0; color:var(--text-primary);"></p>
+            </div>
+            <p id="modal-body" style="font-size:13px; color:var(--text-secondary); margin:0 0 1.25rem 50px;"></p>
+            <div style="display:flex; justify-content:flex-end;">
+                <button id="modal-ok" style="
+        padding:6px 18px; font-size:13px; font-weight:500;
+        border-radius:var(--radius-md); cursor:pointer; border:none;
+      ">OK</button>
+            </div>
+        </div>
+    </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        /* ── Sales chart (original logic) ── */
-        const ctx = document.getElementById('turnoverChart').getContext('2d');
-        const graphData = JSON.parse('<%- graphData %>');
-        const interval  = '<%- interval %>';
 
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: graphData.map(item => item.date),
-                datasets: [{
-                    label: 'Turnover',
-                    data: graphData.map(item => item.turnover),
-                    borderColor: '#534AB7',
-                    backgroundColor: 'rgba(83,74,183,0.07)',
-                    fill: true,
-                    tension: 0.4,
-                    pointBackgroundColor: '#534AB7',
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: {
-                        grid: { color: 'rgba(83,74,183,0.06)' },
-                        ticks: { font: { size: 12 }, color: '#9b98ab' },
-                        title: { display: true, text: interval.charAt(0).toUpperCase() + interval.slice(1) }
-                    },
-                    y: {
-                        grid: { color: 'rgba(83,74,183,0.06)' },
-                        ticks: { font: { size: 12 }, color: '#9b98ab' },
-                        title: { display: true, text: 'Turnover' },
-                        beginAtZero: true
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // Modal helpers — add at the top of DOMContentLoaded
+            const modal = document.getElementById('status-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            const modalIcon = document.getElementById('modal-icon');
+            const modalWrap = document.getElementById('modal-icon-wrap');
+            const modalOk = document.getElementById('modal-ok');
+
+            function showModal(type, title, message) {
+                const isSuccess = type === 'success';
+                modalTitle.textContent = title;
+                modalBody.textContent = message;
+                modalIcon.className = isSuccess ? 'ti ti-check' : 'ti ti-alert-triangle';
+                modalIcon.style.color = isSuccess ? 'var(--green-800)' : 'var(--amber-600)';
+                modalWrap.style.background = isSuccess ? 'var(--green-50)' : 'var(--amber-50)';
+                modalOk.style.background = isSuccess ? 'var(--green-50)' : 'var(--amber-50)';
+                modalOk.style.color = isSuccess ? 'var(--green-800)' : 'var(--amber-600)';
+                modalOk.style.border = isSuccess
+                    ? '1px solid rgba(39,80,10,.2)' : '1px solid rgba(133,79,11,.2)';
+                modal.style.display = 'flex';
+            }
+
+            modalOk.addEventListener('click', () => modal.style.display = 'none');
+            modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
+
+            // Replace the old validateDateRange function with this:
+            function validateDateRange() {
+                const from = document.getElementById('dateFrom').value;
+                const to = document.getElementById('dateTo').value;
+                if (from && to && from > to) {
+                    showModal('warning', 'Invalid date range', "The 'From' date must be earlier than the 'To' date.");
+                    return false;
+                }
+                return true;
+            }
+
+            /* ── Sales chart (original logic) ── */
+            const ctx = document.getElementById('turnoverChart').getContext('2d');
+            const graphData = JSON.parse('<%- graphData %>');
+            const interval = '<%- interval %>';
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: graphData.map(item => item.date),
+                    datasets: [{
+                        label: 'Turnover',
+                        data: graphData.map(item => item.turnover),
+                        borderColor: '#534AB7',
+                        backgroundColor: 'rgba(83,74,183,0.07)',
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#534AB7',
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(83,74,183,0.06)' },
+                            ticks: { font: { size: 12 }, color: '#9b98ab' },
+                            title: { display: true, text: interval.charAt(0).toUpperCase() + interval.slice(1) }
+                        },
+                        y: {
+                            grid: { color: 'rgba(83,74,183,0.06)' },
+                            ticks: { font: { size: 12 }, color: '#9b98ab' },
+                            title: { display: true, text: 'Turnover' },
+                            beginAtZero: true
+                        }
                     }
                 }
-            }
-        });
+            });
 
-        /* ── Interval toggle (original logic) ── */
-        window.changeInterval = function (val, btn) {
-            const currentUrl = new URL(window.location.href);
-            currentUrl.searchParams.set('interval', val);
-            window.location.href = currentUrl.toString();
-        };
+            /* ── Interval toggle (original logic) ── */
+            window.changeInterval = function (val, btn) {
+                const currentUrl = new URL(window.location.href);
+                currentUrl.searchParams.set('interval', val);
+                window.location.href = currentUrl.toString();
+            };
 
-        /* ── AJAX dashboard update (original logic) ── */
-        const today = new Date();
-        const formatDate = date => date.toISOString().split('T')[0];
-        const todayStr = formatDate(today);
+            /* ── AJAX dashboard update (original logic) ── */
+            const today = new Date();
+            const formatDate = date => date.toISOString().split('T')[0];
+            const todayStr = formatDate(today);
 
-        const firstDayOfWeek = new Date(today);
-        firstDayOfWeek.setDate(today.getDate() - today.getDay() + (today.getDay() === 0 ? -6 : 1));
+            const firstDayOfWeek = new Date(today);
+            firstDayOfWeek.setDate(today.getDate() - today.getDay() + (today.getDay() === 0 ? -6 : 1));
 
-        const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
-        document.getElementById('todayOption').setAttribute('data-from', todayStr);
-        document.getElementById('thisWeekOption').setAttribute('data-from', formatDate(firstDayOfWeek));
-        document.getElementById('thisMonthOption').setAttribute('data-from', formatDate(firstDayOfMonth));
+            document.getElementById('todayOption').setAttribute('data-from', todayStr);
+            document.getElementById('thisWeekOption').setAttribute('data-from', formatDate(firstDayOfWeek));
+            document.getElementById('thisMonthOption').setAttribute('data-from', formatDate(firstDayOfMonth));
 
-        let currentDateFrom = '', currentDateTo = '';
+            let currentDateFrom = '', currentDateTo = '';
 
-        function updateDashboard(dateFrom = '', dateTo = '', page = 1) {
-            currentDateFrom = dateFrom;
-            currentDateTo   = dateTo;
+            function updateDashboard(dateFrom = '', dateTo = '', page = 1) {
+                currentDateFrom = dateFrom;
+                currentDateTo = dateTo;
 
-            fetch(`/admin/dashboard?dateFrom=${dateFrom}&dateTo=${dateTo}&page=${page}`, {
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            })
-            .then(r => r.json())
-            .then(data => {
-                const tbody = document.querySelector('table tbody');
-                tbody.innerHTML = data.orderData.map(order => `
+                fetch(`/admin/dashboard?dateFrom=${dateFrom}&dateTo=${dateTo}&page=${page}`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                    .then(r => r.json())
+                    .then(data => {
+                        const tbody = document.querySelector('table tbody');
+                        tbody.innerHTML = data.orderData.map(order => `
                     <tr>
                         <td class="order-id">${order.orderId}</td>
                         <td>${order.userId.username}</td>
@@ -732,72 +1004,76 @@
                     </tr>
                 `).join('');
 
-                document.querySelector('.stat-value').textContent = '₹' + data.totalRevenue.toFixed(2);
-                updatePagination(data.currentPage, data.totalPages, dateFrom, dateTo);
-            })
-            .catch(err => console.error('Error:', err));
-        }
+                        document.querySelector('.stat-value').textContent = '₹' + data.totalRevenue.toFixed(2);
+                        updatePagination(data.currentPage, data.totalPages, dateFrom, dateTo);
+                    })
+                    .catch(err => console.error('Error:', err));
+            }
 
-        function updatePagination(currentPage, totalPages, dateFrom, dateTo) {
-            const pager = document.querySelector('.pager');
-            let html = '';
-            if (currentPage > 1)
-                html += `<a class="page-btn" href="#" data-page="${currentPage - 1}"><i class="ti ti-chevron-left" style="font-size:14px"></i></a>`;
-            for (let i = 1; i <= totalPages; i++)
-                html += `<a class="page-btn ${currentPage === i ? 'active' : ''}" href="#" data-page="${i}">${i}</a>`;
-            if (currentPage < totalPages)
-                html += `<a class="page-btn" href="#" data-page="${currentPage + 1}"><i class="ti ti-chevron-right" style="font-size:14px"></i></a>`;
-            pager.innerHTML = html;
-            pager.querySelectorAll('[data-page]').forEach(link => {
-                link.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    updateDashboard(dateFrom, dateTo, this.getAttribute('data-page'));
+            function updatePagination(currentPage, totalPages, dateFrom, dateTo) {
+                const pager = document.querySelector('.pager');
+                let html = '';
+                if (currentPage > 1)
+                    html += `<a class="page-btn" href="#" data-page="${currentPage - 1}"><i class="ti ti-chevron-left" style="font-size:14px"></i></a>`;
+                for (let i = 1; i <= totalPages; i++)
+                    html += `<a class="page-btn ${currentPage === i ? 'active' : ''}" href="#" data-page="${i}">${i}</a>`;
+                if (currentPage < totalPages)
+                    html += `<a class="page-btn" href="#" data-page="${currentPage + 1}"><i class="ti ti-chevron-right" style="font-size:14px"></i></a>`;
+                pager.innerHTML = html;
+                pager.querySelectorAll('[data-page]').forEach(link => {
+                    link.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        updateDashboard(dateFrom, dateTo, this.getAttribute('data-page'));
+                    });
+                });
+            }
+
+
+
+            document.getElementById('filterForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                if (validateDateRange()) {
+                    updateDashboard(document.getElementById('dateFrom').value, document.getElementById('dateTo').value);
+                }
+            });
+
+            document.querySelectorAll('.filter-pill').forEach(pill => {
+                pill.addEventListener('click', function () {
+                    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+                    this.classList.add('active');
+                    const dateFrom = this.getAttribute('data-from') || '';
+                    const dateTo = dateFrom ? formatDate(new Date()) : '';
+                    updateDashboard(dateFrom, dateTo);
                 });
             });
-        }
 
-        function validateDateRange() {
-            const from = document.getElementById('dateFrom').value;
-            const to   = document.getElementById('dateTo').value;
-            if (from && to && from > to) {
-                alert("The 'From' date must be earlier than the 'To' date.");
-                return false;
-            }
-            return true;
-        }
-
-        document.getElementById('filterForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            if (validateDateRange()) {
-                updateDashboard(document.getElementById('dateFrom').value, document.getElementById('dateTo').value);
-            }
-        });
-
-        document.querySelectorAll('.filter-pill').forEach(pill => {
-            pill.addEventListener('click', function () {
-                document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-                this.classList.add('active');
-                const dateFrom = this.getAttribute('data-from') || '';
-                const dateTo   = dateFrom ? formatDate(new Date()) : '';
-                updateDashboard(dateFrom, dateTo);
+            document.getElementById('createReportBtn').addEventListener('click', function (e) {
+                e.preventDefault();
+                const format = document.getElementById('reportFormat').value;
+                window.location.href = `/admin/generate_report?dateFrom=${currentDateFrom}&dateTo=${currentDateTo}&format=${format}`;
             });
-        });
 
-        document.getElementById('createReportBtn').addEventListener('click', function (e) {
+            updateDashboard();
+        });
+    </script>
+    <script>
+        document.getElementById('logoutBtn').addEventListener('click', async (e) => {
             e.preventDefault();
-            const format = document.getElementById('reportFormat').value;
-            window.location.href = `/admin/generate_report?dateFrom=${currentDateFrom}&dateTo=${currentDateTo}&format=${format}`;
+
+            await fetch('/admin/logout', {
+                method: 'POST'
+            });
+
+            window.location.href = '/admin';
         });
+    </script>
 
-        updateDashboard();
-    });
-</script>
-
-<script src="/admin/assets/js/vendors/jquery-3.6.0.min.js"></script>
-<script src="/admin/assets/js/vendors/bootstrap.bundle.min.js"></script>
-<script src="/admin/assets/js/vendors/perfect-scrollbar.js"></script>
-<script src="/admin/assets/js/vendors/jquery.fullscreen.min.js"></script>
-<script src="/admin/assets/js/main.js"></script>
+    <script src="/admin/assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/admin/assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/admin/assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/admin/assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <script src="/admin/assets/js/main.js"></script>
 
 </body>
+
 </html>

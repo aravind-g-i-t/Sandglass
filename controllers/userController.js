@@ -65,7 +65,7 @@ const insertUser = async (req, res) => {
 
 
         const otpCode = otp.generate();
-        
+
         req.session.email = email;
         req.session.otp = otpCode;
         req.session.otpExpire = Date.now() + (5 * 60 * 1000);
@@ -93,7 +93,7 @@ const loadVerify = async (req, res) => {
 const resendOtp = async (req, res) => {
     try {
         const otpCode = otp.generate();
-        
+
         req.session.otp = otpCode;
         req.session.otpExpire = Date.now() + (5 * 60 * 1000);
         await otp.sendOtp(req.session.email, req.session.otp);
@@ -289,7 +289,7 @@ const forgotPassword = async (req, res) => {
         if (userExists) {
             req.session.email = mail;
             req.session.otp = otp.generate();
-            
+
             req.session.otpExpire = Date.now() + (5 * 60 * 1000);
             await otp.sendOtp(mail, req.session.otp);
             return res.render('user/verifyForgot');
@@ -310,8 +310,8 @@ const forgotPassword = async (req, res) => {
 
 const verifyForgotOtp = async (req, res) => {
     try {
-        const otp = req.body.otp.trim();        
-        
+        const otp = req.body.otp.trim();
+
         if (otp === req.session.otp && Date.now() < req.session.otpExpire) {
 
             return res.render('user/setPassword');
@@ -574,7 +574,7 @@ const editPhone = async (req, res) => {
 
         const phoneUpdated = await User.findByIdAndUpdate(userId,
             { $set: { phone: newPhone } },
-            { new: true } 
+            { new: true }
         );
 
         if (phoneUpdated) {
@@ -655,7 +655,7 @@ const addAddress = async (req, res) => {
             phone,
             email
         } = req.body;
-        
+
         let addressData = await Address.findOne({ userId: req.session.user._id });
 
         if (addressData) {
@@ -699,7 +699,8 @@ const addAddress = async (req, res) => {
 
 const editAddress = async (req, res) => {
     try {
-        const { address, addressId } = req.body;
+        const { address } = req.body;
+        const { addressId } = req.params;
 
         const addressData = await Address.findOne({ userId: req.session.user._id });
         if (!addressData) {
@@ -737,7 +738,7 @@ const editAddress = async (req, res) => {
 
 const deleteAddress = async (req, res) => {
     try {
-        const { addressId } = req.body;
+        const { addressId } = req.params;
         const addressData = await Address.findOne({ userId: req.session.user._id });
         if (!addressData) {
             return res.status(STATUS_CODES.NOT_FOUND).json({ message: "Address doesnot exist." });

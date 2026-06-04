@@ -318,7 +318,7 @@
                     <div class="user-role">Store manager</div>
                 </div>
             </div>
-            <a href="/admin/logout" class="logout-btn"><i class="ti ti-logout"></i> Sign out</a>
+            <a href="#" id="logoutBtn" class="logout-btn"><i class="ti ti-logout"></i> Sign out</a>
         </div>
     </aside>
 
@@ -333,7 +333,7 @@
             <div class="topbar-right">
                 <a href="#" class="icon-btn darkmode" title="Dark mode"><i class="ti ti-moon"></i></a>
                 <a href="#" class="icon-btn requestfullscreen" title="Fullscreen"><i class="ti ti-maximize"></i></a>
-                <a href="/admin/logout" class="icon-btn" title="Logout"><i class="ti ti-logout"></i></a>
+                
             </div>
         </header>
 
@@ -450,6 +450,18 @@
 <script src="/admin/assets/js/vendors/perfect-scrollbar.js"></script>
 <script src="/admin/assets/js/vendors/jquery.fullscreen.min.js"></script>
 <script src="/admin/assets/js/main.js" type="text/javascript"></script>
+
+<script>
+        document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            await fetch('/admin/logout', {
+                method: 'POST'
+            });
+
+            window.location.href = '/admin';
+        });
+    </script>
 
 <script>
     // Offer type change handler (kept for future category/product sub-group use)

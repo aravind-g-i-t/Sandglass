@@ -18,7 +18,7 @@ const moment = require('moment');
 
 const loadLogin = async (req, res) => {
     try {
-        return res.render('admin/login');
+        return res.status(STATUS_CODES.OK).render('admin/login');
     } catch (error) {
 
         return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error, message: MESSAGES.INTERNAL_SERVER_ERROR });
@@ -31,25 +31,41 @@ const adminLogin = async (req, res) => {
         adminId = adminId.trim();
 
         const adminData = await Admin.findOne({ adminId });
+
         if (adminData) {
-            const securePassword = await hashing.comparePassword(adminPassword, adminData.adminPassword);
+            const securePassword = await hashing.comparePassword(
+                adminPassword,
+                adminData.adminPassword
+            );
+
             if (securePassword) {
                 req.session.admin = adminData;
+
                 return res.redirect('/admin/dashboard');
-            } else {
-                return res.render('admin/login', { message: MESSAGES.INCORRECT_CREDENTIALS });
             }
-        } else {
-            return res.render('admin/login', { message: MESSAGES.INCORRECT_CREDENTIALS });
+
+            return res
+                .status(STATUS_CODES.UNAUTHORIZED)
+                .render('admin/login', {
+                    message: MESSAGES.INCORRECT_CREDENTIALS
+                });
         }
 
+        return res
+            .status(STATUS_CODES.UNAUTHORIZED)
+            .render('admin/login', {
+                message: MESSAGES.INCORRECT_CREDENTIALS
+            });
+
     } catch (error) {
-        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error, message: MESSAGES.INTERNAL_SERVER_ERROR });
-
+        return res
+            .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
+            .json({
+                message: MESSAGES.INTERNAL_SERVER_ERROR,
+                error
+            });
     }
-
 };
-
 
 
 const loadDashboard = async (req, res) => {
@@ -62,10 +78,10 @@ const loadDashboard = async (req, res) => {
         let toDate;
         if (dateTo) {
             toDate = new Date(dateTo);
-            toDate.setHours(23, 59, 59, 999); 
+            toDate.setHours(23, 59, 59, 999);
         } else {
             toDate = new Date();
-            toDate.setHours(23, 59, 59, 999); 
+            toDate.setHours(23, 59, 59, 999);
         }
 
         const graphEndDate = new Date(Math.max(toDate, new Date()));
@@ -87,14 +103,14 @@ const loadDashboard = async (req, res) => {
         }
 
         const totalOrders = await Order.countDocuments({
-            orderDate: { $gte: fromDate, $lte: toDate } 
+            orderDate: { $gte: fromDate, $lte: toDate }
         });
 
         const allOrders = await Order.find({
             orderDate: { $gte: graphStartDate, $lte: graphEndDate }
         });
         const orderData = await Order.find({
-            orderDate: { $gte: fromDate, $lte: toDate } 
+            orderDate: { $gte: fromDate, $lte: toDate }
         }).skip((page - 1) * limit)
             .limit(parseInt(limit, 10))
             .populate('userId')
@@ -109,7 +125,7 @@ const loadDashboard = async (req, res) => {
         }, 0);
 
         if (isAjax) {
-            return res.json({
+            return res.status(STATUS_CODES.OK).json({
                 orderData,
                 totalRevenue,
                 currentPage: parseInt(page, 10),
@@ -119,14 +135,14 @@ const loadDashboard = async (req, res) => {
             const productData = await Product.find({});
             const graphData = await processGraphData(allOrders, interval, graphStartDate, graphEndDate);
 
-            return res.render('admin/dashboard', {
+            return res.status(STATUS_CODES.OK).render('admin/dashboard', {
                 orderData,
                 productData,
                 totalRevenue,
                 currentPage: parseInt(page, 10),
                 totalPages: Math.ceil(totalOrders / limit),
                 dateFrom: fromDate.toISOString().split('T')[0],
-                dateTo: toDate.toISOString().split('T')[0], 
+                dateTo: toDate.toISOString().split('T')[0],
                 limit: parseInt(limit, 10),
                 graphData: JSON.stringify(graphData),
                 interval
@@ -217,7 +233,7 @@ const loadUsers = async (req, res) => {
         const userData = await User.find(query).skip(startIndex).limit(limit);
         const totalDocuments = await User.countDocuments();
         const totalPages = Math.ceil(totalDocuments / limit);
-        return res.render('admin/users', { userData, totalPages, page });
+        return res.status(STATUS_CODES.OK).render('admin/users', { userData, totalPages, page });
 
     } catch {
         return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.SERVER_ERROR);
@@ -228,7 +244,7 @@ const loadUsers = async (req, res) => {
 
 const userStatusUpdate = async (req, res) => {
     try {
-        const id = req.query.id;
+        const id = req.params.id;
 
         const user = await User.findById({ _id: id });
         if (user.isActive) {
@@ -242,10 +258,17 @@ const userStatusUpdate = async (req, res) => {
                 { $set: { isActive: true } }
             );
         }
-        return res.redirect('/admin/users');
+        return res.status(200).json({
+            success: true,
+            isActive: !user.isActive,
+            message: "User status updated successfully"
+        });
 
     } catch {
-        return res.redirect('/admin/users');
+        return res.status(500).json({
+            success: true,
+            message: "Internal Server Error"
+        });
     }
 };
 
@@ -273,19 +296,19 @@ const orderList = async (req, res) => {
         const totalDocuments = await Order.countDocuments(query);
         const totalPages = Math.ceil(totalDocuments / limit);
 
-        return res.render('admin/orders', {
+        return res.status(STATUS_CODES.OK).render('admin/orders', {
             orderData,
             page,
             totalPages
         });
     } catch {
-        return res.status(500).send(MESSAGES.INTERNAL_SERVER_ERROR);
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
     }
 };
 
 
 
-const orderDetails = async(req, res) => {
+const orderDetails = async (req, res) => {
     try {
         const orderId = req.query.orderId;
 
@@ -309,7 +332,7 @@ const orderDetails = async(req, res) => {
                 couponDiscount = coupon.discountPercentage;
             }
         }
-        res.render('admin/orderDetails', {
+        res.status(STATUS_CODES.OK).render('admin/orderDetails', {
             orderData,
             totalPrice,
             address,
@@ -317,7 +340,7 @@ const orderDetails = async(req, res) => {
             invoice
         });
     } catch (error) {
-        res.status(500).send(`An error occurred: ${error.message}`);
+        res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(`An error occurred: ${error.message}`);
     }
 
 };
@@ -327,7 +350,7 @@ const updateOrderStatus = async (req, res) => {
         const { orderId, productId, status } = req.body;
 
         if (!orderId || !productId || !status) {
-            return res.status(400).json({ success: false, message: 'Missing orderId, productId, or status' });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: 'Missing orderId, productId, or status' });
         }
 
 
@@ -337,7 +360,7 @@ const updateOrderStatus = async (req, res) => {
             { new: true }
         );
         if (!updatedOrder) {
-            return res.status(404).json({ success: false, message: 'Order or Product not found' });
+            return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: 'Order or Product not found' });
         }
 
         if (status === "Delivered") {
@@ -384,7 +407,7 @@ const updateOrderStatus = async (req, res) => {
                 );
 
                 if (!walletData) {
-                    return res.status(404).json({ success: false, message: 'Wallet not found' });
+                    return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: MESSAGES.WALLET_NOT_FOUND });
                 }
 
                 updatedOrder.payableAmount = refundAmount;
@@ -394,10 +417,10 @@ const updateOrderStatus = async (req, res) => {
             }
         }
 
-        return res.json({ success: true, order: updatedOrder });
+        return res.status(STATUS_CODES.OK).json({ success: true, order: updatedOrder });
 
     } catch {
-        return res.status(500).json({ success: false, message: 'Server error' });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -414,21 +437,21 @@ const coupons = async (req, res) => {
         const totalCoupons = await Coupon.countDocuments();
         const totalPages = Math.ceil(totalCoupons / limit);
 
-        return res.render('admin/coupons', {
+        return res.status(STATUS_CODES.OK).render('admin/coupons', {
             coupons,
             totalPages,
             currentPage: page
         });
     } catch {
-        return res.status(500).json({ success: false, message: 'Server error' });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
 const addCoupon = async (req, res) => {
     try {
-        return res.render('admin/add_coupon');
+        return res.status(STATUS_CODES.OK).render('admin/add_coupon');
     } catch {
-        return res.status(500).json({ success: false, message: 'Server error' });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -439,9 +462,9 @@ const editCoupon = async (req, res) => {
             return res.redirect('/admin/coupons');
         }
 
-        return res.render('admin/edit_coupon', { coupon });
+        return res.status(STATUS_CODES.OK).render('admin/edit_coupon', { coupon });
     } catch {
-        return res.status(500).json({ success: false, message: 'Server error' });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -451,7 +474,7 @@ const updateCoupon = async (req, res) => {
         const couponExists = await Coupon.findOne({ code, _id: { $ne: req.params.id } });
         if (couponExists) {
             const coupon = await Coupon.findById(req.params.id);
-            return res.render(`admin/edit_coupon`, { coupon, message: "Code already exists" });
+            return res.status(STATUS_CODES.CONFLICT).render(`admin/edit_coupon`, { coupon, message: MESSAGES.COUPON_EXISTS });
         } else {
             await Coupon.findByIdAndUpdate(req.params.id, {
                 code,
@@ -461,12 +484,15 @@ const updateCoupon = async (req, res) => {
                 quantityLimit,
                 expiryDate: new Date(expiryDate)
             });
-            return res.redirect('/admin/coupons');
+            return res.status(STATUS_CODES.OK).json({
+                success: true,
+                message: 'Coupon updated successfully'
+            });
         }
 
 
     } catch {
-        return res.status(500).json({ success: false, message: 'Server error' });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
@@ -475,11 +501,11 @@ const saveCoupon = async (req, res) => {
         const { code, description, discountPercentage, minPurchaseAmount, quantityLimit, expiryDate } = req.body;
 
         if (!code || !description || !discountPercentage || !minPurchaseAmount || !quantityLimit || !expiryDate) {
-            return res.status(400).json({ error: 'All fields are required' });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ error: 'All fields are required' });
         }
         const couponExists = await Coupon.findOne({ code });
         if (couponExists) {
-            return res.render('admin/add_coupon', { message: "Code already exists" });
+            return res.status(STATUS_CODES.CONFLICT).render('admin/add_coupon', { message: MESSAGES.COUPON_EXISTS });
         } else {
             const newCoupon = new Coupon({
                 code,
@@ -492,25 +518,40 @@ const saveCoupon = async (req, res) => {
 
             await newCoupon.save();
 
-            return res.status(201).redirect('/admin/coupons');
+            return res.redirect('/admin/coupons');
         }
     } catch {
-        return res.status(500).json({ success: false, message: 'Server error' });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.INTERNAL_SERVER_ERROR });
     }
 };
 
 const updateCouponStatus = async (req, res) => {
     try {
         const { isActive } = req.body;
-        const coupon = await Coupon.findByIdAndUpdate(req.params.id, { isActive }, { new: true });
-        if (coupon) {
-            return res.json({ success: true });
-        } else {
-            return res.json({ success: false });
-        }
-    } catch {
-        return res.status(500).json({ success: false, message: 'Something went wrong' });
 
+        const coupon = await Coupon.findByIdAndUpdate(
+            req.params.id,
+            { isActive },
+            { new: true }
+        );
+
+        if (coupon) {
+            return res
+                .status(STATUS_CODES.OK)
+                .json({ success: true });
+        }
+
+        return res
+            .status(STATUS_CODES.NOT_FOUND)
+            .json({ success: false });
+
+    } catch {
+        return res
+            .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
+            .json({
+                success: false,
+                message: 'Something went wrong'
+            });
     }
 };
 
@@ -550,15 +591,15 @@ const generateReport = async (req, res) => {
             });
         }
 
-        return res.status(400).json({
+        return res.status(STATUS_CODES.BAD_REQUEST).json({
             success: false,
-            message: 'Invalid format. Supported formats are "pdf" and "excel".'
+            message: MESSAGES.INVALID_REPORT_FORMAT
         });
 
     } catch {
 
-        return res.status(500).send(
-            'An error occurred while generating the report. Please try again later.'
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(
+            MESSAGES.REPORT_GENERATION_ERROR
         );
     }
 };

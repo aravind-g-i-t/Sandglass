@@ -88,7 +88,7 @@ const toggleOfferStatus = async (req, res) => {
         offer.isActive = !offer.isActive;
         await offer.save();
 
-        return res.status(STATUS_CODES.SUCCESS).json({ success: true, newStatus: offer.isActive });
+        return res.status(STATUS_CODES.OK).json({ success: true, newStatus: offer.isActive });
     } catch {
         return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
     }
@@ -111,9 +111,10 @@ const editOffer = async (req, res) => {
 
 const updateOffer = async (req, res) => {
     try {
-        const { offerId, name, discountPercentage, startDate, endDate } = req.body;
+        const { name, discountPercentage, startDate, endDate } = req.body;
+        const { id } = req.params;
 
-        const offer = await Offer.findById(offerId);
+        const offer = await Offer.findById(id);
 
         if (!offer) {
             return res.status(STATUS_CODES.NOT_FOUND).send(MESSAGES.OFFER_NOT_FOUND);
@@ -125,9 +126,15 @@ const updateOffer = async (req, res) => {
         offer.endDate = new Date(endDate);
 
         await offer.save();
-        return res.redirect('/admin/offers');
+        return res.status(200).json({
+            success: true,
+            message: 'Offer updated successfully'
+        });
     } catch {
-        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: MESSAGES.INTERNAL_SERVER_ERROR
+        });
     }
 };
 
@@ -185,7 +192,7 @@ const addOfferProduct = async (req, res) => {
         offer.product.push(productId);
         await offer.save();
 
-        return res.status(STATUS_CODES.SUCCESS).json({ message: 'Product added to offer, and any existing offers were removed.' });
+        return res.status(STATUS_CODES.OK).json({ message: 'Product added to offer, and any existing offers were removed.' });
     } catch (error) {
         return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(`An error occurred: ${error.message}`);
     }
@@ -207,7 +214,7 @@ const removeOfferProduct = async (req, res) => {
         } else {
             offer.product.splice(productIndex, 1);
             await offer.save();
-            return res.status(STATUS_CODES.SUCCESS).json({ message: 'Product removed from offer' });
+            return res.status(STATUS_CODES.OK).json({ message: 'Product removed from offer' });
         }
     } catch {
         return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: 'Internal server error' });
@@ -238,7 +245,7 @@ const addOfferCategory = async (req, res) => {
         offer.category.push(categoryId);
         await offer.save();
 
-        return res.status(STATUS_CODES.SUCCESS).json({ message: 'Category added to offer, and any existing offers were removed.' });
+        return res.status(STATUS_CODES.OK).json({ message: 'Category added to offer, and any existing offers were removed.' });
     } catch (error) {
         return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(`An error occurred: ${error.message}`);
     }
@@ -259,9 +266,9 @@ const removeOfferCategory = async (req, res) => {
             return res.status(STATUS_CODES.BAD_REQUEST).json({ error: 'Category not in offer' });
         } else {
 
-            offer.category.splice(categoryIndex, 1); 
+            offer.category.splice(categoryIndex, 1);
             await offer.save();
-            return res.status(STATUS_CODES.SUCCESS).json({ message: 'Category removed from offer' });
+            return res.status(STATUS_CODES.OK).json({ message: 'Category removed from offer' });
         }
     } catch {
         return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: 'Internal server error' });

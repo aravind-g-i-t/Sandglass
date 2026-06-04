@@ -30,7 +30,7 @@ const loadCart = async (req, res) => {
                 couponDiscount = coupon.discountPercentage;
             }
         }
-        return res.render('user/cart', {
+        return res.status(STATUS_CODES.OK).render('user/cart', {
             userData,
             cartData,
             couponDiscount,
@@ -90,9 +90,9 @@ const addToCart = async (req, res) => {
 
 
         await cart.save();
-        return res.status(STATUS_CODES.SUCCESS).json({ success: true });
+        return res.status(STATUS_CODES.OK).json({ success: true });
     } catch {
-        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send('Internal Server Error');
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
     }
 };
 
@@ -141,7 +141,7 @@ const quantityUpdate = async (req, res) => {
 
             if (quantity >= 10) {
                 return res.status(STATUS_CODES.BAD_REQUEST).json({
-                    message: "Maximum quantity is 10",
+                    message: MESSAGES.MAXIMUM_QUANTITY,
                     total: cartData.totalPrice
                 });
             }
@@ -159,7 +159,7 @@ const quantityUpdate = async (req, res) => {
 
             if (quantity <= 1) {
                 return res.status(STATUS_CODES.BAD_REQUEST).json({
-                    message: "Minimum quantity is 1",
+                    message: MESSAGES.MINIMUM_QUANTITY,
                     total: cartData.totalPrice
                 });
             }
@@ -193,8 +193,8 @@ const quantityUpdate = async (req, res) => {
 
         await cartData.save();
 
-        return res.status(STATUS_CODES.SUCCESS).json({
-            message: "Quantity updated successfully",
+        return res.status(STATUS_CODES.OK).json({
+            message: MESSAGES.QUANTITY_UPDATED,
             total: totalPrice,
             quantity: cartProduct.quantity,
             finalPrice,
@@ -223,7 +223,7 @@ const removeProduct = async (req, res) => {
 
         const productIndex = cartData.product.findIndex(item => item.productId.toString() === productId);
         if (productIndex === -1) {
-            return res.status(STATUS_CODES.NOT_FOUND).send("Product not found in cart");
+            return res.status(STATUS_CODES.NOT_FOUND).send(MESSAGES.PRODUCT_NOT_IN_CART);
         }
 
         const quantity = cartData.product[productIndex].quantity;
@@ -236,7 +236,7 @@ const removeProduct = async (req, res) => {
             }
         );
 
-        return res.status(STATUS_CODES.SUCCESS).json("Successfully removed from cart");
+        return res.status(STATUS_CODES.OK).json(MESSAGES.REMOVED_FROM_CART);
 
     } catch {
         return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
@@ -296,7 +296,7 @@ const loadCheckout = async (req, res) => {
             }
         }
 
-        return res.render("user/checkout", {
+        return res.status(STATUS_CODES.OK).render("user/checkout", {
             cartData,
             addressData,
             userData,
@@ -371,12 +371,12 @@ const applyCoupon = async (req, res) => {
 
         const coupon = await Coupon.findOne({ code: couponCode, isActive: true });
         if (!coupon) {
-            return res.status(STATUS_CODES.BAD_REQUEST).json({ message: 'Invalid or expired coupon code' });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ message: MESSAGES.INVALID_COUPON });
         }
 
         const cart = await Cart.findOne({ userId });
         if (!cart) {
-            return res.status(STATUS_CODES.BAD_REQUEST).json({ message: 'Cart not found' });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ message: MESSAGES.CART_NOT_FOUND });
         }
 
         const cartTotal = cart.product.reduce((acc, product) => acc + (product.productPrice * product.quantity), 0);
@@ -388,7 +388,7 @@ const applyCoupon = async (req, res) => {
         cart.coupon = couponCode;
         await cart.save();
 
-        return res.json({ message: 'Coupon applied successfully', discountPercentage: coupon.discountPercentage });
+        return res.json({ message: MESSAGES.COUPON_APPLIED, discountPercentage: coupon.discountPercentage });
     } catch {
         return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
     }
@@ -400,13 +400,13 @@ const removeCoupon = async (req, res) => {
 
         const cart = await Cart.findOne({ userId });
         if (!cart) {
-            return res.status(STATUS_CODES.BAD_REQUEST).json({ message: 'Cart not found' });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({ message: MESSAGES.CART_NOT_FOUND });
         }
 
         cart.coupon = undefined;
         await cart.save();
 
-        return res.json({ message: 'Coupon removed successfully' });
+        return res.status(STATUS_CODES.OK).json({ message: MESSAGES.COUPON_REMOVED });
     } catch {
         return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
     }

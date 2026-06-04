@@ -332,7 +332,7 @@
                     <div class="user-role">Store manager</div>
                 </div>
             </div>
-            <a href="/admin/logout" class="logout-btn"><i class="ti ti-logout"></i> Sign out</a>
+                <a href="#" id="logoutBtn" class="logout-btn"><i class="ti ti-logout"></i> Sign out</a>
         </div>
     </aside>
 
@@ -347,7 +347,6 @@
             <div class="topbar-right">
                 <a href="#" class="icon-btn darkmode" title="Dark mode"><i class="ti ti-moon"></i></a>
                 <a href="#" class="icon-btn requestfullscreen" title="Fullscreen"><i class="ti ti-maximize"></i></a>
-                <a href="/admin/logout" class="icon-btn" title="Logout"><i class="ti ti-logout"></i></a>
             </div>
         </header>
 
@@ -436,6 +435,18 @@
 
     </div>
 </div>
+
+<script>
+        document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            await fetch('/admin/logout', {
+                method: 'POST'
+            });
+
+            window.location.href = '/admin';
+        });
+    </script>
 
 <script src="/admin/assets/js/vendors/jquery-3.6.0.min.js"></script>
 <script src="/admin/assets/js/vendors/bootstrap.bundle.min.js"></script>

@@ -102,7 +102,7 @@ const addProduct = async (req, res) => {
 
 const editProduct = async (req, res) => {
     try {
-        const id = req.query.id;
+        const id = req.params.id;
         const productName = req.body.product_name;
         const description = req.body.product_description;
         const price = req.body.product_price;
@@ -127,15 +127,21 @@ const editProduct = async (req, res) => {
             }
         );
 
-        return res.redirect('/admin/products');
+        return res.status(STATUS_CODES.OK).json({
+            success: true,
+            message: 'Product updated successfully'
+        });
     } catch {
-        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: MESSAGES.INTERNAL_SERVER_ERROR
+        });
     }
 };
 
 const productStatusUpdate = async (req, res) => {
     try {
-        const id = req.query.id;
+        const id = req.params.id;
 
         const product = await Product.findById({ _id: id });
         if (product.isActive) {
@@ -157,17 +163,23 @@ const productStatusUpdate = async (req, res) => {
                 { $set: { isActive: true } }
             );
         }
-        return res.redirect('/admin/products');
+        return res.status(STATUS_CODES.OK).json({
+            success: true,
+            message: "Product status updated successfully"
+        });
 
     } catch {
-        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: "Failed to update product status"
+        });
     }
 };
 
 const loadEditProduct = async (req, res) => {
     try {
         const categories = await Categories.find({ isActive: true });
-        const id = req.query.id;
+        const id = req.params.id;
         const product = await Product.findOne({ _id: id });
 
         // Check if the product was found
@@ -183,7 +195,7 @@ const loadEditProduct = async (req, res) => {
         }
 
         // Success Response
-        return res.status(STATUS_CODES.SUCCESS).render('admin/editProduct', {
+        return res.status(STATUS_CODES.OK).render('admin/editProduct', {
             success: true,
             message: 'Product and categories loaded successfully',
             product,
@@ -234,7 +246,7 @@ const removeImage = async (req, res) => {
 
         await product.save();
 
-        return res.status(STATUS_CODES.SUCCESS).json({
+        return res.status(STATUS_CODES.OK).json({
             success: true,
             message: 'Image removed successfully'
         });

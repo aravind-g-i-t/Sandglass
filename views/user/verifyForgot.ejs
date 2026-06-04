@@ -295,6 +295,21 @@
             margin-top: 12px;
         }
 
+        .resend-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            margin: 0;
+            color: var(--purple-600);
+            text-decoration: underline;
+            cursor: pointer;
+            font: inherit;
+        }
+
+        .resend-btn:hover {
+            color: var(--purple-800);
+        }
+
         @media(max-width:600px) {
             .sg-page {
                 padding: 90px 20px 40px;
@@ -376,7 +391,10 @@
                         </form>
 
                         <div class="sg-resend">
-                            Didn't get the code? <a href="/resend_otp">Resend</a>
+                            Didn't receive the code?
+                            <form action="/resend_otp" method="POST" style="display:inline;">
+                                <button type="submit" class="resend-btn">Resend OTP</button>
+                            </form>
                         </div>
             </div>
             <p class="sg-page-footer">© 2026 Sandglass. All rights reserved.</p>

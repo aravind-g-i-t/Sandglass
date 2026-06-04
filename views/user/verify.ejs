@@ -9,33 +9,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Serif+Display&display=swap"
+        rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="/user/assets/imgs/theme/favicon.svg">
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         :root {
-            --purple-50:  #EEEDFE;
+            --purple-50: #EEEDFE;
             --purple-100: #CECBF6;
             --purple-200: #AFA9EC;
             --purple-400: #7F77DD;
             --purple-600: #534AB7;
             --purple-800: #3C3489;
             --purple-900: #26215C;
-            --gray-50:  #F7F6F3;
+            --gray-50: #F7F6F3;
             --gray-100: #EEECE8;
             --gray-200: #D3D1C7;
             --gray-400: #888780;
             --gray-600: #5F5E5A;
             --gray-900: #1A1918;
-            --white:    #FFFFFF;
-            --danger:    #E24B4A;
+            --white: #FFFFFF;
+            --danger: #E24B4A;
             --danger-bg: #FCEBEB;
-            --success:   #3B6D11;
-            --success-bg:#EAF3DE;
+            --success: #3B6D11;
+            --success-bg: #EAF3DE;
         }
 
-        html, body {
+        html,
+        body {
             height: 100%;
             font-family: 'DM Sans', sans-serif;
             color: var(--gray-900);
@@ -45,9 +53,11 @@
         /* ── Header ── */
         .sg-header {
             position: fixed;
-            top: 0; left: 0; right: 0;
+            top: 0;
+            left: 0;
+            right: 0;
             z-index: 100;
-            background: rgba(255,255,255,0.90);
+            background: rgba(255, 255, 255, 0.90);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--gray-100);
@@ -64,10 +74,13 @@
         }
 
         .sg-logo-icon {
-            width: 30px; height: 30px;
+            width: 30px;
+            height: 30px;
             background: var(--purple-800);
             border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .sg-logo-text {
@@ -86,7 +99,7 @@
             padding: 100px 40px 60px;
             background:
                 radial-gradient(ellipse 55% 45% at 85% 15%, var(--purple-50) 0%, transparent 65%),
-                radial-gradient(ellipse 45% 40% at 8%  85%, var(--purple-100) 0%, transparent 60%),
+                radial-gradient(ellipse 45% 40% at 8% 85%, var(--purple-100) 0%, transparent 60%),
                 var(--gray-50);
         }
 
@@ -101,21 +114,31 @@
             border: 1px solid var(--gray-100);
             border-radius: 20px;
             padding: 48px 52px;
-            box-shadow: 0 4px 32px rgba(60,52,137,0.08), 0 1px 4px rgba(0,0,0,0.04);
+            box-shadow: 0 4px 32px rgba(60, 52, 137, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
             animation: fadeUp 0.4s ease both;
         }
 
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(14px); }
-            to   { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* ── Icon badge ── */
         .sg-icon-badge {
-            width: 52px; height: 52px;
+            width: 52px;
+            height: 52px;
             background: var(--purple-50);
             border-radius: 14px;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             margin-bottom: 20px;
         }
 
@@ -168,7 +191,9 @@
         }
 
         /* ── OTP input ── */
-        .sg-field { margin-bottom: 20px; }
+        .sg-field {
+            margin-bottom: 20px;
+        }
 
         .sg-label {
             font-size: 13px;
@@ -178,7 +203,9 @@
             display: block;
         }
 
-        .sg-input-wrap { position: relative; }
+        .sg-input-wrap {
+            position: relative;
+        }
 
         .sg-input-icon {
             position: absolute;
@@ -254,8 +281,14 @@
             margin-bottom: 20px;
         }
 
-        .sg-btn-primary:hover  { background: var(--purple-900); }
-        .sg-btn-primary:active { transform: scale(0.98); }
+        .sg-btn-primary:hover {
+            background: var(--purple-900);
+        }
+
+        .sg-btn-primary:active {
+            transform: scale(0.98);
+        }
+
         .sg-btn-primary:disabled {
             background: var(--gray-200);
             color: var(--gray-400);
@@ -275,7 +308,9 @@
             text-decoration: none;
         }
 
-        .sg-resend a:hover { text-decoration: underline; }
+        .sg-resend a:hover {
+            text-decoration: underline;
+        }
 
         /* ── Breadcrumb ── */
         .sg-breadcrumb {
@@ -293,7 +328,9 @@
             font-weight: 500;
         }
 
-        .sg-breadcrumb a:hover { text-decoration: underline; }
+        .sg-breadcrumb a:hover {
+            text-decoration: underline;
+        }
 
         .sg-breadcrumb-sep {
             color: var(--gray-200);
@@ -307,11 +344,34 @@
             margin-top: 12px;
         }
 
+        .resend-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            margin: 0;
+            color: var(--purple-600);
+            text-decoration: underline;
+            cursor: pointer;
+            font: inherit;
+        }
+
+        .resend-btn:hover {
+            color: var(--purple-800);
+        }
+
         /* ── Responsive ── */
         @media (max-width: 600px) {
-            .sg-header { padding: 14px 20px; }
-            .sg-page   { padding: 90px 20px 40px; }
-            .sg-card   { padding: 32px 24px; }
+            .sg-header {
+                padding: 14px 20px;
+            }
+
+            .sg-page {
+                padding: 90px 20px 40px;
+            }
+
+            .sg-card {
+                padding: 32px 24px;
+            }
         }
     </style>
 </head>
@@ -322,8 +382,9 @@
     <header class="sg-header">
         <a href="/" class="sg-logo">
             <div class="sg-logo-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M5 3h14M5 21h14M8 3v4a4 4 0 008 0V3M8 21v-4a4 4 0 018 0v4"/>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 3h14M5 21h14M8 3v4a4 4 0 008 0V3M8 21v-4a4 4 0 018 0v4" />
                 </svg>
             </div>
             <span class="sg-logo-text">Sandglass</span>
@@ -347,65 +408,98 @@
 
                 <!-- Icon + heading -->
                 <div class="sg-icon-badge">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#534AB7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="4" width="20" height="16" rx="2"/>
-                        <path d="m22 7-10 7L2 7"/>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#534AB7" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="4" width="20" height="16" rx="2" />
+                        <path d="m22 7-10 7L2 7" />
                     </svg>
                 </div>
 
                 <p class="sg-eyebrow">Verification</p>
                 <h1 class="sg-title">Check your email</h1>
-                <p class="sg-subtitle">We've sent a one-time passcode to your registered email address. Enter it below to continue.</p>
+                <p class="sg-subtitle">We've sent a one-time passcode to your registered email address. Enter it below
+                    to continue.</p>
 
                 <!-- Server-side error -->
                 <% if(locals.message) { %>
-                <div class="sg-alert sg-alert-danger" role="alert">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                    <%= message %>
-                </div>
-                <% } %>
+                    <div class="sg-alert sg-alert-danger" role="alert">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                        <%= message %>
+                    </div>
+                    <% } %>
 
-                <!-- Client-side feedback -->
-                <div class="sg-alert sg-alert-danger" id="jsError" style="display:none" role="alert">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                    <span id="jsErrorText"></span>
-                </div>
-
-                <div class="sg-alert sg-alert-success" id="jsSuccess" style="display:none" role="alert">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    <span id="jsSuccessText"></span>
-                </div>
-
-                <form id="otpForm" method="post">
-                    <div class="sg-field">
-                        <label class="sg-label" for="otp">One-time passcode</label>
-                        <div class="sg-input-wrap">
-                            <span class="sg-input-icon">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-                            </span>
-                            <input type="text" id="otp" name="otp" placeholder="Enter OTP" inputmode="numeric" maxlength="6" autocomplete="one-time-code" required>
+                        <!-- Client-side feedback -->
+                        <div class="sg-alert sg-alert-danger" id="jsError" style="display:none" role="alert">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                            <span id="jsErrorText"></span>
                         </div>
-                    </div>
 
-                    <!-- Timer -->
-                    <div class="sg-timer">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                        Time remaining: <span id="countdown">05:00</span>
-                    </div>
+                        <div class="sg-alert sg-alert-success" id="jsSuccess" style="display:none" role="alert">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            <span id="jsSuccessText"></span>
+                        </div>
 
-                    <button class="sg-btn-primary" type="submit" id="verifyBtn">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                        Verify OTP
-                    </button>
-                </form>
+                        <form id="otpForm" method="post">
+                            <div class="sg-field">
+                                <label class="sg-label" for="otp">One-time passcode</label>
+                                <div class="sg-input-wrap">
+                                    <span class="sg-input-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <rect x="3" y="11" width="18" height="11" rx="2" />
+                                            <path d="M7 11V7a5 5 0 0110 0v4" />
+                                        </svg>
+                                    </span>
+                                    <input type="text" id="otp" name="otp" placeholder="Enter OTP" inputmode="numeric"
+                                        maxlength="6" autocomplete="one-time-code" required>
+                                </div>
+                            </div>
 
-                <div class="sg-resend">
-                    Didn't receive the code? <a href="/resend_otp">Resend OTP</a>
-                </div>
+                            <!-- Timer -->
+                            <div class="sg-timer">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                                Time remaining: <span id="countdown">05:00</span>
+                            </div>
+
+                            <button class="sg-btn-primary" type="submit" id="verifyBtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                                Verify OTP
+                            </button>
+                        </form>
+
+                        <div class="sg-resend">
+                            Didn't receive the code?
+                            <form action="/resend_otp" method="POST" style="display:inline;">
+                                <button type="submit" class="resend-btn">Resend OTP</button>
+                            </form>
+                        </div>
 
             </div>
 
-            <p class="sg-page-footer">© <script>document.write(new Date().getFullYear())</script> Sandglass. All rights reserved.</p>
+            <p class="sg-page-footer">©
+                <script>document.write(new Date().getFullYear())</script> Sandglass. All rights reserved.
+            </p>
         </div>
     </div>
 
@@ -413,12 +507,12 @@
         // ── Timer ──
         let countdown = 300;
         const countdownEl = document.getElementById('countdown');
-        const verifyBtn   = document.getElementById('verifyBtn');
+        const verifyBtn = document.getElementById('verifyBtn');
 
         function formatTime(s) {
             const m = Math.floor(s / 60);
             const sec = s % 60;
-            return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+            return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
         }
 
         const timer = setInterval(() => {
@@ -441,7 +535,7 @@
             document.getElementById('jsSuccess').style.display = 'none';
         }
 
-        document.getElementById('otpForm').addEventListener('submit', function(e) {
+        document.getElementById('otpForm').addEventListener('submit', function (e) {
             const otp = document.getElementById('otp').value.trim();
             if (!otp) {
                 e.preventDefault();
@@ -460,5 +554,5 @@
     <script src="/user/assets/js/main.js?v=3.4"></script>
 
 </body>
-</html>
 
+</html>

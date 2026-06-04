@@ -764,7 +764,7 @@
                                 Profile
                             </a>
                             <div class="sg-dropdown-divider"></div>
-                            <a href="/logout" class="danger">
+                            <a href="#" id="logoutBtn" class="danger">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
@@ -1134,6 +1134,17 @@
                 });
             });
         </script>
+        <script>
+        document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            await fetch('/logout', {
+                method: 'POST'
+            });
+
+            window.location.href = '/login';
+        });
+    </script>
         <% } %>
 
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -1198,7 +1209,7 @@
                 async function quantityUpdate(productId, status) {
                     try {
                         let response = await fetch('/cart/quantity', {
-                            method: 'PUT',
+                            method: 'PATCH',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ productId, status })
                         });

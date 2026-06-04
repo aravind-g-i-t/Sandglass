@@ -12,7 +12,7 @@ const loadcategories = async (req, res) => {
         const categoryData = await Category.find().sort({ createdAt: -1 }).skip(startIndex).limit(limit);
         const totalDocuments = await Category.countDocuments();
         const totalPages = Math.ceil(totalDocuments / limit);
-        return res.status(STATUS_CODES.SUCCESS).render('admin/categories', { categoryData, page, totalPages });
+        return res.status(STATUS_CODES.OK).render('admin/categories', { categoryData, page, totalPages });
     } catch {
         return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
     }
@@ -42,8 +42,8 @@ const insertCategory = async (req, res) => {
 
 
         if (checkCategory) {
-            return res.status(STATUS_CODES.SUCCESS).render('admin/categories', {
-                message: 'Category already exists',
+            return res.status(STATUS_CODES.CONFLICT).render('admin/categories', {
+                message: MESSAGES.CATEGORY_EXISTS,
                 categoryData,
                 page,
                 totalPages
@@ -54,7 +54,7 @@ const insertCategory = async (req, res) => {
             description
         });
 
-        return res.render('admin/categories', {
+        return res.status(STATUS_CODES.OK).render('admin/categories', {
             categoryData: [newCat, ...categoryData],
             page,
             totalPages
@@ -68,7 +68,9 @@ const insertCategory = async (req, res) => {
 
 const statusUpdate = async (req, res) => {
     try {
-        const id = req.query.id;
+        const id = req.params.id;
+        console.log(id);
+
 
         const category = await Category.findById({ _id: id });
         if (category.isActive) {
@@ -102,7 +104,7 @@ const loadEdit = async (req, res) => {
         const id = req.query.id;
         const category = await Category.findById(id);
 
-        return res.render('admin/editCategory', { category });
+        return res.status(STATUS_CODES.OK).render('admin/editCategory', { category });
     } catch {
         return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
     }
@@ -110,7 +112,8 @@ const loadEdit = async (req, res) => {
 
 const editCategory = async (req, res) => {
     try {
-        let { id, name, description } = req.body;
+        let { name, description } = req.body;
+        const { id } = req.params;
         name = name.toUpperCase();
         const category = await Category.findById(id);
         const nameMatch = await Category.findOne({
@@ -135,12 +138,19 @@ const editCategory = async (req, res) => {
                     name
                 }
             });
-            return res.redirect('/admin/categories');
+            return res.status(STATUS_CODES.OK).json({
+                success: true,
+                message: 'Category updated successfully'
+            });
+
         }
 
 
     } catch {
-        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+            success:false,
+            message:MESSAGES.INTERNAL_SERVER_ERROR
+        });
     }
 };
 
