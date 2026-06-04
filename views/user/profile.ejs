@@ -1032,14 +1032,14 @@
                         </a>
                         <div class="sg-dropdown-divider"></div>
                         <a href="#" id="logoutBtn" class="danger">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
-                                    <polyline points="16 17 21 12 16 7" />
-                                    <line x1="21" y1="12" x2="9" y2="12" />
-                                </svg>
-                                Logout
-                            </a>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+                                <polyline points="16 17 21 12 16 7" />
+                                <line x1="21" y1="12" x2="9" y2="12" />
+                            </svg>
+                            Logout
+                        </a>
                     </div>
                 </div>
             </div>
@@ -1114,7 +1114,7 @@
                             Orders
                         </a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a href="#" onclick="switchTab(event, 'tab-track')">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1123,7 +1123,7 @@
                             </svg>
                             Track Order
                         </a>
-                    </li>
+                    </li> -->
                     <li>
                         <a href="#" onclick="switchTab(event, 'tab-wallet')">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -1386,7 +1386,7 @@
                 </div>
 
                 <!-- ── Track Order ── -->
-                <div class="sg-tab-pane" id="tab-track">
+                <!-- <div class="sg-tab-pane" id="tab-track">
                     <div class="sg-card">
                         <div class="sg-card-header">
                             <h5>Track Your Order</h5>
@@ -1415,7 +1415,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- ── Wallet ── -->
                 <div class="sg-tab-pane" id="tab-wallet">
@@ -1962,7 +1962,8 @@
                 if (result.isConfirmed) {
                     await fetch(`/addresses/${addressId}`, {
                         method: 'DELETE',
-                        headers: { 'Content-Type': 'application/json' }                    });
+                        headers: { 'Content-Type': 'application/json' }
+                    });
                     window.location.href = '/profile?tab=address';
                 }
             });
@@ -1979,8 +1980,14 @@
                 confirmButtonColor: '#3C3489',
                 cancelButtonColor: '#EEECE8',
                 confirmButtonText: 'Log out'
-            }).then((result) => {
-                if (result.isConfirmed) window.location.href = '/logout';
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    await fetch('/logout', {
+                        method: 'POST'
+                    });
+
+                    window.location.href = '/login';
+                }
             });
         }
 
