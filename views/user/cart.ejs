@@ -228,22 +228,22 @@
         }
 
         .sg-dropdown {
-    position: absolute;
-    right: 0;
-    top: calc(100% + 8px);
-    background: var(--white);
-    border: 1px solid var(--gray-100);
-    border-radius: 12px;
-    padding: 6px;
-    min-width: 180px;
-    box-shadow: 0 8px 24px rgba(60,52,137,0.10);
-    display: none;
-    z-index: 200;
-}
+            position: absolute;
+            right: 0;
+            top: calc(100% + 8px);
+            background: var(--white);
+            border: 1px solid var(--gray-100);
+            border-radius: 12px;
+            padding: 6px;
+            min-width: 180px;
+            box-shadow: 0 8px 24px rgba(60, 52, 137, 0.10);
+            display: none;
+            z-index: 200;
+        }
 
-.sg-dropdown.active {
-    display: block;
-}
+        .sg-dropdown.active {
+            display: block;
+        }
 
 
         .sg-dropdown a {
@@ -1135,16 +1135,16 @@
             });
         </script>
         <script>
-        document.getElementById('logoutBtn').addEventListener('click', async (e) => {
-            e.preventDefault();
+            document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+                e.preventDefault();
 
-            await fetch('/logout', {
-                method: 'POST'
+                await fetch('/logout', {
+                    method: 'POST'
+                });
+
+                window.location.href = '/login';
             });
-
-            window.location.href = '/login';
-        });
-    </script>
+        </script>
         <% } %>
 
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -1208,35 +1208,68 @@
                 // Update Quantity
                 async function quantityUpdate(productId, status) {
                     try {
-                        let response = await fetch('/cart/quantity', {
+                        const response = await fetch('/cart/quantity', {
                             method: 'PATCH',
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
                             body: JSON.stringify({ productId, status })
                         });
-                        if (!response.ok) throw new Error('Network error');
-                        let data = await response.json();
 
-                        if (data.message === 'product exceeded') {
-                            await Swal.fire('Stock Exceeded', 'Cannot increase quantity beyond available stock.', 'error');
-                            location.reload();
-                        } else if (data.message === 'Max 10') {
-                            await Swal.fire('Maximum Quantity', 'Cannot add more than 10 of the same item.', 'error');
-                            location.reload();
-                        } else if (data.message === 'Min 1') {
-                            await Swal.fire('Minimum Quantity', 'Quantity cannot be less than 1.', 'error');
-                            location.reload();
-                        } else {
-                            document.getElementById(`quantity${data.productData._id}`).innerText = data.quantity;
-                            document.getElementById(`totalPrice${data.productData._id}`).innerText = '₹' + (data.quantity * data.finalPrice);
-                            document.getElementById(`price${data.productData._id}`).innerText = '₹' + data.finalPrice;
-                            document.getElementById('subTotal').innerText = '₹' + data.total;
-                            document.getElementById('total').innerText = '₹' + (data.total + 300 - data.discount);
-                            if (data.discount) {
-                                document.getElementById('discount').innerText = '−₹' + data.discount;
+                        const data = await response.json();
+
+                        if (!response.ok) {
+
+                            switch (data.code) {
+
+                                case "STOCK_EXCEEDED":
+                                    return Swal.fire(
+                                        'Stock Exceeded',
+                                        data.message,
+                                        'error'
+                                    );
+
+                                case "MAX_QUANTITY":
+                                    return Swal.fire(
+                                        'Maximum Quantity',
+                                        data.message,
+                                        'error'
+                                    );
+
+                                case "MIN_QUANTITY":
+                                    return Swal.fire(
+                                        'Minimum Quantity',
+                                        data.message,
+                                        'error'
+                                    );
+
+                                default:
+                                    throw new Error(data.message);
                             }
                         }
+
+                        // Success
+                        document.getElementById(`quantity${data.productData._id}`).innerText = data.quantity;
+                        document.getElementById(`totalPrice${data.productData._id}`).innerText =
+                            '₹' + (data.quantity * data.finalPrice);
+                        document.getElementById(`price${data.productData._id}`).innerText =
+                            '₹' + data.finalPrice;
+                        document.getElementById('subTotal').innerText = '₹' + data.total;
+                        document.getElementById('total').innerText =
+                            '₹' + (data.total + 300 - data.discount);
+
+                        if (data.discount) {
+                            document.getElementById('discount').innerText =
+                                '−₹' + data.discount;
+                        }
+
                     } catch (error) {
-                        await Swal.fire('Error', 'Something went wrong. Please try again.', 'error');
+                        console.error(error);
+                        await Swal.fire(
+                            'Error',
+                            'Something went wrong. Please try again.',
+                            'error'
+                        );
                     }
                 }
 

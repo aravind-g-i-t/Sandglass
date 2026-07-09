@@ -115,7 +115,6 @@ const editCategory = async (req, res) => {
         let { name, description } = req.body;
         const { id } = req.params;
         name = name.toUpperCase();
-        const category = await Category.findById(id);
         const nameMatch = await Category.findOne({
             name
         });
@@ -124,11 +123,14 @@ const editCategory = async (req, res) => {
                 await Category.findByIdAndUpdate(id, {
                     $set: { description }
                 });
-                return res.redirect('/admin/categories');
+                return res.status(STATUS_CODES.OK).json({
+                success: true,
+                message: 'Category updated successfully'
+            });
             } else {
-                return res.render("edit-category", {
-                    message: "Cannot change to existing Category",
-                    category
+                return res.status(STATUS_CODES.CONFLICT).json({
+                    success:false,
+                    message: "Category already exists"
                 });
             }
         } else {

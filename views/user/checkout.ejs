@@ -797,7 +797,7 @@
                                 <div class="sg-form-grid">
                                     <div class="sg-form-group sg-form-full">
                                         <label for="fullName">Full name</label>
-                                        <input name="fullName" type="text" id="fullName" placeholder="John Doe" required>
+                                        <input name="fullName" type="text" id="fullName" placeholder="John Doe" pattern="[a-zA-Z\s.]+" title="Letters, spaces, or dots only" required>
                                     </div>
                                     <div class="sg-form-group sg-form-full">
                                         <label for="address1">Address line 1</label>
@@ -809,11 +809,11 @@
                                     </div>
                                     <div class="sg-form-group">
                                         <label for="city">City</label>
-                                        <input name="city" type="text" id="city" placeholder="Mumbai" required>
+                                        <input name="city" type="text" id="city" placeholder="Mumbai" pattern="[a-zA-Z\s]+" title="Letters and spaces only" required>
                                     </div>
                                     <div class="sg-form-group">
                                         <label for="state">State</label>
-                                        <input name="state" type="text" id="state" placeholder="Maharashtra" required>
+                                        <input name="state" type="text" id="state" placeholder="Maharashtra" pattern="[a-zA-Z\s]+" title="Letters and spaces only" required>
                                     </div>
                                     <div class="sg-form-group">
                                         <label for="pincode">Pincode</label>
@@ -944,34 +944,49 @@
         }
 
         function validateAndSaveAddress() {
-            const fullName = document.getElementById('fullName').value.trim();
-            const address1 = document.getElementById('address1').value.trim();
-            const city     = document.getElementById('city').value.trim();
-            const state    = document.getElementById('state').value.trim();
-            const pincode  = document.getElementById('pincode').value.trim();
-            const phone    = document.getElementById('phone').value.trim();
-            const email    = document.getElementById('email').value.trim();
+    const fullName = document.getElementById('fullName').value.trim();
+    const address1 = document.getElementById('address1').value.trim();
+    const city     = document.getElementById('city').value.trim();
+    const state    = document.getElementById('state').value.trim();
+    const pincode  = document.getElementById('pincode').value.trim();
+    const phone    = document.getElementById('phone').value.trim();
+    const email    = document.getElementById('email').value.trim();
 
-            if (!fullName || !address1 || !city || !state || !pincode || !phone || !email) {
-                Swal.fire({ icon: 'error', title: 'Error', text: 'All required fields must be filled out.' });
-                return;
-            }
-            if (!/^\d{6}$/.test(pincode)) {
-                Swal.fire({ icon: 'error', title: 'Error', text: 'Please enter a valid 6-digit pincode.' });
-                return;
-            }
-            if (!/^\d{10}$/.test(phone)) {
-                Swal.fire({ icon: 'error', title: 'Error', text: 'Please enter a valid 10-digit phone number.' });
-                return;
-            }
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                Swal.fire({ icon: 'error', title: 'Error', text: 'Please enter a valid email address.' });
-                return;
-            }
+    const namePattern = /^[a-zA-Z\s.]+$/;
+    const placePattern = /^[a-zA-Z\s]+$/;
 
-            Swal.fire({ icon: 'success', title: 'Success', text: 'Address saved successfully!' })
-                .then(() => { document.getElementById('address-form').submit(); });
-        }
+    if (!fullName || !address1 || !city || !state || !pincode || !phone || !email) {
+        Swal.fire({ icon: 'error', title: 'Error', text: 'All required fields must be filled out.' });
+        return;
+    }
+    if (!namePattern.test(fullName)) {
+        Swal.fire({ icon: 'error', title: 'Error', text: 'Full Name must only contain letters, spaces, or dots.' });
+        return;
+    }
+    if (!placePattern.test(city)) {
+        Swal.fire({ icon: 'error', title: 'Error', text: 'City must only contain letters and spaces.' });
+        return;
+    }
+    if (!placePattern.test(state)) {
+        Swal.fire({ icon: 'error', title: 'Error', text: 'State must only contain letters and spaces.' });
+        return;
+    }
+    if (!/^\d{6}$/.test(pincode)) {
+        Swal.fire({ icon: 'error', title: 'Error', text: 'Please enter a valid 6-digit pincode.' });
+        return;
+    }
+    if (!/^\d{10}$/.test(phone)) {
+        Swal.fire({ icon: 'error', title: 'Error', text: 'Please enter a valid 10-digit phone number.' });
+        return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        Swal.fire({ icon: 'error', title: 'Error', text: 'Please enter a valid email address.' });
+        return;
+    }
+
+    Swal.fire({ icon: 'success', title: 'Success', text: 'Address saved successfully!' })
+        .then(() => { document.getElementById('address-form').submit(); });
+}
 
         async function placeOrder() {
             const selectedAddress = document.querySelector('input[name="address"]:checked');

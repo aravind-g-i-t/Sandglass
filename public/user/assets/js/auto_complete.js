@@ -1,26 +1,20 @@
+/* global document */
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.querySelector('input[name="search"]');
     let debounceTimeout;
 
-    searchInput.addEventListener('input', () => {
-        const query = searchInput.value.trim();
+    function handleAutocompleteResponse(response) {
+        return response.json();
+    }
 
-        clearTimeout(debounceTimeout);
-
-        debounceTimeout = setTimeout(() => {
-            if (query.length > 0) {
-                fetch(`/autocomplete?query=${encodeURIComponent(query)}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        renderAutocompleteSuggestions(data);
-                    })
-                    .catch(error => console.error('Error fetching autocomplete data:', error));
-            } else {
-                closeAutocomplete(); // Close if input is empty
-            }
-        }, 300); // Delay of 300ms
-    });
+    function fetchSuggestions(query) {
+        fetch(`/autocomplete?query=${encodeURIComponent(query)}`)
+            .then(handleAutocompleteResponse)
+            .then(renderAutocompleteSuggestions)
+            .catch(() => closeAutocomplete());
+    }
 
     function renderAutocompleteSuggestions(suggestions) {
         let autocompleteBox = document.querySelector('.autocomplete-box');
@@ -31,26 +25,29 @@ document.addEventListener('DOMContentLoaded', () => {
             searchInput.parentNode.appendChild(autocompleteBox);
         }
 
-        autocompleteBox.innerHTML = suggestions.map(item =>
-            `<div class="autocomplete-item">
-                        <img src="/uploads/${item.photoUrl}" alt="${item.name}" class="autocomplete-photo">
-                        <div class="autocomplete-info">
-                            <div class="autocomplete-name">${item.name}</div>
-                            <div class="autocomplete-category">${item.category}</div>
-                        </div>
-                    </div>`
-        ).join('');
+        autocompleteBox.innerHTML = suggestions.map(item => `
+    <div class="autocomplete-item">
+        <img src="/uploads/${item.photoUrl}" alt="${item.name}" class="autocomplete-photo">
+        <div class="autocomplete-info">
+            <div class="autocomplete-id" hidden>${item.id}</div>
+            <div class="autocomplete-name">${item.name}</div>
+            <div class="autocomplete-category">${item.category}</div>
+        </div>
+    </div>
+`).join('');
 
         autocompleteBox.style.display = 'block'; // Ensure the box is visible
 
         document.querySelectorAll('.autocomplete-item').forEach(item => {
-            item.addEventListener('click', () => {
-                searchInput.value = item.querySelector('.autocomplete-name').textContent;
-                document.getElementById('searchForm').submit();
-                closeAutocomplete(); // Close after selecting an item
-            });
+            item.addEventListener('click', () => selectSuggestion(item));
         });
     }
+
+    function selectSuggestion(item) {
+    const productId = item.querySelector('.autocomplete-id').textContent;
+
+    globalThis.location.href = `/product_details?id=${productId}`;
+}
 
     function closeAutocomplete() {
         const autocompleteBox = document.querySelector('.autocomplete-box');
@@ -59,24 +56,38 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Re-open autocomplete if the input is focused and has a value
-    searchInput.addEventListener('focus', () => {
-        if (searchInput.value.trim().length > 0) {
-            fetch(`/autocomplete?query=${encodeURIComponent(searchInput.value.trim())}`)
-                .then(response => response.json())
-                .then(data => {
-                    renderAutocompleteSuggestions(data);
-                })
-                .catch(error => console.error('Error fetching autocomplete data:', error));
-        }
-    });
+    function handleSearchInput() {
+        const query = searchInput.value.trim();
 
-    // Close autocomplete when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!searchInput.contains(e.target) && !document.querySelector('.autocomplete-box').contains(e.target)) {
+        clearTimeout(debounceTimeout);
+
+        debounceTimeout = setTimeout(() => {
+            if (query.length > 0) {
+                fetchSuggestions(query);
+            } else {
+                closeAutocomplete(); // Close if input is empty
+            }
+        }, 300); // Delay of 300ms
+    }
+
+    function handleSearchFocus() {
+        const query = searchInput.value.trim();
+        if (query.length > 0) {
+            fetchSuggestions(query);
+        }
+    }
+
+    function handleOutsideClick(e) {
+        const autocompleteBox = document.querySelector('.autocomplete-box');
+        const clickedOutsideInput = !searchInput.contains(e.target);
+        const clickedOutsideBox = !autocompleteBox || !autocompleteBox.contains(e.target);
+
+        if (clickedOutsideInput && clickedOutsideBox) {
             closeAutocomplete();
         }
-    });
+    }
+
+    searchInput.addEventListener('input', handleSearchInput);
+    searchInput.addEventListener('focus', handleSearchFocus);
+    document.addEventListener('click', handleOutsideClick);
 });
-
-

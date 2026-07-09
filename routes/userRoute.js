@@ -6,24 +6,26 @@ const passport = require('passport');
 const cartController = require('../controllers/cartController');
 const wishlistController = require('../controllers/wishlistController');
 const orderController = require('../controllers/orderController');
-
-
-
-
-
-
-
-
+const {
+    validateSignup,
+    validateLogin,
+    validateForgotPassword,
+    validateSetPassword,
+    validateResetPassword,
+    validateEditName,
+    validateEditPhone,
+    handleValidation
+} = require('../middlewares/validation');
 
 userRoute.get('/', userController.loadHome);
 userRoute.get('/login', auth.isLoggedOut, userController.loadLogin);
-userRoute.post('/login', userController.verifyLogin);
+userRoute.post('/login', validateLogin, handleValidation('user/login'), userController.verifyLogin);
 userRoute.get('/forgot_password', auth.isLoggedOut, userController.loadForgotPassword);
-userRoute.post('/forgotPassword', auth.isLoggedOut, userController.forgotPassword);
+userRoute.post('/forgotPassword', auth.isLoggedOut, validateForgotPassword, handleValidation('user/forgotPassword'), userController.forgotPassword);
 userRoute.post('/verify_otp', auth.isLoggedOut, userController.verifyForgotOtp);
-userRoute.post('/set_password', auth.isLoggedOut, userController.setPassword);
+userRoute.post('/set_password', auth.isLoggedOut, validateSetPassword, handleValidation('user/setPassword'), userController.setPassword);
 userRoute.get('/signup', auth.isLoggedOut, userController.loadSignup);
-userRoute.post('/signup', userController.insertUser);
+userRoute.post('/signup', validateSignup, handleValidation('user/signup'), userController.insertUser);
 userRoute.get('/verify', userController.loadVerify);
 userRoute.post('/resend_otp', userController.resendOtp);
 userRoute.post('/verify', userController.verifyOtp);
@@ -33,7 +35,8 @@ userRoute.get('/auth/google', passport.authenticate('google', {
     scope: ['email', 'profile']
 }));
 userRoute.get('/oauth2/redirect/google', passport.authenticate('google',
-    { failureRedirect: '/failure',
+    {
+        failureRedirect: '/failure',
         successRedirect: '/success'
     })
 );
@@ -44,10 +47,10 @@ userRoute.get('/product_details', userController.productDetails);
 userRoute.get('/profile', auth.isLoggedIn, userController.profile);
 userRoute.get('/wishlist', auth.isLoggedIn, wishlistController.wishlist);
 userRoute.get('/cart', auth.isLoggedIn, cartController.loadCart);
-userRoute.patch('/edit_name/:id', userController.editName);
-userRoute.patch('/edit_phone/:id', userController.editPhone);
-userRoute.patch('/reset_password/:id', userController.resetPassword);
-userRoute.post('/address', userController.addAddress);
+userRoute.patch('/edit_name/:id', auth.isLoggedIn, validateEditName, handleValidation("user/edit_name/:id"), userController.editName);
+userRoute.patch('/edit_phone/:id', auth.isLoggedIn, validateEditPhone, handleValidation("user/edit_phone"), userController.editPhone);
+userRoute.patch('/reset_password/:id', auth.isLoggedIn, validateResetPassword, handleValidation("user/reset_password/:id"), userController.resetPassword);
+userRoute.post('/address', auth.isLoggedIn, userController.addAddress);
 userRoute.patch('/addresses/:addressId', auth.isLoggedIn, userController.editAddress);
 userRoute.delete('/addresses/:addressId', auth.isLoggedIn, userController.deleteAddress);
 userRoute.post('/product/add_to_cart', auth.isLoggedIn, cartController.addToCart);
@@ -71,7 +74,7 @@ userRoute.patch('/pay-by-razorpay', auth.isLoggedIn, orderController.payByRazorp
 userRoute.patch('/pay-by-wallet', auth.isLoggedIn, orderController.payByWallet);
 userRoute.get('/about', userController.loadAbout);
 userRoute.get('/contact', userController.loadContact);
-userRoute.get('/wallet-transactions', userController.getWalletTransactions);
+userRoute.get('/wallet-transactions', auth.isLoggedIn, userController.getWalletTransactions);
 
 
 

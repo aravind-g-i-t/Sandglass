@@ -3,7 +3,7 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 const generate = () => {
-    const otp= generateOtp.generate(4, {
+    const otp = generateOtp.generate(4, {
         digits: true,
         lowerCaseAlphabets: false,
         upperCaseAlphabets: false,
@@ -11,10 +11,13 @@ const generate = () => {
     });
     console.log(otp);
     return otp;
-    
+
 };
 
 const sendOtp = async (email, otp) => {
+    console.log(process.env.EMAIL, process.env.PASSWORD);
+
+    try {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -34,6 +37,12 @@ const sendOtp = async (email, otp) => {
 
 
         return info;
+    } catch (error) {
+        console.log(error);
+
+        throw new Error("Failed to sent otp");
+    }
+
 
 
 };

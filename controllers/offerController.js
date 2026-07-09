@@ -90,7 +90,10 @@ const toggleOfferStatus = async (req, res) => {
 
         return res.status(STATUS_CODES.OK).json({ success: true, newStatus: offer.isActive });
     } catch {
-        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: MESSAGES.INTERNAL_SERVER_ERROR
+        });
     }
 };
 

@@ -49,14 +49,20 @@ const addToCart = async (req, res) => {
         const productId = req.body.productId;
         const productData = await Product.findById(productId);
         if (!productData) {
-            return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: MESSAGES.PRODUCT_NOT_FOUND });
+            return res.status(STATUS_CODES.NOT_FOUND).json({
+                success: false,
+                message: MESSAGES.PRODUCT_NOT_FOUND
+            });
         }
 
         const finalPrice = await productData.getDisplayPrice();
 
         const userData = await User.findById(req.session.user._id);
         if (!userData) {
-            return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: MESSAGES.USER_NOT_FOUND });
+            return res.status(STATUS_CODES.NOT_FOUND).json({
+                success: false,
+                message: MESSAGES.USER_NOT_FOUND
+            });
         }
 
         let cart = await Cart.findOne({ userId: userData._id });
@@ -90,9 +96,15 @@ const addToCart = async (req, res) => {
 
 
         await cart.save();
-        return res.status(STATUS_CODES.OK).json({ success: true });
+        return res.status(STATUS_CODES.OK).json({
+            success: true,
+            message: MESSAGES.PRODUCT_ADDED_TO_CART
+        });
     } catch {
-        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: MESSAGES.INTERNAL_SERVER_ERROR
+        });
     }
 };
 
@@ -141,17 +153,18 @@ const quantityUpdate = async (req, res) => {
 
             if (quantity >= 10) {
                 return res.status(STATUS_CODES.BAD_REQUEST).json({
-                    message: MESSAGES.MAXIMUM_QUANTITY,
-                    total: cartData.totalPrice
+                    code: "MAX_QUANTITY",
+                    message: "Cannot add more than 10 of the same item."
                 });
             }
 
             if (quantity >= stock) {
                 return res.status(STATUS_CODES.BAD_REQUEST).json({
-                    message: MESSAGES.STOCK_EXCEEDED,
-                    total: cartData.totalPrice
+                    code: "STOCK_EXCEEDED",
+                    message: "Cannot increase quantity beyond available stock."
                 });
             }
+
 
             cartProduct.quantity += 1;
 
@@ -159,8 +172,8 @@ const quantityUpdate = async (req, res) => {
 
             if (quantity <= 1) {
                 return res.status(STATUS_CODES.BAD_REQUEST).json({
-                    message: MESSAGES.MINIMUM_QUANTITY,
-                    total: cartData.totalPrice
+                    code: "MIN_QUANTITY",
+                    message: "Quantity cannot be less than 1."
                 });
             }
 
@@ -382,7 +395,9 @@ const applyCoupon = async (req, res) => {
         const cartTotal = cart.product.reduce((acc, product) => acc + (product.productPrice * product.quantity), 0);
 
         if (cartTotal < coupon.minPurchaseAmount) {
-            return res.status(STATUS_CODES.BAD_REQUEST).json({ message: `Minimum purchase amount of ₹${coupon.minPurchaseAmount} is required to use this coupon` });
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
+                success:true,
+                message: `Minimum purchase amount of ₹${coupon.minPurchaseAmount} is required to use this coupon` });
         }
 
         cart.coupon = couponCode;
@@ -390,7 +405,10 @@ const applyCoupon = async (req, res) => {
 
         return res.json({ message: MESSAGES.COUPON_APPLIED, discountPercentage: coupon.discountPercentage });
     } catch {
-        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: MESSAGES.INTERNAL_SERVER_ERROR
+        });
     }
 };
 

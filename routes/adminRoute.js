@@ -6,23 +6,24 @@ const multer = require('../helpers/multer');
 const auth = require('../middlewares/adminAuth');
 const adminRoute = express.Router();
 const offerController = require('../controllers/offerController');
+const { validateAdminLogin, handleValidation } = require('../middlewares/validation');
 
 
 
 adminRoute.get('/', auth.isLoggedOut, adminController.loadLogin);
-adminRoute.post('/', adminController.adminLogin);
+adminRoute.post('/', validateAdminLogin, handleValidation("admin"), adminController.adminLogin);
 adminRoute.post('/logout', adminController.adminLogout);
 adminRoute.get('/dashboard', auth.isLoggedIn, adminController.loadDashboard);
 adminRoute.get('/users', auth.isLoggedIn, adminController.loadUsers);
 adminRoute.get('/categories', auth.isLoggedIn, categoryController.loadcategories);
-adminRoute.post('/categories', categoryController.insertCategory);
+adminRoute.post('/categories', auth.isLoggedIn, categoryController.insertCategory);
 adminRoute.patch("/categories/:id/status", auth.isLoggedIn, categoryController.statusUpdate);
 adminRoute.get('/editCategory', auth.isLoggedIn, categoryController.loadEdit);
-adminRoute.patch('/categories/:id', categoryController.editCategory);
+adminRoute.patch('/categories/:id', auth.isLoggedIn, categoryController.editCategory);
 adminRoute.get('/products', auth.isLoggedIn, productController.loadProducts);
 adminRoute.get('/add_product', auth.isLoggedIn, productController.loadAddProduct);
 adminRoute.patch('/users/:id/status', auth.isLoggedIn, adminController.userStatusUpdate);
-adminRoute.post('/add_product', multer, productController.addProduct);
+adminRoute.post('/add_product', auth.isLoggedIn, multer, productController.addProduct);
 adminRoute.patch('/products/:id/status', auth.isLoggedIn, productController.productStatusUpdate);
 adminRoute.get('/products/:id/edit', auth.isLoggedIn, productController.loadEditProduct);
 adminRoute.delete('/remove_image', multer, productController.removeImage);

@@ -11,7 +11,6 @@ const Cart = require("../models/cartModel");
 const MESSAGES = require("../constants/messages.constant");
 const STATUS_CODES = require('../enum/statusCode.enum');
 
-const validate = require('../helpers/validatePassword');
 
 
 const loadSignup = (req, res) => {
@@ -27,6 +26,7 @@ const loadSignup = (req, res) => {
 const insertUser = async (req, res) => {
     try {
         const { username, email, phone, password } = req.body;
+
 
         const checkMail = await User.findOne({
             email
@@ -52,7 +52,6 @@ const insertUser = async (req, res) => {
         }
 
 
-        await validate(password);
         const hashedPassword = await hashing.hashPassword(password);
         const userData = {
             username,
@@ -502,7 +501,7 @@ const googleSuccess = async (req, res) => {
 
         if (req.user) {
             req.session.user = await User.findById(req.user._id);
-            return res.status(STATUS_CODES.SUCCESS).redirect('/');
+            return res.status(STATUS_CODES.OK).redirect('/');
         } else {
             return res.status(STATUS_CODES.NOT_FOUND).render('user/login', { message: 'googleSuccess failure' });
         }
@@ -549,7 +548,7 @@ const editName = async (req, res) => {
         const newName = req.body.name;
         const nameUpdated = await User.findByIdAndUpdate(userId, { $set: { username: newName } }, { new: true });
         if (nameUpdated) {
-            return res.status(STATUS_CODES.SUCCESS).json({
+            return res.status(STATUS_CODES.OK).json({
                 message: 'Name updated successfully',
                 user: nameUpdated
             });
@@ -578,7 +577,7 @@ const editPhone = async (req, res) => {
         );
 
         if (phoneUpdated) {
-            return res.status(STATUS_CODES.SUCCESS).json({
+            return res.status(STATUS_CODES.OK).json({
                 message: 'Phone number updated successfully',
                 user: phoneUpdated
             });
@@ -629,7 +628,7 @@ const resetPassword = async (req, res) => {
         user.password = await hashing.hashPassword(newPassword);
         await user.save();
 
-        return res.status(STATUS_CODES.SUCCESS).json({
+        return res.status(STATUS_CODES.OK).json({
             success: true,
             message: 'Password reset successfully'
         });
@@ -729,7 +728,7 @@ const editAddress = async (req, res) => {
         if (!newAddress) {
             return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ message: "Failed to update address." });
         }
-        return res.status(STATUS_CODES.SUCCESS).json({ message: "Successfully updated address" });
+        return res.status(STATUS_CODES.OK).json({ message: "Successfully updated address" });
 
     } catch (error) {
         return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error, message: "Internal server error." });
@@ -746,10 +745,16 @@ const deleteAddress = async (req, res) => {
         const findAddress = addressData.address.find(
             (addr) => addr._id.toString() === addressId
         );
+        if (!findAddress) {
+            return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+                success: false,
+                message: "Address doesnot exist"
+            });
+        }
         const addressIndex = addressData.address.indexOf(findAddress);
         addressData.address.splice(addressIndex, 1);
         await addressData.save();
-        return res.status(STATUS_CODES.SUCCESS).json({ message: "Successfully deleted" });
+        return res.status(STATUS_CODES.OK).json({ message: "Successfully deleted" });
     } catch (error) {
         return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error, message: "Internal server error." });
     }
@@ -763,13 +768,15 @@ const autoComplete = async (req, res) => {
         const products = await Product.find({
             isActive: true,
             category: { $in: activeCategoryIds },
-            productName: new RegExp(query, "i")
+            productName: new RegExp(query, "i"),
+            stock: { $gt: 0 }
         }).limit(3).populate('category');
 
         const suggestions = products.map(item => ({
             name: item.productName,
             category: item.category.name,
-            photoUrl: item.productImage[0]
+            photoUrl: item.productImage[0],
+            id:item._id
         }));
         return res.json(suggestions);
     } catch {

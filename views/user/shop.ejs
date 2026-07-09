@@ -640,7 +640,7 @@
                 <form id="searchForm" action="/shop" method="get">
                     <input name="search" type="text" placeholder="Search for items…" value="<%= search %>">
                     <input type="hidden" name="sort" value="<%= sortBy %>">
-                    <input type="hidden" name="page" value="<%= page %>">
+                    <input type="hidden" name="page" value="<%= 1 %>">
                     <input type="hidden" name="category" value="<%= categoryFilter %>">
                 </form>
             </div>
@@ -748,14 +748,14 @@
                     <h5 class="sg-sidebar-title">Categories</h5>
                     <ul class="sg-category-list">
                         <li>
-                            <a href="/shop?search=<%= search %>&sort=<%= sortBy %>&page=<%= page %>&category=all-categories"
+                            <a href="/shop?search=<%= search %>&sort=<%= sortBy %>&page=1&category=all-categories"
                                class="<%= (categoryFilter === 'all-categories' || !categoryFilter) ? 'active' : '' %>">
                                 All Categories
                             </a>
                         </li>
                         <% if(categories) { categories.forEach(category => { %>
                         <li>
-                            <a href="/shop?search=<%= search %>&sort=<%= sortBy %>&page=<%= page %>&category=<%= category._id %>"
+                            <a href="/shop?search=<%= search %>&sort=<%= sortBy %>&page=1&category=<%= category._id %>"
                                class="<%= categoryFilter == category._id ? 'active' : '' %>">
                                 <%= category.name %>
                             </a>
@@ -970,8 +970,6 @@
             } else {
                 window.location.href = "/cart";
             }
-            const data = await response.json();
-            console.log(`Data is ${data}`);
         }
 
         async function addToWishlist(productId) {

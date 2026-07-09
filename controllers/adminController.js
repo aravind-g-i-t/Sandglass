@@ -353,46 +353,101 @@ const updateOrderStatus = async (req, res) => {
             return res.status(STATUS_CODES.BAD_REQUEST).json({ success: false, message: 'Missing orderId, productId, or status' });
         }
 
+        const order = await Order.findById(orderId);
 
-        const updatedOrder = await Order.findOneAndUpdate(
-            { "_id": orderId, 'products._id': productId },
-            { $set: { 'products.$.status': status } },
-            { new: true }
-        );
-        if (!updatedOrder) {
-            return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: 'Order or Product not found' });
+        if (!order) {
+            return res.status(STATUS_CODES.NOT_FOUND).json({
+                success: false,
+                message: "Order not found"
+            });
         }
+
+        const orderedProduct = order.products.id(productId);
+
+        if (!orderedProduct) {
+            return res.status(STATUS_CODES.NOT_FOUND).json({
+                success: false,
+                message: "Product not found"
+            });
+        }
+
+        const terminalStatuses = [
+            "Cancelled",
+            "Returned",
+            "Return Rejected"
+        ];
+
+        if (terminalStatuses.includes(orderedProduct.status)) {
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
+                success: false,
+                message: `Product is already ${orderedProduct.status}`
+            });
+        }
+
+        const allowedTransitions = {
+            Pending: ["Processing", "Cancelled"],
+            Processing: ["Shipped", "Cancelled"],
+            Shipped: ["Delivered"],
+            Delivered: [],
+            "Return Requested": [
+                "Return Approved",
+                "Return Rejected"
+            ],
+            "Return Approved": ["Returned"]
+        };
+
+        const allowed = allowedTransitions[orderedProduct.status] || [];
+
+        if (!allowed.includes(status)) {
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
+                success: false,
+                message: `Cannot change status from ${orderedProduct.status} to ${status}`
+            });
+        }
+
+        orderedProduct.status = status;
 
         if (status === "Delivered") {
-            updatedOrder.paymentStatus = "Success";
-
-            const order = await Order.findById(orderId);
-
-            order.products.forEach(product => {
-                if (product.status !== 'Cancelled') {
-                    product.status = 'Delivered';
-                }
-            });
-            await updatedOrder.save();
+            order.paymentStatus = "Success";
         }
 
-        if (status === "Returned" && updatedOrder.paymentStatus === "Success") {
-            const product = updatedOrder.products.find(product => product._id.toString() === productId);
+        if (status === "Cancelled" || status === "Returned") {
+            await Product.findByIdAndUpdate(
+                orderedProduct.productId,
+                {
+                    $inc: {
+                        stock: orderedProduct.quantity
+                    }
+                }
+            );
+        }
+
+        if (status === "Returned" && order.paymentStatus === "Success") {
+            if (orderedProduct.status === "Returned") {
+                return res.status(400).json({
+                    success: false,
+                    message: "Already refunded"
+                });
+
+            }
+            const product = order.products.find(p => p._id.toString() === productId);
             if (product) {
                 let refundAmount = product.productPrice * product.quantity;
-                if (updatedOrder.coupon) {
-                    const coupon = await Coupon.findOne({ code: updatedOrder.coupon });
+
+                if (order.coupon) {
+                    const coupon = await Coupon.findOne({ code: order.coupon });
                     if (coupon) {
                         refundAmount = refundAmount / 100 * (100 - coupon.discountPercentage);
                     }
                 }
-                const activeProducts = updatedOrder.products.filter(product => !['Cancelled', 'Returned'].includes(product.status));
-                if (updatedOrder.products.length === 1 || activeProducts.length === 0) {
-                    refundAmount = updatedOrder.payableAmount;
+
+                const activeProducts = order.products.filter(p => !['Cancelled', 'Returned'].includes(p.status));
+                if (order.products.length === 1 || activeProducts.length === 0) {
+                    refundAmount = order.payableAmount;
                 }
-                updatedOrder.returnedAmount = refundAmount;
+
                 const walletData = await Wallet.findOneAndUpdate(
-                    { userId: updatedOrder.userId },
+                    { userId: order.userId },
                     {
                         $inc: { walletBalance: refundAmount },
                         $push: {
@@ -410,14 +465,15 @@ const updateOrderStatus = async (req, res) => {
                     return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: MESSAGES.WALLET_NOT_FOUND });
                 }
 
-                updatedOrder.payableAmount = refundAmount;
-                updatedOrder.paymentStatus = 'Refunded';
-
-                await updatedOrder.save();
+                order.returnedAmount = refundAmount;
+                order.payableAmount = refundAmount;
+                order.paymentStatus = 'Refunded';
             }
         }
 
-        return res.status(STATUS_CODES.OK).json({ success: true, order: updatedOrder });
+        await order.save();
+
+        return res.status(STATUS_CODES.OK).json({ success: true, order });
 
     } catch {
         return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.INTERNAL_SERVER_ERROR });

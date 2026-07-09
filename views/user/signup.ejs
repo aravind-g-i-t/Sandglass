@@ -410,7 +410,7 @@
                                             </svg>
                                         </span>
                                         <input type="text" id="username" name="username" placeholder="johndoe"
-                                            class="form-control" required>
+                                            class="form-control" required minlength="3" maxlength="30">
                                     </div>
                                     <span class="error" id="usernameError"></span>
                                 </div>
@@ -464,7 +464,8 @@
                                             </svg>
                                         </span>
                                         <input type="password" id="password" name="password"
-                                            placeholder="Min. 6 characters" class="form-control" required minlength="6">
+                                            placeholder="Min. 8 characters, mixed case, number & symbol"
+                                            class="form-control" required minlength="8">
                                     </div>
                                     <span class="error" id="passwordError"></span>
                                 </div>
@@ -535,14 +536,22 @@
             document.getElementById('termsError').textContent = '';
 
             const username = document.getElementById('username');
-            if (!username.value) {
+            const usernameValue = username.value.trim();
+            const usernamePattern = /^[a-zA-Z0-9_. ]+$/;
+            if (!usernameValue) {
                 document.getElementById('usernameError').textContent = 'Username is required.';
+                valid = false;
+            } else if (usernameValue.length < 3 || usernameValue.length > 30) {
+                document.getElementById('usernameError').textContent = 'Username must be between 3 and 30 characters.';
+                valid = false;
+            } else if (!usernamePattern.test(usernameValue)) {
+                document.getElementById('usernameError').textContent = 'Username can only contain letters, numbers, spaces, dots, and underscores.';
                 valid = false;
             }
 
             const email = document.getElementById('email');
-            if (!email.value) {
-                document.getElementById('emailError').textContent = 'Email is required.';
+            if (!email.value.trim()) {
+                document.getElementById('emailError').textContent = 'Email address is required.';
                 valid = false;
             } else if (!email.validity.valid) {
                 document.getElementById('emailError').textContent = 'Please enter a valid email address.';
@@ -551,20 +560,26 @@
 
             const phone = document.getElementById('phone');
             const phonePattern = /^[0-9]{10}$/;
-            if (!phone.value) {
+            const phoneValue = phone.value.trim();
+            if (!phoneValue) {
                 document.getElementById('phoneError').textContent = 'Phone number is required.';
                 valid = false;
-            } else if (!phonePattern.test(phone.value)) {
+            } else if (!phonePattern.test(phoneValue)) {
                 document.getElementById('phoneError').textContent = 'Please enter a valid 10-digit phone number.';
                 valid = false;
             }
 
             const password = document.getElementById('password');
-            if (!password.value) {
+            const passwordValue = password.value.trim();
+            const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$.!%*#?&])/;
+            if (!passwordValue) {
                 document.getElementById('passwordError').textContent = 'Password is required.';
                 valid = false;
-            } else if (password.value.length < 6) {
-                document.getElementById('passwordError').textContent = 'Password must be at least 6 characters long.';
+            } else if (passwordValue.length < 8) {
+                document.getElementById('passwordError').textContent = 'Password must be at least 8 characters long.';
+                valid = false;
+            } else if (!passwordPattern.test(passwordValue)) {
+                document.getElementById('passwordError').textContent = 'Password must contain uppercase, lowercase, numbers, and special symbols.';
                 valid = false;
             }
 

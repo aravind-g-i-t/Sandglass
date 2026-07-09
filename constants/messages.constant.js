@@ -56,6 +56,7 @@ const MESSAGES = Object.freeze({
     PRODUCT_REMOVED: "Product removed successfully",
 
     PRODUCT_NOT_IN_CART: "Product not found in cart",
+    PRODUCT_ADDED_TO_CART: "Product added to cart successfully",
 
     PRODUCT_ALREADY_IN_OFFER: "Product already in offer",
 
@@ -68,6 +69,7 @@ const MESSAGES = Object.freeze({
 
 
     CART_NOT_FOUND: "Cart not found",
+    CART_UPDATED:"Cart updated successfully",
 
     QUANTITY_UPDATED: "Quantity updated successfully",
 

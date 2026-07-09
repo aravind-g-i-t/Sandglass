@@ -75,7 +75,24 @@ const addProduct = async (req, res) => {
         if (nameExists) {
             return res.render('admin/addProduct', { message: 'Product already exists', msg: '', categories });
         } else {
-            const images = req.files.map(file => file.filename);
+            const images = req.files?.map(file => file.filename) || [];
+
+            if (images.length < 3) {
+
+                for (const image of images) {
+                    try {
+                        await fs.unlink(path.join(__dirname, "../public/uploads", image));
+                    } catch (err) {
+                        console.error(`Failed to delete ${image}:`, err);
+                    }
+                }
+
+                return res.render("admin/addProduct", {
+                    message: "Please upload at least 3 product images.",
+                    msg: "",
+                    categories
+                });
+            }
             const productAdding = await Product.create({
                 productName: name,
                 category,
@@ -226,6 +243,13 @@ const removeImage = async (req, res) => {
             });
         }
 
+        // Ensure at least 3 images remain
+        if (product.productImage.length <= 3) {
+            return res.status(STATUS_CODES.BAD_REQUEST).json({
+                error: 'A product must have at least 3 images.'
+            });
+        }
+
         const imageIndex = product.productImage.indexOf(image);
 
         if (imageIndex === -1) {
@@ -252,8 +276,6 @@ const removeImage = async (req, res) => {
         });
 
     } catch {
-
-
         return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
             error: 'An error occurred while removing the image'
         });
