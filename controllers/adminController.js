@@ -109,6 +109,11 @@ const loadDashboard = async (req, res) => {
         const allOrders = await Order.find({
             orderDate: { $gte: graphStartDate, $lte: graphEndDate }
         });
+
+        const grossOrders = await Order.find();
+
+
+
         const orderData = await Order.find({
             orderDate: { $gte: fromDate, $lte: toDate }
         }).skip((page - 1) * limit)
@@ -116,7 +121,7 @@ const loadDashboard = async (req, res) => {
             .populate('userId')
             .sort({ orderDate: -1 });
 
-        const totalRevenue = orderData.reduce((acc, order) => {
+        const totalRevenue = grossOrders.reduce((acc, order) => {
             let orderTotal = parseFloat(order.payableAmount);
             if (order.returnedAmount) {
                 orderTotal -= parseFloat(order.returnedAmount);
@@ -139,6 +144,7 @@ const loadDashboard = async (req, res) => {
                 orderData,
                 productData,
                 totalRevenue,
+                orderCount: grossOrders.length,
                 currentPage: parseInt(page, 10),
                 totalPages: Math.ceil(totalOrders / limit),
                 dateFrom: fromDate.toISOString().split('T')[0],
@@ -385,8 +391,8 @@ const updateOrderStatus = async (req, res) => {
         }
 
         const allowedTransitions = {
-            Pending: ["Processing", "Cancelled"],
-            Processing: ["Shipped", "Cancelled"],
+            Pending: ["Processing", "Cancelled", "Shipped", "Delivered"],
+            Processing: ["Shipped", "Cancelled", "Delivered"],
             Shipped: ["Delivered"],
             Delivered: [],
             "Return Requested": [
@@ -405,6 +411,7 @@ const updateOrderStatus = async (req, res) => {
             });
         }
 
+        const previousStatus = orderedProduct.status;
         orderedProduct.status = status;
 
         if (status === "Delivered") {
@@ -423,12 +430,11 @@ const updateOrderStatus = async (req, res) => {
         }
 
         if (status === "Returned" && order.paymentStatus === "Success") {
-            if (orderedProduct.status === "Returned") {
-                return res.status(400).json({
+            if (previousStatus === "Returned") {
+                return res.status(STATUS_CODES.BAD_REQUEST).json({
                     success: false,
                     message: "Already refunded"
                 });
-
             }
             const product = order.products.find(p => p._id.toString() === productId);
             if (product) {
@@ -453,7 +459,7 @@ const updateOrderStatus = async (req, res) => {
                         $push: {
                             transactions: {
                                 type: 'Credit',
-                                amount: refundAmount.toString(),
+                                amount: refundAmount,
                                 time: new Date()
                             }
                         }
@@ -465,9 +471,12 @@ const updateOrderStatus = async (req, res) => {
                     return res.status(STATUS_CODES.NOT_FOUND).json({ success: false, message: MESSAGES.WALLET_NOT_FOUND });
                 }
 
-                order.returnedAmount = refundAmount;
-                order.payableAmount = refundAmount;
-                order.paymentStatus = 'Refunded';
+                order.returnedAmount = (order.returnedAmount || 0) + refundAmount;
+                order.payableAmount = Math.max(0, order.payableAmount - refundAmount);
+
+                if (activeProducts.length === 0) {
+                    order.paymentStatus = 'Refunded';
+                }
             }
         }
 

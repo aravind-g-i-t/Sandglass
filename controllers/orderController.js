@@ -48,7 +48,7 @@ const orderDetails = async (req, res) => {
         }
         let walletApplicable;
         const wallet = await Wallet.findOne({ userId: req.session.user._id });
-        if (wallet.walletBalance > orderData.payableAmount) {
+        if (wallet.walletBalance >= orderData.payableAmount) {
             walletApplicable = true;
         }
         return res.render('user/orderDetails', {
@@ -143,6 +143,8 @@ const cancelOrder = async (req, res) => {
             return res.status(STATUS_CODES.NOT_FOUND).json({ message: "Order not found" });
         }
 
+
+
         const product = orderData.products.find(product => product._id.toString() === productId);
         if (!product) {
             return res.status(STATUS_CODES.NOT_FOUND).json({ message: "Product not found in order" });
@@ -155,7 +157,7 @@ const cancelOrder = async (req, res) => {
                 refundAmount = refundAmount * (1 - (coupon.discountPercentage / 100));
             }
         }
-        const activeProducts = orderData.products.filter(product => !['Cancelled', 'Returned'].includes(product.status));
+        const activeProducts = orderData.products.filter(product => !['Cancelled', 'Returned', "Delivered"].includes(product.status));
         if (orderData.products.length === 1 || activeProducts.length === 1) {
             if (orderData.paymentStatus === 'Success') {
                 orderData.paymentStatus = 'Refunded';
@@ -224,9 +226,9 @@ const returnOrder = async (req, res) => {
 
 const razorPayment = (req, res) => {
     let amount = parseFloat(req.body.amount);
-    amount = Math.round(amount); 
+    amount = Math.round(amount);
     const options = {
-        amount, 
+        amount,
         currency: "INR",
         receipt: "order_rcptid_11"
     };
@@ -267,7 +269,7 @@ const verifyPayment = async (req, res) => {
                     if (!product) {
                         return res.status(STATUS_CODES.NOT_FOUND).json({ message: `Product not found: ${productId}` });
                     }
-                    if (product.stock === '0') {
+                    if (product.stock === 0) {
                         return res.status(STATUS_CODES.BAD_REQUEST).json({ message: `${product.productName} is out of stock` });
                     }
                     if (product.stock < quantity) {
@@ -314,7 +316,6 @@ const verifyPayment = async (req, res) => {
     }
 };
 
-// eslint-disable-next-line consistent-return
 const generateInvoice = async (req, res) => {
     try {
         const order = await Order.findOne({ orderId: req.params.id })
@@ -336,6 +337,14 @@ const generateInvoice = async (req, res) => {
             return;
         }
 
+        let couponDiscount = 0;
+        if (order.coupon) {
+            const coupon = await Coupon.findOne({ code: order.coupon });
+            if (coupon) {
+                couponDiscount = coupon.discountPercentage;
+            }
+        }
+
         const doc = new PDFDocument({ margin: 50 });
 
         res.setHeader('Content-Type', 'application/pdf');
@@ -344,7 +353,7 @@ const generateInvoice = async (req, res) => {
 
         generateHeader(doc);
         generateCustomerInformation(doc, order, address);
-        generateInvoiceTable(doc, order);
+        generateInvoiceTable(doc, order, couponDiscount);
         generateFooter(doc);
 
         doc.end();
@@ -379,7 +388,7 @@ function generateCustomerInformation(doc, order, address) {
         .moveDown();
 }
 
-function generateInvoiceTable(doc, order) {
+function generateInvoiceTable(doc, order, couponDiscount = 0) {
     let i;
     const invoiceTableTop = 250;
 
@@ -392,13 +401,14 @@ function generateInvoiceTable(doc, order) {
     for (i = 0; i < order.products.length; i++) {
         const product = order.products[i];
         const position = invoiceTableTop + ((i + 1) * 30);
+        const actualPrice = product.productPrice * (1 - (couponDiscount / 100));
         generateTableRow(
             doc,
             position,
             product.productId.productName,
-            product.productPrice.toFixed(2),
+            actualPrice.toFixed(2),
             product.quantity,
-            (product.productPrice * product.quantity).toFixed(2)
+            (actualPrice * product.quantity).toFixed(2)
         );
         generateHr(doc, position + 20);
     }

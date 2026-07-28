@@ -695,6 +695,48 @@
         .sg-card {
             animation: fadeUp 0.3s ease both;
         }
+
+        .sg-available-coupons {
+            margin-top: 24px;
+            border-top: 1px solid var(--gray-100);
+            padding-top: 20px;
+        }
+
+        .sg-available-coupons h6 {
+            margin-bottom: 15px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .sg-coupon-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px;
+            border: 1px solid var(--gray-100);
+            border-radius: 10px;
+            margin-bottom: 12px;
+            background: #fff;
+        }
+
+        .sg-coupon-item.locked {
+            opacity: .75;
+        }
+
+        .coupon-details p {
+            margin: 4px 0;
+        }
+
+        .coupon-details small {
+            color: #888;
+        }
+
+        .unlock-msg {
+            margin-top: 5px;
+            color: #e67e22;
+            font-size: 12px;
+            font-weight: 500;
+        }
     </style>
 </head>
 
@@ -908,59 +950,121 @@
                         <% if (cartData.coupon) { %>Applied Coupon<% } else { %>Apply Coupon<% } %>
                     </h5>
 
-                    <% if (cartData.coupon) { %>
-                        <div class="sg-coupon-applied">
-                            <span>
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                    style="vertical-align:middle; margin-right:6px;">
-                                    <path
-                                        d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" />
-                                    <line x1="7" y1="7" x2="7.01" y2="7" />
-                                </svg>
-                                Coupon: <strong>
-                                    <%= cartData.coupon %>
-                                </strong>
-                            </span>
-                            <button id="removeCouponBtn" class="sg-btn sg-btn-danger">Remove</button>
-                        </div>
-                        <p style="font-size:12px; color:var(--success); margin-top:10px;">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
-                                style="vertical-align:middle; margin-right:4px;">
-                                <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                            Discount applied successfully!
-                        </p>
-                        <% } else { %>
-                            <p style="font-size:13px; color:var(--gray-400); margin:0 0 14px;">Have a coupon code? Enter
-                                it below.</p>
-                            <div class="sg-coupon-form">
-                                <input class="sg-input" type="text" id="couponCode" placeholder="Enter coupon code">
-                                <button id="applyCouponBtn" class="sg-btn sg-btn-outline">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path
-                                            d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" />
-                                        <line x1="7" y1="7" x2="7.01" y2="7" />
-                                    </svg>
-                                    Apply
-                                </button>
-                            </div>
-                            <% } %>
 
-                                <div
-                                    style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--gray-100);">
-                                    <a href="/shop" class="sg-btn sg-btn-outline"
-                                        style="width:100%; justify-content:center;">
+                    <% if (!cartData.coupon && activeCoupons.length) { %>
+
+                        <div class="sg-available-coupons">
+                            <h6>Available Coupons</h6>
+
+                            <% activeCoupons.forEach(coupon=> { %>
+
+                                <% const applicable=totalPrice>= coupon.minPurchaseAmount; %>
+
+                                    <div class="sg-coupon-item <%= applicable ? '' : 'locked' %>">
+
+                                        <div class="coupon-details">
+
+                                            <strong>
+                                                <%= coupon.code %>
+                                            </strong>
+
+                                            <p>
+                                                Save <%= coupon.discountPercentage %>% off
+                                            </p>
+
+                                            <small>
+                                                Min purchase ₹<%= coupon.minPurchaseAmount %>
+                                            </small>
+
+                                            <% if (!applicable) { %>
+
+                                                <div class="unlock-msg">
+                                                    Add ₹<%= coupon.minPurchaseAmount - totalPrice %> more to unlock
+                                                </div>
+
+                                                <% } %>
+
+                                        </div>
+
+                                        <% if (applicable) { %>
+
+                                            <button class="sg-btn sg-btn-outline"
+                                                onclick="selectCoupon('<%= coupon.code %>')">
+                                                Apply
+                                            </button>
+
+                                            <% } else { %>
+
+                                                <button class="sg-btn" disabled>
+                                                    Locked
+                                                </button>
+
+                                                <% } %>
+
+                                    </div>
+
+                                    <% }) %>
+
+                        </div>
+
+                        <% } %>
+
+                            <% if (cartData.coupon) { %>
+                                <div class="sg-coupon-applied">
+                                    <span>
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                                             stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                            stroke-linejoin="round">
-                                            <polyline points="15 18 9 12 15 6" />
+                                            stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;">
+                                            <path
+                                                d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" />
+                                            <line x1="7" y1="7" x2="7.01" y2="7" />
                                         </svg>
-                                        Continue Shopping
-                                    </a>
+                                        Coupon: <strong>
+                                            <%= cartData.coupon %>
+                                        </strong>
+                                    </span>
+                                    <button id="removeCouponBtn" class="sg-btn sg-btn-danger">Remove</button>
                                 </div>
+                                <p style="font-size:12px; color:var(--success); margin-top:10px;">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                                        style="vertical-align:middle; margin-right:4px;">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                    Discount applied successfully!
+                                </p>
+                                <% } else { %>
+                                    <p style="font-size:13px; color:var(--gray-400); margin:0 0 14px;">Have a coupon
+                                        code? Enter
+                                        it below.</p>
+                                    <div class="sg-coupon-form">
+                                        <input class="sg-input" type="text" id="couponCode"
+                                            placeholder="Enter coupon code">
+                                        <button id="applyCouponBtn" class="sg-btn sg-btn-outline">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <path
+                                                    d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" />
+                                                <line x1="7" y1="7" x2="7.01" y2="7" />
+                                            </svg>
+                                            Apply
+                                        </button>
+                                    </div>
+                                    <% } %>
+
+                                        <div
+                                            style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--gray-100);">
+                                            <a href="/shop" class="sg-btn sg-btn-outline"
+                                                style="width:100%; justify-content:center;">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round">
+                                                    <polyline points="15 18 9 12 15 6" />
+                                                </svg>
+                                                Continue Shopping
+                                            </a>
+                                        </div>
                 </div>
 
                 <!-- Order Summary -->
@@ -1159,6 +1263,11 @@
             <script src="./user/assets/js/shop.js?v=3.4"></script>
 
             <script>
+
+                function selectCoupon(code) {
+                    document.getElementById("couponCode").value = code;
+                    document.getElementById("applyCouponBtn").click();
+                }
                 // Apply Coupon
                 const applyCouponBtn = document.getElementById('applyCouponBtn');
                 if (applyCouponBtn) {

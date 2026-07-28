@@ -8,6 +8,7 @@ const Wishlist = require('../models/wishlistModel');
 const Order = require('../models/orderModel');
 const Wallet = require('../models/walletModel');
 const Cart = require("../models/cartModel");
+const Coupon = require('../models/couponModel');
 const MESSAGES = require("../constants/messages.constant");
 const STATUS_CODES = require('../enum/statusCode.enum');
 
@@ -144,9 +145,9 @@ const verifyOtp = async (req, res) => {
                 ]
             });
             await cart.save();
+            req.session.tempUser = null;
 
             return res.redirect('/');
-
 
         } else {
             req.session.otp = null;
@@ -461,11 +462,11 @@ const productDetails = async (req, res) => {
             wishlisted = !!wishlisted;
         }
 
-        const activeCategories = await Category.find({ isActive: true }).select('_id');
-        const activeCategoryIds = activeCategories.map(category => category._id);
+        // const activeCategories = await Category.find({ isActive: true }).select('_id');
+        // const activeCategoryIds = activeCategories.map(category => category._id);
 
         const relatedProducts = await Product.find({
-            category: { $in: activeCategoryIds },
+            category: product.category,
             isActive: true,
             _id: { $ne: product._id }
         }).sort({ createdAt: -1 }).limit(4);
@@ -525,14 +526,25 @@ const profile = async (req, res) => {
         const userData = await User.findById(req.session.user._id);
         const addressData = await Address.findOne({ userId: req.session.user._id });
         const orderData = await Order.find({ userId: req.session.user._id }).populate('products.productId').sort({ createdAt: -1 });
+        const ordersWithCoupon = await Promise.all(orderData.map(async (order) => {
+            let couponDiscount = 0;
+            if (order.coupon) {
+                const coupon = await Coupon.findOne({ code: order.coupon });
+                if (coupon) {
+                    couponDiscount = coupon.discountPercentage;
+                }
+            }
+            const orderObj = order.toObject();
+            orderObj.couponDiscount = couponDiscount;
+            return orderObj;
+        }));
         const walletData = await Wallet.findOne({ userId: req.session.user._id }).sort({ time: 1 });
 
         return res.render('user/profile', {
             userData,
             addressData,
-            orderData,
+            orderData: ordersWithCoupon,
             walletData
-
         });
     } catch {
         return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);
@@ -776,7 +788,7 @@ const autoComplete = async (req, res) => {
             name: item.productName,
             category: item.category.name,
             photoUrl: item.productImage[0],
-            id:item._id
+            id: item._id
         }));
         return res.json(suggestions);
     } catch {

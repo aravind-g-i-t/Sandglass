@@ -34,12 +34,9 @@ const insertCategory = async (req, res) => {
         let { name, description } = req.body;
         name = name.toUpperCase();
 
-
         const checkCategory = await Category.findOne({
             name
         });
-
-
 
         if (checkCategory) {
             return res.status(STATUS_CODES.CONFLICT).render('admin/categories', {
@@ -59,7 +56,6 @@ const insertCategory = async (req, res) => {
             page,
             totalPages
         });
-
 
     } catch {
         return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send(MESSAGES.INTERNAL_SERVER_ERROR);

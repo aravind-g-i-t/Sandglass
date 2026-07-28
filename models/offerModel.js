@@ -9,12 +9,12 @@ const offerSchema = new mongoose.Schema({
     category: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: 'categories',
-        default: null
+        default: []
     },
     product: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: 'products',
-        default: null
+        default: []
     },
     discountPercentage: {
         type: Number,

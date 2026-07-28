@@ -276,7 +276,7 @@
         <!-- Greeting -->
         <div class="greeting-banner">
             Hi <strong><%= user.username %></strong>, thank you for your order. Here is your receipt for a payment of
-            <strong>₹<%= order.productPrice %></strong> (INR).
+            <strong>₹<%= order.payableAmount %></strong> (INR).
         </div>
 
         <!-- Info grid -->
@@ -337,7 +337,14 @@
             <div class="line-item">
                 <div class="item-name"><%= item.productId.productName %></div>
                 <div class="item-qty"><%= item.quantity %></div>
-                <div class="item-price">₹<%= item.productPrice %></div>
+                <%
+                   let couponDiscount = 0;
+                   if (order.coupon && typeof coupon !== 'undefined' && coupon) {
+                       couponDiscount = coupon.discountPercentage;
+                   }
+                   const actualPrice = item.productPrice * (1 - (couponDiscount / 100));
+                %>
+                <div class="item-price">₹<%= actualPrice.toFixed(2) %></div>
             </div>
             <% }) %>
 

@@ -126,7 +126,7 @@ const editProduct = async (req, res) => {
         const salePrice = req.body.product_sale_price;
         const stock = req.body.product_stock;
         const category = req.body.product_category;
-        const images = req.files.map(file => file.filename);
+        const images = req.files.map(file => file.filename) || [];
 
         await Product.findByIdAndUpdate(id,
             {
@@ -152,6 +152,32 @@ const editProduct = async (req, res) => {
         return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
             success: false,
             message: MESSAGES.INTERNAL_SERVER_ERROR
+        });
+    }
+};
+
+const updateImage = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const index = Number(req.body.index);
+
+        const image = req.files[0].filename;
+
+        const product = await Product.findById(id);
+
+        product.productImage[index] = image;
+
+        await product.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Image updated successfully"
+        });
+
+    } catch {
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
         });
     }
 };
@@ -291,5 +317,6 @@ module.exports = {
     productStatusUpdate,
     loadEditProduct,
     removeImage,
-    editProduct
+    editProduct,
+    updateImage
 };

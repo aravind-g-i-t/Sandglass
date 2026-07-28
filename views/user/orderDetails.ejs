@@ -604,13 +604,13 @@
                                         <span class="sg-product-cell-name"><%= product.productId.productName %></span>
                                     </div>
                                 </td>
-                                <td style="color:var(--gray-600)">₹<%= product.productPrice %></td>
+                                <td style="color:var(--gray-600)">₹<%= (product.productPrice * (1 - (couponDiscount / 100))).toFixed(2) %></td>
                                 <td>
                                     <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;background:var(--gray-50);border:1px solid var(--gray-100);font-size:13px;font-weight:500">
                                         <%= product.quantity %>
                                     </span>
                                 </td>
-                                <td class="text-right" style="font-weight:500;color:var(--purple-800)">₹<%= product.productPrice * product.quantity %></td>
+                                <td class="text-right" style="font-weight:500;color:var(--purple-800)">₹<%= (product.productPrice * product.quantity * (1 - (couponDiscount / 100))).toFixed(2) %></td>
                                 <td>
                                     <%
                                         const s = product.status ? product.status.toLowerCase() : 'pending';

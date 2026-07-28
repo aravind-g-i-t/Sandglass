@@ -12,20 +12,25 @@
     <link rel="stylesheet" href="user/assets/css/auto_complete.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Serif+Display&display=swap"
+        rel="stylesheet">
 
     <style>
-        *, *::before, *::after { box-sizing: border-box; }
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
 
         :root {
-            --purple-50:  #EEEDFE;
+            --purple-50: #EEEDFE;
             --purple-100: #CECBF6;
             --purple-200: #AFA9EC;
             --purple-400: #7F77DD;
             --purple-600: #534AB7;
             --purple-800: #3C3489;
             --purple-900: #26215C;
-            --gray-50:  #F7F6F3;
+            --gray-50: #F7F6F3;
             --gray-100: #EEECE8;
             --gray-200: #D3D1C7;
             --gray-400: #888780;
@@ -42,13 +47,17 @@
             margin: 0;
         }
 
-        .header-area { display: none !important; }
+        .header-area {
+            display: none !important;
+        }
 
         .sg-header {
             position: fixed;
-            top: 0; left: 0; right: 0;
+            top: 0;
+            left: 0;
+            right: 0;
             z-index: 1050;
-            background: rgba(255,255,255,0.92);
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             border-bottom: 1px solid var(--gray-100);
@@ -72,10 +81,13 @@
         }
 
         .sg-logo-icon {
-            width: 32px; height: 32px;
+            width: 32px;
+            height: 32px;
             background: var(--purple-800);
             border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .sg-logo-text {
@@ -90,7 +102,8 @@
             align-items: center;
             gap: 32px;
             list-style: none;
-            margin: 0; padding: 0;
+            margin: 0;
+            padding: 0;
         }
 
         .sg-nav a {
@@ -101,7 +114,10 @@
             transition: color 0.15s;
         }
 
-        .sg-nav a:hover, .sg-nav a.active { color: var(--purple-800); }
+        .sg-nav a:hover,
+        .sg-nav a.active {
+            color: var(--purple-800);
+        }
 
         .sg-search {
             position: relative;
@@ -127,11 +143,14 @@
             background: var(--white);
         }
 
-        .sg-search input::placeholder { color: var(--gray-200); }
+        .sg-search input::placeholder {
+            color: var(--gray-200);
+        }
 
         .sg-search-icon {
             position: absolute;
-            left: 10px; top: 50%;
+            left: 10px;
+            top: 50%;
             transform: translateY(-50%);
             color: var(--gray-400);
             pointer-events: none;
@@ -144,11 +163,14 @@
         }
 
         .sg-icon-btn {
-            width: 38px; height: 38px;
+            width: 38px;
+            height: 38px;
             border-radius: 8px;
             border: 1px solid var(--gray-100);
             background: var(--white);
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
             text-decoration: none;
             color: var(--gray-600);
@@ -156,21 +178,31 @@
             transition: background 0.15s, border-color 0.15s;
         }
 
-        .sg-icon-btn:hover { background: var(--gray-50); border-color: var(--gray-200); color: var(--gray-900); }
+        .sg-icon-btn:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-200);
+            color: var(--gray-900);
+        }
 
         .sg-badge {
             position: absolute;
-            top: -5px; right: -5px;
-            width: 18px; height: 18px;
+            top: -5px;
+            right: -5px;
+            width: 18px;
+            height: 18px;
             background: var(--purple-800);
             color: #fff;
             border-radius: 50%;
             font-size: 10px;
             font-weight: 500;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .sg-user-wrap { position: relative; }
+        .sg-user-wrap {
+            position: relative;
+        }
 
         .sg-user-btn {
             display: flex;
@@ -188,13 +220,19 @@
             transition: background 0.15s;
         }
 
-        .sg-user-btn:hover { background: var(--gray-50); color: var(--gray-900); }
+        .sg-user-btn:hover {
+            background: var(--gray-50);
+            color: var(--gray-900);
+        }
 
         .sg-user-avatar {
-            width: 26px; height: 26px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             background: var(--purple-100);
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 11px;
             font-weight: 600;
             color: var(--purple-800);
@@ -202,18 +240,21 @@
 
         .sg-dropdown {
             position: absolute;
-            right: 0; top: calc(100% + 8px);
+            right: 0;
+            top: calc(100% + 8px);
             background: var(--white);
             border: 1px solid var(--gray-100);
             border-radius: 12px;
             padding: 6px;
             min-width: 180px;
-            box-shadow: 0 8px 24px rgba(60,52,137,0.10);
+            box-shadow: 0 8px 24px rgba(60, 52, 137, 0.10);
             display: none;
             z-index: 200;
         }
 
-        .sg-user-wrap:hover .sg-dropdown { display: block; }
+        .sg-user-wrap:hover .sg-dropdown {
+            display: block;
+        }
 
         .sg-dropdown a {
             display: flex;
@@ -227,9 +268,17 @@
             transition: background 0.12s;
         }
 
-        .sg-dropdown a:hover { background: var(--gray-50); }
-        .sg-dropdown a.danger { color: var(--danger); }
-        .sg-dropdown a.danger:hover { background: #FCEBEB; }
+        .sg-dropdown a:hover {
+            background: var(--gray-50);
+        }
+
+        .sg-dropdown a.danger {
+            color: var(--danger);
+        }
+
+        .sg-dropdown a.danger:hover {
+            background: #FCEBEB;
+        }
 
         .sg-dropdown-divider {
             height: 1px;
@@ -239,7 +288,9 @@
 
         .sg-navbar {
             position: fixed;
-            top: 64px; left: 0; right: 0;
+            top: 64px;
+            left: 0;
+            right: 0;
             z-index: 1040;
             background: var(--purple-900);
             display: flex;
@@ -253,15 +304,20 @@
         .sg-navbar a {
             font-size: 13px;
             font-weight: 500;
-            color: rgba(255,255,255,0.75);
+            color: rgba(255, 255, 255, 0.75);
             text-decoration: none;
             transition: color 0.15s;
             letter-spacing: 0.01em;
         }
 
-        .sg-navbar a:hover, .sg-navbar a.active { color: #fff; }
+        .sg-navbar a:hover,
+        .sg-navbar a.active {
+            color: #fff;
+        }
 
-        .sg-page-offset { padding-top: 110px; }
+        .sg-page-offset {
+            padding-top: 110px;
+        }
 
         .sg-shop-wrap {
             max-width: 1200px;
@@ -284,7 +340,9 @@
             margin: 0;
         }
 
-        .sg-sort-wrap { position: relative; }
+        .sg-sort-wrap {
+            position: relative;
+        }
 
         .sg-sort-btn {
             display: flex;
@@ -303,22 +361,28 @@
             font-family: 'DM Sans', sans-serif;
         }
 
-        .sg-sort-btn:hover { border-color: var(--purple-400); color: var(--gray-900); }
+        .sg-sort-btn:hover {
+            border-color: var(--purple-400);
+            color: var(--gray-900);
+        }
 
         .sg-sort-dropdown {
             display: none;
             position: absolute;
-            right: 0; top: calc(100% + 6px);
+            right: 0;
+            top: calc(100% + 6px);
             background: var(--white);
             border: 1px solid var(--gray-100);
             border-radius: 10px;
             padding: 6px;
             min-width: 200px;
-            box-shadow: 0 8px 24px rgba(60,52,137,0.10);
+            box-shadow: 0 8px 24px rgba(60, 52, 137, 0.10);
             z-index: 100;
         }
 
-        .sg-sort-wrap.open .sg-sort-dropdown { display: block; }
+        .sg-sort-wrap.open .sg-sort-dropdown {
+            display: block;
+        }
 
         .sg-sort-dropdown a {
             display: block;
@@ -330,7 +394,8 @@
             transition: background 0.12s, color 0.12s;
         }
 
-        .sg-sort-dropdown a:hover, .sg-sort-dropdown a.active {
+        .sg-sort-dropdown a:hover,
+        .sg-sort-dropdown a.active {
             background: var(--purple-50);
             color: var(--purple-800);
         }
@@ -356,7 +421,9 @@
             border-bottom: 1px solid var(--gray-100);
         }
 
-        .sg-sidebar-section:last-child { border-bottom: none; }
+        .sg-sidebar-section:last-child {
+            border-bottom: none;
+        }
 
         .sg-sidebar-title {
             font-family: 'DM Serif Display', serif;
@@ -368,10 +435,13 @@
 
         .sg-category-list {
             list-style: none;
-            margin: 0; padding: 0;
+            margin: 0;
+            padding: 0;
         }
 
-        .sg-category-list li { margin-bottom: 2px; }
+        .sg-category-list li {
+            margin-bottom: 2px;
+        }
 
         .sg-category-list a {
             display: flex;
@@ -385,12 +455,15 @@
             transition: background 0.12s, color 0.12s;
         }
 
-        .sg-category-list a:hover, .sg-category-list a.active {
+        .sg-category-list a:hover,
+        .sg-category-list a.active {
             background: var(--purple-50);
             color: var(--purple-800);
         }
 
-        .sg-category-list a.active { font-weight: 500; }
+        .sg-category-list a.active {
+            font-weight: 500;
+        }
 
         .sg-product-grid {
             display: grid;
@@ -408,7 +481,7 @@
         }
 
         .sg-product-card:hover {
-            box-shadow: 0 8px 28px rgba(60,52,137,0.10);
+            box-shadow: 0 8px 28px rgba(60, 52, 137, 0.10);
             transform: translateY(-2px);
         }
 
@@ -426,11 +499,14 @@
             transition: transform 0.35s ease;
         }
 
-        .sg-product-card:hover .sg-product-img-wrap img { transform: scale(1.05); }
+        .sg-product-card:hover .sg-product-img-wrap img {
+            transform: scale(1.05);
+        }
 
         .sg-product-actions {
             position: absolute;
-            top: 10px; right: 10px;
+            top: 10px;
+            right: 10px;
             display: flex;
             flex-direction: column;
             gap: 6px;
@@ -439,23 +515,35 @@
             transition: opacity 0.2s, transform 0.2s;
         }
 
-        .sg-product-card:hover .sg-product-actions { opacity: 1; transform: translateX(0); }
+        .sg-product-card:hover .sg-product-actions {
+            opacity: 1;
+            transform: translateX(0);
+        }
 
         .sg-product-action-btn {
-            width: 32px; height: 32px;
+            width: 32px;
+            height: 32px;
             border-radius: 8px;
             background: var(--white);
             border: 1px solid var(--gray-100);
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-decoration: none;
             color: var(--gray-600);
             transition: background 0.15s, color 0.15s;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         }
 
-        .sg-product-action-btn:hover { background: var(--purple-800); color: #fff; border-color: var(--purple-800); }
+        .sg-product-action-btn:hover {
+            background: var(--purple-800);
+            color: #fff;
+            border-color: var(--purple-800);
+        }
 
-        .sg-product-body { padding: 14px; }
+        .sg-product-body {
+            padding: 14px;
+        }
 
         .sg-product-name {
             font-size: 14px;
@@ -470,7 +558,9 @@
             margin-bottom: 8px;
         }
 
-        .sg-product-name:hover { color: var(--purple-800); }
+        .sg-product-name:hover {
+            color: var(--purple-800);
+        }
 
         .sg-product-rating {
             display: flex;
@@ -479,8 +569,15 @@
             margin-bottom: 8px;
         }
 
-        .sg-stars { display: flex; gap: 2px; }
-        .sg-star { color: #F5A623; font-size: 12px; }
+        .sg-stars {
+            display: flex;
+            gap: 2px;
+        }
+
+        .sg-star {
+            color: #F5A623;
+            font-size: 12px;
+        }
 
         .sg-product-price {
             display: flex;
@@ -500,7 +597,9 @@
             text-decoration: line-through;
         }
 
-        .sg-product-footer { padding: 0 14px 14px; }
+        .sg-product-footer {
+            padding: 0 14px 14px;
+        }
 
         .sg-add-to-cart {
             width: 100%;
@@ -535,8 +634,11 @@
         }
 
         .sg-page-btn {
-            width: 36px; height: 36px;
-            display: flex; align-items: center; justify-content: center;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             border: 1px solid var(--gray-200);
             border-radius: 8px;
             font-size: 13px;
@@ -547,7 +649,11 @@
             transition: all 0.15s;
         }
 
-        .sg-page-btn:hover { border-color: var(--purple-400); color: var(--purple-800); background: var(--purple-50); }
+        .sg-page-btn:hover {
+            border-color: var(--purple-400);
+            color: var(--purple-800);
+            background: var(--purple-50);
+        }
 
         .sg-page-btn.active {
             background: var(--purple-800);
@@ -569,7 +675,10 @@
             margin: 16px 0 8px;
         }
 
-        .sg-empty p { font-size: 13px; margin: 0; }
+        .sg-empty p {
+            font-size: 13px;
+            margin: 0;
+        }
 
         .sg-results-bar {
             display: flex;
@@ -578,8 +687,15 @@
             margin-bottom: 20px;
         }
 
-        .sg-results-count { font-size: 13px; color: var(--gray-400); }
-        .sg-results-count strong { color: var(--gray-900); font-weight: 500; }
+        .sg-results-count {
+            font-size: 13px;
+            color: var(--gray-400);
+        }
+
+        .sg-results-count strong {
+            color: var(--gray-900);
+            font-weight: 500;
+        }
 
         .sg-breadcrumb {
             padding: 20px 0 0;
@@ -587,47 +703,91 @@
             color: var(--gray-400);
         }
 
-        .sg-breadcrumb a { color: var(--gray-400); text-decoration: none; }
-        .sg-breadcrumb a:hover { color: var(--purple-800); }
-        .sg-breadcrumb span { margin: 0 8px; }
+        .sg-breadcrumb a {
+            color: var(--gray-400);
+            text-decoration: none;
+        }
+
+        .sg-breadcrumb a:hover {
+            color: var(--purple-800);
+        }
+
+        .sg-breadcrumb span {
+            margin: 0 8px;
+        }
 
         @media (max-width: 1024px) {
-            .sg-product-grid { grid-template-columns: repeat(2, 1fr); }
+            .sg-product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 768px) {
-            .sg-header-inner { padding: 0 20px; }
-            .sg-nav { display: none; }
-            .sg-navbar { display: none; }
-            .sg-shop-wrap { padding: 0 20px 48px; }
-            .sg-shop-grid { grid-template-columns: 1fr; }
-            .sg-sidebar { position: static; }
-            .sg-product-grid { grid-template-columns: repeat(2, 1fr); }
-            .sg-page-offset { padding-top: 64px; }
+            .sg-header-inner {
+                padding: 0 20px;
+            }
+
+            .sg-nav {
+                display: none;
+            }
+
+            .sg-navbar {
+                display: none;
+            }
+
+            .sg-shop-wrap {
+                padding: 0 20px 48px;
+            }
+
+            .sg-shop-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sg-sidebar {
+                position: static;
+            }
+
+            .sg-product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .sg-page-offset {
+                padding-top: 64px;
+            }
         }
 
         @media (max-width: 480px) {
-            .sg-product-grid { grid-template-columns: 1fr; }
+            .sg-product-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(12px); }
-            to   { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 
 <body>
 
-   
+
 
     <!-- Sandglass Header -->
     <header class="sg-header">
         <div class="sg-header-inner">
             <a href="/" class="sg-logo">
                 <div class="sg-logo-icon">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M5 3h14M5 21h14M8 3v4a4 4 0 008 0V3M8 21v-4a4 4 0 018 0v4"/>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 3h14M5 21h14M8 3v4a4 4 0 008 0V3M8 21v-4a4 4 0 018 0v4" />
                     </svg>
                 </div>
                 <span class="sg-logo-text">Sandglass</span>
@@ -635,7 +795,11 @@
 
             <div class="sg-search">
                 <span class="sg-search-icon">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="m21 21-4.35-4.35" />
+                    </svg>
                 </span>
                 <form id="searchForm" action="/shop" method="get">
                     <input name="search" type="text" placeholder="Search for items…" value="<%= search %>">
@@ -647,23 +811,42 @@
 
             <div class="sg-header-actions">
                 <% if(userData) { %>
+                    <!-- Wishlist -->
                     <a href="/wishlist" class="sg-icon-btn" title="Wishlist">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                        <span class="sg-badge">4</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                        </svg>
                     </a>
+                    <!-- Cart -->
                     <a href="/cart" class="sg-icon-btn" title="Cart">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-                        <span class="sg-badge">2</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <path d="M16 10a4 4 0 01-8 0" />
+                        </svg>
                     </a>
+                    <!-- User dropdown -->
                     <div class="sg-user-wrap">
-                        <a href="#" class="sg-user-btn">
-                            <div class="sg-user-avatar"><%= userData.username ? userData.username.charAt(0).toUpperCase() : 'U' %></div>
+                        <a id="userDropdownBtn" class="sg-user-btn">
+                            <div class="sg-user-avatar">
+                                <%= userData.username ? userData.username.charAt(0).toUpperCase() : 'U' %>
+                            </div>
                             <%= userData.username %>
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9" />
+                                </svg>
                         </a>
                         <div class="sg-dropdown">
                             <a href="/profile">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                                    <circle cx="12" cy="7" r="4" />
+                                </svg>
                                 Profile
                             </a>
                             <div class="sg-dropdown-divider"></div>
@@ -678,13 +861,20 @@
                             </a>
                         </div>
                     </div>
-                <% } else { %>
-                    <a href="/login" class="sg-user-btn">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                        Log in
-                    </a>
-                    <a href="/signup" style="padding:7px 14px;background:var(--purple-800);color:#fff;border-radius:8px;font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='var(--purple-900)'" onmouseout="this.style.background='var(--purple-800)'">Sign up</a>
-                <% } %>
+                    <% } else { %>
+                        <a href="/login" class="sg-user-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg>
+                            Log in
+                        </a>
+                        <a href="/signup"
+                            style="padding:7px 14px;background:var(--purple-800);color:#fff;border-radius:8px;font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;text-decoration:none;transition:background 0.15s;"
+                            onmouseover="this.style.background='var(--purple-900)'"
+                            onmouseout="this.style.background='var(--purple-800)'">Sign up</a>
+                        <% } %>
             </div>
         </div>
     </header>
@@ -708,7 +898,7 @@
             <% if (search) { %>
                 <span>›</span>
                 <span>"<%= search %>"</span>
-            <% } %>
+                <% } %>
         </div>
 
         <div class="sg-shop-header">
@@ -718,24 +908,41 @@
 
             <div class="sg-sort-wrap">
                 <button class="sg-sort-btn" onclick="this.closest('.sg-sort-wrap').classList.toggle('open')">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="9" y1="18" x2="15" y2="18"/></svg>
-                    Sort: <%= (sortBy === 'new-arrivals') ? 'New Arrivals' :
-                        (sortBy === 'popularity') ? 'Popularity' :
-                        (sortBy === 'featured') ? 'Featured' :
-                        (sortBy === 'price-high-low') ? 'Price: High → Low' :
-                        (sortBy === 'price-low-high') ? 'Price: Low → High' :
-                        (sortBy === 'aA-zZ') ? 'A → Z' :
-                        (sortBy === 'zZ-aA') ? 'Z → A' : 'New Arrivals' %>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="6" y1="12" x2="18" y2="12" />
+                        <line x1="9" y1="18" x2="15" y2="18" />
+                    </svg>
+                    Sort: <%= (sortBy==='new-arrivals' ) ? 'New Arrivals' : (sortBy==='popularity' ) ? 'Popularity' :
+                        (sortBy==='featured' ) ? 'Featured' : (sortBy==='price-high-low' ) ? 'Price: High → Low' :
+                        (sortBy==='price-low-high' ) ? 'Price: Low → High' : (sortBy==='aA-zZ' ) ? 'A → Z' :
+                        (sortBy==='zZ-aA' ) ? 'Z → A' : 'New Arrivals' %>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg>
                 </button>
                 <div class="sg-sort-dropdown">
-                    <a class="<%= sortBy === 'new-arrivals' ? 'active' : '' %>" href="/shop?search=<%= search %>&sort=new-arrivals&page=<%= page %>&category=<%= categoryFilter %>">New Arrivals</a>
-                    <a class="<%= sortBy === 'featured' ? 'active' : '' %>" href="/shop?search=<%= search %>&sort=featured&page=<%= page %>&category=<%= categoryFilter %>">Featured</a>
-                    <a class="<%= sortBy === 'popularity' ? 'active' : '' %>" href="/shop?search=<%= search %>&sort=popularity&page=<%= page %>&category=<%= categoryFilter %>">Popularity</a>
-                    <a class="<%= sortBy === 'price-high-low' ? 'active' : '' %>" href="/shop?search=<%= search %>&sort=price-high-low&page=<%= page %>&category=<%= categoryFilter %>">Price: High → Low</a>
-                    <a class="<%= sortBy === 'price-low-high' ? 'active' : '' %>" href="/shop?search=<%= search %>&sort=price-low-high&page=<%= page %>&category=<%= categoryFilter %>">Price: Low → High</a>
-                    <a class="<%= sortBy === 'aA-zZ' ? 'active' : '' %>" href="/shop?search=<%= search %>&sort=aA-zZ&page=<%= page %>&category=<%= categoryFilter %>">A → Z</a>
-                    <a class="<%= sortBy === 'zZ-aA' ? 'active' : '' %>" href="/shop?search=<%= search %>&sort=zZ-aA&page=<%= page %>&category=<%= categoryFilter %>">Z → A</a>
+                    <a class="<%= sortBy === 'new-arrivals' ? 'active' : '' %>"
+                        href="/shop?search=<%= search %>&sort=new-arrivals&page=<%= page %>&category=<%= categoryFilter %>">New
+                        Arrivals</a>
+                    <a class="<%= sortBy === 'featured' ? 'active' : '' %>"
+                        href="/shop?search=<%= search %>&sort=featured&page=<%= page %>&category=<%= categoryFilter %>">Featured</a>
+                    <a class="<%= sortBy === 'popularity' ? 'active' : '' %>"
+                        href="/shop?search=<%= search %>&sort=popularity&page=<%= page %>&category=<%= categoryFilter %>">Popularity</a>
+                    <a class="<%= sortBy === 'price-high-low' ? 'active' : '' %>"
+                        href="/shop?search=<%= search %>&sort=price-high-low&page=<%= page %>&category=<%= categoryFilter %>">Price:
+                        High → Low</a>
+                    <a class="<%= sortBy === 'price-low-high' ? 'active' : '' %>"
+                        href="/shop?search=<%= search %>&sort=price-low-high&page=<%= page %>&category=<%= categoryFilter %>">Price:
+                        Low → High</a>
+                    <a class="<%= sortBy === 'aA-zZ' ? 'active' : '' %>"
+                        href="/shop?search=<%= search %>&sort=aA-zZ&page=<%= page %>&category=<%= categoryFilter %>">A →
+                        Z</a>
+                    <a class="<%= sortBy === 'zZ-aA' ? 'active' : '' %>"
+                        href="/shop?search=<%= search %>&sort=zZ-aA&page=<%= page %>&category=<%= categoryFilter %>">Z →
+                        A</a>
                 </div>
             </div>
         </div>
@@ -749,18 +956,18 @@
                     <ul class="sg-category-list">
                         <li>
                             <a href="/shop?search=<%= search %>&sort=<%= sortBy %>&page=1&category=all-categories"
-                               class="<%= (categoryFilter === 'all-categories' || !categoryFilter) ? 'active' : '' %>">
+                                class="<%= (categoryFilter === 'all-categories' || !categoryFilter) ? 'active' : '' %>">
                                 All Categories
                             </a>
                         </li>
-                        <% if(categories) { categories.forEach(category => { %>
-                        <li>
-                            <a href="/shop?search=<%= search %>&sort=<%= sortBy %>&page=1&category=<%= category._id %>"
-                               class="<%= categoryFilter == category._id ? 'active' : '' %>">
-                                <%= category.name %>
-                            </a>
-                        </li>
-                        <% }) } %>
+                        <% if(categories) { categories.forEach(category=> { %>
+                            <li>
+                                <a href="/shop?search=<%= search %>&sort=<%= sortBy %>&page=1&category=<%= category._id %>"
+                                    class="<%= categoryFilter == category._id ? 'active' : '' %>">
+                                    <%= category.name %>
+                                </a>
+                            </li>
+                            <% }) } %>
                     </ul>
                 </div>
             </aside>
@@ -770,80 +977,112 @@
 
                 <div class="sg-results-bar">
                     <span class="sg-results-count">
-                        <% if (products && products.length > 0) { %>
-                            Showing <strong><%= products.length %></strong> product<%= products.length !== 1 ? 's' : '' %>
-                        <% } else { %>
-                            No products found
-                        <% } %>
+                        <% if (products && products.length> 0) { %>
+                            Showing <strong>
+                                <%= products.length %>
+                            </strong> product<%= products.length !==1 ? 's' : '' %>
+                                <% } else { %>
+                                    No products found
+                                    <% } %>
                     </span>
                 </div>
 
-                <% if (products && products.length > 0) { %>
+                <% if (products && products.length> 0) { %>
                     <div class="sg-product-grid">
-                        <% products.forEach((product, idx) => { %>
-                        <div class="sg-product-card" style="animation-delay: <%= idx * 0.04 %>s">
-                            <div class="sg-product-img-wrap">
-                                <a href="/product_details?id=<%= product._id %>">
-                                    <img src="/uploads/<%= (product.productImage && product.productImage.length > 0) ? product.productImage[0] : 'default-image.jpg' %>" alt="<%= product.productName %>">
-                                </a>
-                                <div class="sg-product-actions">
-                                    
-                                    <a onclick="addToWishlist('<%= product._id %>')" class="sg-product-action-btn" title="Add to wishlist">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                        <% products.forEach((product, idx)=> { %>
+                            <div class="sg-product-card" style="animation-delay: <%= idx * 0.04 %>s">
+                                <div class="sg-product-img-wrap">
+                                    <a href="/product_details?id=<%= product._id %>">
+                                        <img src="/uploads/<%= (product.productImage && product.productImage.length > 0) ? product.productImage[0] : 'default-image.jpg' %>"
+                                            alt="<%= product.productName %>">
                                     </a>
-                                    
-                                </div>
-                            </div>
-                            <div class="sg-product-body">
-                                <a href="/product_details?id=<%= product._id %>" class="sg-product-name"><%= product.productName %></a>
-                                <div class="sg-product-rating">
-                                    <div class="sg-stars">
-                                        <span class="sg-star">★</span><span class="sg-star">★</span><span class="sg-star">★</span><span class="sg-star">★</span><span class="sg-star" style="color:var(--gray-200)">★</span>
+                                    <div class="sg-product-actions">
+
+                                        <a onclick="addToWishlist('<%= product._id %>')" class="sg-product-action-btn"
+                                            title="Add to wishlist">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <path
+                                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                                            </svg>
+                                        </a>
+
                                     </div>
                                 </div>
-                                <div class="sg-product-price">
-                                    <span class="sg-price-current">₹<%= product.finalPrice %></span>
-                                    <span class="sg-price-old">₹<%= product.price %></span>
+                                <div class="sg-product-body">
+                                    <a href="/product_details?id=<%= product._id %>" class="sg-product-name">
+                                        <%= product.productName %>
+                                    </a>
+                                    <div class="sg-product-rating">
+                                        <div class="sg-stars">
+                                            <span class="sg-star">★</span><span class="sg-star">★</span><span
+                                                class="sg-star">★</span><span class="sg-star">★</span><span
+                                                class="sg-star" style="color:var(--gray-200)">★</span>
+                                        </div>
+                                    </div>
+                                    <div class="sg-product-price">
+                                        <span class="sg-price-current">₹<%= product.finalPrice %></span>
+                                        <span class="sg-price-old">₹<%= product.price %></span>
+                                    </div>
+                                </div>
+                                <div class="sg-product-footer">
+                                    <a onclick="addToCart('<%= product._id %>')" class="sg-add-to-cart">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                                            <line x1="3" y1="6" x2="21" y2="6" />
+                                            <path d="M16 10a4 4 0 01-8 0" />
+                                        </svg>
+                                        Add to cart
+                                    </a>
                                 </div>
                             </div>
-                            <div class="sg-product-footer">
-                                <a onclick="addToCart('<%= product._id %>')" class="sg-add-to-cart">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-                                    Add to cart
+                            <% }) %>
+                    </div>
+
+                    <% if (totalPages> 1) { %>
+                        <div class="sg-pagination">
+                            <% if (page> 1) { %>
+                                <a class="sg-page-btn"
+                                    href="/shop?search=<%= search %>&sort=<%= sortBy %>&page=<%= page - 1 %>&category=<%= categoryFilter %>">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="15 18 9 12 15 6" />
+                                    </svg>
                                 </a>
-                            </div>
+                                <% } %>
+                                    <% for(let i=1; i <=totalPages; i++) { %>
+                                        <a class="sg-page-btn <%= page == i ? 'active' : '' %>"
+                                            href="/shop?search=<%= search %>&sort=<%= sortBy %>&page=<%= i %>&category=<%= categoryFilter %>">
+                                            <%= i %>
+                                        </a>
+                                        <% } %>
+                                            <% if (page < totalPages) { %>
+                                                <a class="sg-page-btn"
+                                                    href="/shop?search=<%= search %>&sort=<%= sortBy %>&page=<%= parseInt(page) + 1 %>&category=<%= categoryFilter %>">
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                                        stroke-linejoin="round">
+                                                        <polyline points="9 18 15 12 9 6" />
+                                                    </svg>
+                                                </a>
+                                                <% } %>
                         </div>
-                        <% }) %>
-                    </div>
+                        <% } %>
 
-                    <% if (totalPages > 1) { %>
-                    <div class="sg-pagination">
-                        <% if (page > 1) { %>
-                            <a class="sg-page-btn" href="/shop?search=<%= search %>&sort=<%= sortBy %>&page=<%= page - 1 %>&category=<%= categoryFilter %>">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-                            </a>
-                        <% } %>
-                        <% for(let i = 1; i <= totalPages; i++) { %>
-                            <a class="sg-page-btn <%= page == i ? 'active' : '' %>"
-                               href="/shop?search=<%= search %>&sort=<%= sortBy %>&page=<%= i %>&category=<%= categoryFilter %>">
-                                <%= i %>
-                            </a>
-                        <% } %>
-                        <% if (page < totalPages) { %>
-                            <a class="sg-page-btn" href="/shop?search=<%= search %>&sort=<%= sortBy %>&page=<%= parseInt(page) + 1 %>&category=<%= categoryFilter %>">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-                            </a>
-                        <% } %>
-                    </div>
-                    <% } %>
-
-                <% } else { %>
-                    <div class="sg-empty">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                        <h4>No products found</h4>
-                        <p>Try a different search term or browse all categories.</p>
-                    </div>
-                <% } %>
+                            <% } else { %>
+                                <div class="sg-empty">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="11" cy="11" r="8" />
+                                        <path d="m21 21-4.35-4.35" />
+                                    </svg>
+                                    <h4>No products found</h4>
+                                    <p>Try a different search term or browse all categories.</p>
+                                </div>
+                                <% } %>
 
             </div>
         </div>
@@ -857,7 +1096,9 @@
                     <div class="col-lg-4 col-md-6">
                         <div class="widget-about font-md mb-md-5 mb-lg-0">
                             <div class="logo logo-width-1">
-                                <a href="/"><img src="user/assets/imgs/theme/sandglass-high-resolution-logo-transparent.svg" alt="logo"></a>
+                                <a href="/"><img
+                                        src="user/assets/imgs/theme/sandglass-high-resolution-logo-transparent.svg"
+                                        alt="logo"></a>
                             </div>
                             <h5 class="mt-20 mb-10 fw-600 text-grey-4">Contact</h5>
                             <p><strong>Address: </strong>562 Wellington Road, Street 32, San Francisco</p>
@@ -900,8 +1141,10 @@
                             <div class="col-md-8 col-lg-12">
                                 <p>From App Store or Google Play</p>
                                 <div class="download-app">
-                                    <a href="#" class="hover-up mb-sm-4 mb-lg-0"><img class="active" src="user/assets/imgs/theme/app-store.jpg" alt=""></a>
-                                    <a href="#" class="hover-up"><img src="user/assets/imgs/theme/google-play.jpg" alt=""></a>
+                                    <a href="#" class="hover-up mb-sm-4 mb-lg-0"><img class="active"
+                                            src="user/assets/imgs/theme/app-store.jpg" alt=""></a>
+                                    <a href="#" class="hover-up"><img src="user/assets/imgs/theme/google-play.jpg"
+                                            alt=""></a>
                                 </div>
                             </div>
                             <div class="col-md-4 col-lg-12 mt-md-3 mt-lg-0">
@@ -915,9 +1158,12 @@
         </section>
         <div class="container pb-20">
             <div class="row">
-                <div class="col-12 mb-20"><div class="footer-bottom"></div></div>
+                <div class="col-12 mb-20">
+                    <div class="footer-bottom"></div>
+                </div>
                 <div class="col-lg-6">
-                    <p class="float-md-left font-sm text-muted mb-0">&copy; 2026 <strong style="color:var(--purple-800)">Sandglass</strong>. All rights reserved.</p>
+                    <p class="float-md-left font-sm text-muted mb-0">&copy; 2026 <strong
+                            style="color:var(--purple-800)">Sandglass</strong>. All rights reserved.</p>
                 </div>
             </div>
         </div>
@@ -949,15 +1195,34 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             const wrap = document.querySelector('.sg-sort-wrap');
             if (wrap && !wrap.contains(e.target)) {
                 wrap.classList.remove('open');
             }
         });
     </script>
+
     <script>
-       
+        const userBtn = document.getElementById('userDropdownBtn');
+        const dropdown = document.querySelector('.sg-dropdown');
+
+        userBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            dropdown.classList.toggle('active');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (
+                !e.target.closest('.sg-user-wrap')
+            ) {
+                dropdown.classList.remove('active');
+            }
+        });
+    </script>
+    <script>
+
 
         async function addToCart(productId) {
             let response = await fetch('product/add_to_cart', {
@@ -1023,4 +1288,5 @@
         });
     </script>
 </body>
+
 </html>

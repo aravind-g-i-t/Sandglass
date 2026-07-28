@@ -28,6 +28,7 @@ adminRoute.patch('/products/:id/status', auth.isLoggedIn, productController.prod
 adminRoute.get('/products/:id/edit', auth.isLoggedIn, productController.loadEditProduct);
 adminRoute.delete('/remove_image', multer, productController.removeImage);
 adminRoute.patch('/products/:id', multer, productController.editProduct);
+adminRoute.patch('/products/:id/image', multer, productController.updateImage);
 adminRoute.get('/orders', auth.isLoggedIn, adminController.orderList);
 adminRoute.get('/order_details', auth.isLoggedIn, adminController.orderDetails);
 adminRoute.patch('/update-order-status', auth.isLoggedIn, adminController.updateOrderStatus);

@@ -845,6 +845,63 @@
             border-top: 1px solid var(--border);
             background: var(--bg-primary);
         }
+
+        .replace-btn {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+
+            width: 26px;
+            height: 26px;
+
+            border: none;
+            border-radius: 6px;
+
+            background: #534AB7;
+            color: white;
+
+            cursor: pointer;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            opacity: 0;
+            transition: .2s;
+        }
+
+        .existing-item:hover .replace-btn {
+            opacity: 1;
+        }
+
+        .replace-spinner-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(26, 24, 37, 0.45);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 20px;
+        }
+
+        .replace-spinner-overlay.visible {
+            display: flex;
+        }
+
+        .replace-spinner-overlay i {
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 
@@ -1004,14 +1061,34 @@
                                 <% if(product.productImage && product.productImage.length> 0) { %>
                                     <div class="section-divider">Current images</div>
                                     <div class="existing-grid" id="existingGrid">
-                                        <% product.productImage.forEach((img)=> { %>
+                                        <% product.productImage.forEach((img,index)=> { %>
                                             <div class="existing-item" id="existing-<%= img %>">
-                                                <img src="/uploads/<%= img %>" alt="Product image">
+                                                <img src="/uploads/<%= img %>" alt="Product image"
+                                                    id="existing-image-<%= index %>">
+
                                                 <span class="existing-label">Saved</span>
+
+                                                <div class="replace-spinner-overlay" id="replace-spinner-<%= index %>">
+                                                    <i class="ti ti-loader-2"></i>
+                                                </div>
+
                                                 <button type="button" class="existing-remove"
                                                     onclick="confirmRemove('<%= product._id %>', '<%= img %>')"
-                                                    title="Remove image">&times;</button>
+                                                    title="Remove image">
+                                                    &times;
+                                                </button>
+
+                                                <button type="button" class="replace-btn"
+                                                    onclick="document.getElementById('replace-input-<%= index %>').click()"
+                                                    title="Replace">
+                                                    <i class="ti ti-refresh"></i>
+                                                </button>
+
+                                                <input type="file" id="replace-input-<%= index %>"
+                                                    accept="image/png,image/jpeg,image/jpg" hidden
+                                                    onchange="handleReplaceFile(event,'<%= product._id %>',<%= index %>)">
                                             </div>
+
                                             <% }) %>
                                     </div>
                                     <% } %>
@@ -1100,9 +1177,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
 
     <script>
-            /* =========================================================
-               IMAGE UPLOAD, CROP & PREVIEW MANAGER
-               ========================================================= */
+
             (function () {
 
                 const VALID_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
@@ -1113,6 +1188,10 @@
                 let currentCropId = null;
                 let cropperInstance = null;
                 let scaleX = 1, scaleY = 1;
+
+                // Replace-mode: when set, the cropper modal is being used to
+                // re-crop a single existing image instead of a queued new upload.
+                let replaceMode = null; // { productId, index, fileName }
 
                 const fileInput = document.getElementById('file-input-1');
                 const previewContainer = document.getElementById('preview-container');
@@ -1236,7 +1315,7 @@
 
                 /* ── Queue ── */
                 function processQueue() {
-                    if (currentCropId !== null) return;
+                    if (currentCropId !== null || replaceMode !== null) return;
                     if (cropQueue.length === 0) { rebuildFileInput(); updateQueueUI(); return; }
 
                     const nextId = cropQueue.shift();
@@ -1247,13 +1326,12 @@
                     entry.status = 'cropping';
                     updatePreviewCard(entry);
                     updateQueueUI();
-                    openCropper(entry);
+                    openCropper(entry.originalSrc, `Image ${images.filter(e => e.status === 'done').length + 1} of ${images.length}`);
                 }
 
-                function openCropper(entry) {
+                function openCropper(src, subLabel) {
                     scaleX = 1; scaleY = 1;
-                    const done = images.filter(e => e.status === 'done').length;
-                    cropperSub.textContent = `Image ${done + 1} of ${images.length}`;
+                    cropperSub.textContent = subLabel;
 
                     if (cropperInstance) { cropperInstance.destroy(); cropperInstance = null; }
                     cropperImage.src = '';
@@ -1265,7 +1343,7 @@
                             movable: true, zoomable: true, rotatable: true, scalable: true,
                         });
                     };
-                    cropperImage.src = entry.originalSrc;
+                    cropperImage.src = src;
                 }
 
                 function closeCropper() {
@@ -1276,7 +1354,21 @@
                 }
 
                 cropBtn.addEventListener('click', function () {
-                    if (!cropperInstance || currentCropId === null) return;
+                    if (!cropperInstance) return;
+
+                    // Replace-mode: crop the existing-image replacement, then upload it.
+                    if (replaceMode !== null) {
+                        cropperInstance.getCroppedCanvas({ width: 800, height: 800 }).toBlob(function (blob) {
+                            const mode = replaceMode;
+                            closeCropper();
+                            replaceMode = null;
+                            uploadReplacementImage(blob, mode.productId, mode.index, mode.fileName);
+                            processQueue();
+                        }, 'image/jpeg', 0.92);
+                        return;
+                    }
+
+                    if (currentCropId === null) return;
                     cropperInstance.getCroppedCanvas({ width: 800, height: 800 }).toBlob(function (blob) {
                         const entry = getEntry(currentCropId);
                         if (entry) { entry.croppedBlob = blob; entry.status = 'done'; updatePreviewCard(entry); }
@@ -1285,17 +1377,36 @@
                 });
 
                 skipBtn.addEventListener('click', function () {
+                    // Replace-mode: user chose to skip cropping, upload the original file.
+                    if (replaceMode !== null) {
+                        const mode = replaceMode;
+                        closeCropper();
+                        replaceMode = null;
+                        uploadReplacementImage(mode.originalFile, mode.productId, mode.index, mode.fileName);
+                        processQueue();
+                        return;
+                    }
+
                     const entry = getEntry(currentCropId);
                     if (entry) { entry.croppedBlob = null; entry.status = 'done'; updatePreviewCard(entry); }
                     closeCropper(); rebuildFileInput(); processQueue();
                 });
 
-                cropperClose.addEventListener('click', function () { skipBtn.click(); });
+                cropperClose.addEventListener('click', function () {
+                    // Replace-mode: closing the modal cancels the replacement entirely.
+                    if (replaceMode !== null) {
+                        closeCropper();
+                        replaceMode = null;
+                        processQueue();
+                        return;
+                    }
+                    skipBtn.click();
+                });
 
                 window.recropImage = function (id) {
                     const entry = getEntry(id);
                     if (!entry) return;
-                    if (currentCropId !== null) { cropQueue.unshift(id); return; }
+                    if (currentCropId !== null || replaceMode !== null) { cropQueue.unshift(id); return; }
                     entry.status = 'pending'; entry.croppedBlob = null;
                     updatePreviewCard(entry);
                     cropQueue.unshift(id);
@@ -1366,11 +1477,68 @@
                     return true;
                 };
 
+                /* ── Replace-existing-image flow: crop before uploading ── */
+                window.handleReplaceFile = function (event, productId, index) {
+                    const file = event.target.files[0];
+                    event.target.value = '';
+                    if (!file) return;
+
+                    if (!VALID_TYPES.includes(file.type)) {
+                        Swal.fire({ icon: 'warning', title: 'Unsupported file', text: 'Please choose a JPEG or PNG image.' });
+                        return;
+                    }
+
+                    // If a queued crop is already open, wait for it to close first.
+                    if (currentCropId !== null || replaceMode !== null) {
+                        Swal.fire({ icon: 'info', title: 'One at a time', text: 'Please finish the current crop before replacing another image.' });
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        replaceMode = { productId, index, fileName: file.name, originalFile: file };
+                        openCropper(e.target.result, 'Replacement image');
+                    };
+                    reader.readAsDataURL(file);
+                };
+
+                window.uploadReplacementImage = async function (blob, productId, index, fileName) {
+                    const spinner = document.getElementById(`replace-spinner-${index}`);
+                    if (spinner) spinner.classList.add('visible');
+
+                    const uploadFile = blob instanceof File
+                        ? blob
+                        : new File([blob], fileName, { type: 'image/jpeg', lastModified: Date.now() });
+
+                    const formData = new FormData();
+                    formData.append('images', uploadFile);
+                    formData.append('index', index);
+
+                    try {
+                        const response = await fetch(`/admin/products/${productId}/image`, {
+                            method: 'PATCH',
+                            body: formData
+                        });
+
+                        const data = await response.json();
+
+                        if (!response.ok) {
+                            return Swal.fire({ icon: 'error', title: 'Error', text: data.message });
+                        }
+
+                        document.getElementById(`existing-image-${index}`).src = URL.createObjectURL(uploadFile);
+
+                        Swal.fire({ icon: 'success', title: 'Updated', text: data.message, timer: 1200, showConfirmButton: false });
+                    } catch {
+                        Swal.fire({ icon: 'error', title: 'Error', text: 'Unable to update image.' });
+                    } finally {
+                        if (spinner) spinner.classList.remove('visible');
+                    }
+                };
+
             })();
 
-        /* =========================================================
-           EXISTING IMAGE REMOVAL
-           ========================================================= */
+
         async function confirmRemove(productId, imageUrl) {
             const result = await Swal.fire({
                 title: 'Remove this image?',
@@ -1409,9 +1577,6 @@
             }
         }
 
-        /* =========================================================
-           FORM VALIDATION
-           ========================================================= */
         function productValidate() {
             const productName = document.getElementById('product_name').value.trim();
             const productDescription = document.getElementById('product_description').value.trim();

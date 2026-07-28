@@ -12,32 +12,66 @@ const STATUS_CODES = require('../enum/statusCode.enum');
 const loadCart = async (req, res) => {
     try {
         const userData = await User.findById(req.session.user._id);
-        const cartData = await Cart.findOne({ userId: userData._id }).populate('product.productId');
-        await Promise.all(cartData.product.map(async item => {
-            const product = await Product.findById(item.productId);
-            item.productPrice = await product.getDisplayPrice();
-        }));
-        let totalPrice;
-        let couponDiscount = 0;
+
+        const cartData = await Cart.findOne({
+            userId: userData._id
+        }).populate("product.productId");
+
         if (cartData) {
-            totalPrice = cartData.product.reduce((total, item) => {
-                return total + (item.productPrice * item.quantity);
-            }, 0);
+            await Promise.all(
+                cartData.product.map(async (item) => {
+                    const product = await Product.findById(item.productId);
+                    item.productPrice = await product.getDisplayPrice();
+                })
+            );
         }
-        if (cartData && cartData.coupon) {
-            const coupon = await Coupon.findOne({ code: cartData.coupon });
+
+        let totalPrice = 0;
+        let couponDiscount = 0;
+
+        if (cartData) {
+            totalPrice = cartData.product.reduce(
+                (total, item) => total + (item.productPrice * item.quantity),
+                0
+            );
+        }
+
+        if (cartData?.coupon) {
+            const coupon = await Coupon.findOne({
+                code: cartData.coupon
+            });
+
             if (coupon) {
                 couponDiscount = coupon.discountPercentage;
             }
         }
-        return res.status(STATUS_CODES.OK).render('user/cart', {
+
+        const now = new Date();
+
+        const activeCoupons = await Coupon.find(
+        {
+            isActive: true,
+            expiryDate: { $gte: now },
+            quantityLimit: { $gt: 0 }
+        }
+        ).sort({ minPurchaseAmount: 1 });
+
+        console.log(activeCoupons);
+
+
+        return res.status(STATUS_CODES.OK).render("user/cart", {
             userData,
             cartData,
             couponDiscount,
-            totalPrice
+            totalPrice,
+            activeCoupons
         });
+
     } catch {
-        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.INTERNAL_SERVER_ERROR });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: MESSAGES.INTERNAL_SERVER_ERROR
+        });
     }
 };
 
@@ -52,6 +86,12 @@ const addToCart = async (req, res) => {
             return res.status(STATUS_CODES.NOT_FOUND).json({
                 success: false,
                 message: MESSAGES.PRODUCT_NOT_FOUND
+            });
+        }
+        if (productData.stock <= 0) {
+            return res.status(STATUS_CODES.CONFLICT).json({
+                success: false,
+                message: MESSAGES.PRODUCT_OUT_OF_STOCK
             });
         }
 
@@ -396,8 +436,9 @@ const applyCoupon = async (req, res) => {
 
         if (cartTotal < coupon.minPurchaseAmount) {
             return res.status(STATUS_CODES.BAD_REQUEST).json({
-                success:true,
-                message: `Minimum purchase amount of ₹${coupon.minPurchaseAmount} is required to use this coupon` });
+                success: true,
+                message: `Minimum purchase amount of ₹${coupon.minPurchaseAmount} is required to use this coupon`
+            });
         }
 
         cart.coupon = couponCode;

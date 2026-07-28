@@ -1011,14 +1011,14 @@
                 <span class="sg-logo-text">Sandglass</span>
             </a>
 
-            <nav>
+            <!-- <nav>
                 <ul class="sg-nav">
                     <li><a href="/">Home</a></li>
                     <li><a href="/shop">Shop</a></li>
                     <li><a href="#">About</a></li>
                     <li><a href="page-contact.html">Contact</a></li>
                 </ul>
-            </nav>
+            </nav> -->
 
             <div class="sg-header-actions">
                 <a href="/wishlist" class="sg-icon-btn" title="Wishlist">
@@ -1367,7 +1367,7 @@
                                                                     <td style="color:var(--gray-400);">× <%=
                                                                             product.quantity %>
                                                                     </td>
-                                                                    <td>₹<%= product.productPrice %>
+                                                                    <td>₹<%= (product.productPrice * (1 - (order.couponDiscount / 100))).toFixed(2) %>
                                                                     </td>
                                                                     <td>
                                                                         <span

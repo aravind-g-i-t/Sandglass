@@ -516,10 +516,10 @@
                                             <span class="product-name"><%= product.productId.productName %></span>
                                         </div>
                                     </td>
-                                    <td>₹<%= product.productPrice %></td>
+                                    <td>₹<%= (product.productPrice * (1 - (couponDiscount / 100))).toFixed(2) %></td>
                                     <td><%= product.quantity %></td>
                                     <td style="font-weight:500; color:var(--purple-600)">
-                                        ₹<%= product.productPrice * product.quantity %>
+                                        ₹<%= (product.productPrice * product.quantity * (1 - (couponDiscount / 100))).toFixed(2) %>
                                     </td>
                                     <td>
                                         <%
