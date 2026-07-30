@@ -347,6 +347,117 @@
             margin-top: 12px;
         }
 
+        /* ── Demo notice link ── */
+        .sg-demo-note-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: none;
+            border: none;
+            color: var(--purple-600);
+            font-size: 12.5px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 0;
+            margin-bottom: 24px;
+        }
+
+        /* ── Demo modal ── */
+        .sg-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(26, 25, 24, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            padding: 20px;
+        }
+
+        .sg-modal-overlay.is-open {
+            display: flex;
+        }
+
+        .sg-modal {
+            background: var(--white);
+            border-radius: 16px;
+            max-width: 440px;
+            width: 100%;
+            padding: 30px 32px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+            animation: fadeUp 0.25s ease both;
+        }
+
+        .sg-modal h2 {
+            font-family: 'DM Serif Display', serif;
+            font-weight: 400;
+            font-size: 21px;
+            margin-bottom: 10px;
+        }
+
+        .sg-modal p {
+            font-size: 13.5px;
+            color: var(--gray-600);
+            line-height: 1.5;
+            margin-bottom: 14px;
+        }
+
+        .sg-modal-creds {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-100);
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 18px;
+        }
+
+        .sg-modal-creds div {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            padding: 3px 0;
+        }
+
+        .sg-modal-creds code {
+            background: var(--purple-50);
+            color: var(--purple-800);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 12.5px;
+        }
+
+        .sg-modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .sg-modal-btn-secondary {
+            padding: 9px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--gray-200);
+            background: var(--white);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13.5px;
+            cursor: pointer;
+        }
+
+        .sg-modal-btn-primary {
+            padding: 9px 16px;
+            border-radius: 8px;
+            border: none;
+            background: var(--purple-800);
+            color: #fff;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13.5px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .sg-modal-btn-primary:hover {
+            background: var(--purple-900);
+        }
+
         /* ── Responsive ── */
         @media (max-width: 600px) {
             .sg-page {
@@ -363,6 +474,10 @@
 
             .sg-actions {
                 grid-template-columns: 1fr;
+            }
+
+            .sg-modal {
+                padding: 24px 22px;
             }
         }
     </style>
@@ -382,12 +497,43 @@
         </a>
     </header>
 
+    <!-- Demo notice modal -->
+    <div class="sg-modal-overlay" id="demoModalOverlay" role="dialog" aria-modal="true">
+        <div class="sg-modal">
+            <h2>Before you sign in</h2>
+            <p>
+                This deployment's host blocks outbound <strong>SMTP requests</strong>,
+                so email verification for new sign-ups won't go through — creating a
+                new account won't work here. Google sign-in is unaffected.
+            </p>
+            <p>Use this demo account instead:</p>
+            <div class="sg-modal-creds">
+                <div><span>Email</span><code>user@gmail.com</code></div>
+                <div><span>Password</span><code>User@123</code></div>
+            </div>
+            <div class="sg-modal-actions">
+                <button type="button" class="sg-modal-btn-secondary" id="demoModalClose">Got it</button>
+                <button type="button" class="sg-modal-btn-primary" id="demoModalFill">Fill demo credentials</button>
+            </div>
+        </div>
+    </div>
+
     <div class="sg-page">
         <div class="sg-card-wrap">
             <div class="sg-card">
                 <p class="sg-eyebrow">Welcome</p>
                 <h1 class="sg-title">Sign in to your account</h1>
                 <p class="sg-subtitle">Enter your credentials to continue</p>
+
+                <button type="button" class="sg-demo-note-link" id="demoModalOpen">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="16" x2="12" y2="12" />
+                        <line x1="12" y1="8" x2="12.01" y2="8" />
+                    </svg>
+                    Demo account & hosting notes
+                </button>
 
                 <% if(locals.message) { %>
                     <div class="alert alert-danger" role="alert">
@@ -511,6 +657,25 @@
                 event.preventDefault();
             }
         });
+
+        // Demo notice modal
+        const demoOverlay = document.getElementById('demoModalOverlay');
+        const openModal = () => demoOverlay.classList.add('is-open');
+        const closeModal = () => demoOverlay.classList.remove('is-open');
+
+        document.getElementById('demoModalOpen').addEventListener('click', openModal);
+        document.getElementById('demoModalClose').addEventListener('click', closeModal);
+        document.getElementById('demoModalFill').addEventListener('click', function () {
+            document.getElementById('email').value = 'user@gmail.com';
+            document.getElementById('password').value = 'User@123';
+            closeModal();
+        });
+        demoOverlay.addEventListener('click', function (e) {
+            if (e.target === demoOverlay) closeModal();
+        });
+
+        // Auto-open on first visit of this session
+        window.addEventListener('DOMContentLoaded', openModal);
     </script>
 
 </body>
