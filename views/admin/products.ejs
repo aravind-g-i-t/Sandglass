@@ -627,7 +627,7 @@
                 <div class="products-card">
 
                     <!-- Filter bar -->
-                    <div class="filter-bar">
+                    <!-- <div class="filter-bar">
                         <input type="checkbox" class="check-input" title="Select all">
                         <select class="filter-select">
                             <option selected>All categories</option>
@@ -640,7 +640,7 @@
                             <option>Active</option>
                             <option>Blocked</option>
                         </select>
-                    </div>
+                    </div> -->
 
                     <!-- Table header -->
                     <div class="product-row header">
@@ -656,7 +656,7 @@
                     <% if(products) { %>
                         <% products.forEach(product=> { %>
                             <div class="product-row">
-                                <input type="checkbox" class="check-input">
+                                <input type="checkbox"   class="check-input">
 
                                 <div class="product-info">
                                     <img src="/uploads/<%= (product.productImage && product.productImage.length > 0) ? product.productImage[0] : 'default-image.jpg' %>"
